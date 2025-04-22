@@ -1,5 +1,8 @@
 .leshen-header {
     background: #DBEAFE;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .top-bar {
@@ -153,4 +156,17 @@ body {
 
 .leshen-variable-content {
     background-color: #fff!important;
+}
+
+.css-1f6qadj {
+    background: #172554;
+}
+
+.breadcrumbs {
+    color: #fff;
+    padding: 0;
+}
+
+.leshen-cta-bar {
+    display: none;
 }
