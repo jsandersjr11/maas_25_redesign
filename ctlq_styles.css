@@ -1,0 +1,156 @@
+.leshen-header {
+    background: #DBEAFE;
+}
+
+.top-bar {
+    display: none;
+}
+
+.leshen-header .leshen-phone-cta {
+    background-color: #EFF6FF;
+    box-shadow: none;
+    border-radius: 6px;
+    padding: 8px 32px;
+}
+
+.css-1rd8rk9 {
+    display: none;
+}
+
+.leshen-hero .background-image {display: none;}
+
+.leshen-hero {
+    background-color: #dbeafe !important;
+}
+
+.leshen-typography-h1 {
+    color: #172554;
+}
+
+@media (min-width: 1200px) {
+    .leshen-typography-h1 {
+    font-size: 80px;
+        line-height: 80px;
+}
+}
+@media (max-width: 480px) {
+    .leshen-typography-h1 {
+    font-size: 40px;
+        line-height: 40px;
+}
+    .leshen-hero {
+        padding: 1.5rem;
+    }
+    .leshen-typography-body {
+        font-size: 18px;
+    }
+
+    /* package cards */
+    .leshen-carousel-item-container .is-selected {
+        min-width: 95%;
+    }
+    .leshen-carousel >div {
+        overflow-x: unset !important;
+    }
+}
+
+
+.submit-button {
+    background-color: #34D399;
+    padding: 14px 28px;
+    box-shadow: none;
+    border-radius: 6px !important;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* her0 image */
+/* .leshen-hero .gatsby-image-wrapper {
+    display: none;
+} */
+
+/* package cards */
+
+.leshen-package-card > div {
+    background-color: #DBEAFE;
+    box-shadow: none;
+    border-radius: 0px;
+    border-top: none;
+}
+/* text color changes */
+.leshen-package-card .title, .leshen-package-card .leshen-price-currency, .leshen-package-card .leshen-price-dollar {
+    color: #172554 !important;
+}
+
+.leshen-package-card .duration-html {
+    color: #172554 !important;
+}
+
+
+
+.leshen-package-card .leshen-phone-cta {
+    background-color: #34D399;
+    box-shadow: none;
+    padding: 14px 28px;
+    border-radius: 6px;
+    
+}
+
+.leshen-package-card .leshen-phone-cta span {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.leshen-typography-h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #172554;
+}
+
+/* footer */
+
+.leshen-footer .top-section svg path {
+    filter: invert(100%);
+}
+
+.leshen-footer .top-section {
+    background: #172554;
+    border-bottom: none;
+}
+
+.bottom-section {
+    background: #172554;
+}
+
+.bottom-section p {
+    color: #fff;
+}
+
+.bottom-section a {
+    color: #A1A1AA !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+}
+
+.legal-section {
+    background: #172554;
+}
+.legal-section p {
+    color: #fff;
+}
+
+body {
+    margin-bottom: 0;
+}
+
+.leshen-stack .embla {
+    padding: unset;
+}
+
+.leshen-stack .embla__viewport {
+    overflow: unset;
+}
+
+.leshen-variable-content {
+    background-color: #fff!important;
+}
