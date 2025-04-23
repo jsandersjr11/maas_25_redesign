@@ -78,7 +78,7 @@
 
 /* package cards */
 
-.leshen-package-card > div, .background-color-default .leshen-stack .leshen-package-card .wrapper {
+.leshen-package-card > div {
     background-color: #DBEAFE;
     box-shadow: none;
     border-radius: 0px;
