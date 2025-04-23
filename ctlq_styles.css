@@ -347,8 +347,12 @@ body {
     display: none;
 }
 
-.css-1j7i1j2 >section:nth-of-type(even) {
-    background-color: #EFF6FF;
+.packages {
+    background-color: #172554 !important;
+}
+
+.packages .leshen-typography-h4 {
+    color: #fff;
 }
 
 .leshen-header-mobile-nav {
