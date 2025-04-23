@@ -78,7 +78,7 @@
 
 /* package cards */
 
-.leshen-package-card > div {
+.leshen-package-card > div, .background-color-default .leshen-stack .leshen-package-card .wrapper {
     background-color: #DBEAFE;
     box-shadow: none;
     border-radius: 0px;
@@ -248,7 +248,7 @@ body {
 }
 
 
-.leshen-billboard .content-split {
+.leshen-billboard .content-split, .leshen-billboard .content-split {
     background: #fff;
     padding: 2rem;
     border-radius: 8px;
@@ -307,8 +307,12 @@ body {
     display: none;
 }
 
-.leshen-billboard-section-full .leshen-typography-h2, .leshen-billboard-section-full .leshen-typography-body {
+.leshen-billboard-section-full .leshen-typography-h2 {
     color: #fff
+}
+
+.leshen-billboard-section-full .leshen-typography-body {
+    color: #172554
 }
 
 .leshen-package-card .default {
