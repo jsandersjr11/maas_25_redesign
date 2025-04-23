@@ -272,7 +272,8 @@ body {
 }
 
 .leshen-columns-card .leshen-typography-body {
-    color: rgb(255 255 255 / 50%);
+    color: rgb(255 255 255 / 75%);
+    margin: 0;
 }
 
 .leshen-columns-card .leshen-typography-body strong {
@@ -380,7 +381,7 @@ body {
     display: none;
 }
 
-.leshen-billboard.leshen-billboard-section-split {
+.leshen-billboard.leshen-billboard-section-split, .leshen-billboard.leshen-billboard-section-full {
     padding: 1.5rem;
     background: #172554 !important;
 }
@@ -396,4 +397,9 @@ body {
 
 .leshen-columns-default .leshen-column-wrapper .leshen-typography-h4 a, .leshen-columns-default .leshen-column-wrapper .leshen-typography-body a {
     color: #fff;
+}
+
+.leshen-table-wrapper table {
+    border-radius: 8px;
+    overflow: hidden;
 }
