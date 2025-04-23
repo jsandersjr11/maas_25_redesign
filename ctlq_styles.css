@@ -345,7 +345,7 @@ body {
     color: rgb(255 255 255 / 75%);
 }
 
-.background-color-light .leshen-brandy {
+.background-color-light .leshen-brandy,  .main-content-area .leshen-brandy {
     color: rgb(23 37 84 / 75%);
 }
 
@@ -383,4 +383,17 @@ body {
 .leshen-billboard.leshen-billboard-section-split {
     padding: 1.5rem;
     background: #172554 !important;
+}
+
+.leshen-stack .leshen-column-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.main-content-area {
+    background: #EFF6FF;
+}
+
+.leshen-columns-default .leshen-column-wrapper .leshen-typography-h4 a, .leshen-columns-default .leshen-column-wrapper .leshen-typography-body a {
+    color: #fff;
 }
