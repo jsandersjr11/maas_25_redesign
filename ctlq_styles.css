@@ -345,6 +345,10 @@ body {
     color: rgb(255 255 255 / 75%);
 }
 
+.background-color-light .leshen-brandy {
+    color: rgb(23 37 84 / 75%);
+}
+
 .leshen-stack .embla .embla__container {
     gap: 0px;
 }
