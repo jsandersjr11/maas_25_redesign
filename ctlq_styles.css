@@ -373,7 +373,7 @@ body {
 }
 
 .leshen-billboard.leshen-billboard-section-split {
-    padding: 1.5rem;
+    padding: 1.5rem !important;
 }
 
 .leshen-billboard .image-split {
