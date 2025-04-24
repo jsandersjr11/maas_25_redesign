@@ -125,8 +125,8 @@
     color: #172554;
 }
 
-.leshen-typography-body {
-    color: #172554;
+.leshen-package-card .leshen-typography-body {
+    color: #172554 !important;
 }
 
 /* footer */
