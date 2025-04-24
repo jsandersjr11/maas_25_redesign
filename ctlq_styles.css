@@ -351,6 +351,10 @@ body {
     color: rgb(255 255 255 / 75%);
 }
 
+.background-color-default .leshen-brandy {
+    color: rgb(23 37 84 / 75%);
+}
+
 .background-color-light .leshen-brandy,  .main-content-area .leshen-brandy {
     color: rgb(23 37 84 / 75%);
 }
