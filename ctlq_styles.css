@@ -472,3 +472,30 @@ body {
     }
 }
 
+.embla__slide .content {
+    background: #172554;
+}
+
+.embla__slide .leshen-column-wrapper {
+    margin-right: 0.5rem;
+}
+
+.embla__slide .leshen-typography-body {
+    color: rgb(255 255 255 / 75%);
+}
+
+.leshen-columns-default .leshen-typography-h4 {
+    color:#fff !important;
+}
+
+.leshen-columns-default .leshen-list .leshen-typography-body {
+    color: rgb(255 255 255 / 75%) !important;
+}
+
+.leshen-columns-default .leshen-typography-body {
+    color: rgb(255 255 255 / 75%);
+}
+
+.leshen-columns-default .svg-image path {
+    filter: invert(100%);
+}
