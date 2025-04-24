@@ -283,6 +283,7 @@ body {
 .leshen-columns-default .leshen-column-wrapper {
     background: #172554;
     border: 8px;
+    background-color: #172554 !important;
 }
 
 .leshen-columns-default .leshen-column-wrapper .leshen-typography-h4, .leshen-columns-default .leshen-column-wrapper .leshen-typography-body {
