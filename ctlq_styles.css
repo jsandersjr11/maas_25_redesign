@@ -407,3 +407,58 @@ body {
     border-radius: 8px;
     overflow: hidden;
 }
+
+/* For sticky cta */
+.call-button {
+    display: flex;
+    align-items: center;
+    background-color: #e6f0ff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.call-button:hover {
+    background-color: #d9e7ff;
+    transform: translateY(-2px);
+}
+
+.phone-icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.call-text {
+    font-weight: 600;
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+    .call-button {
+        padding: 12px 20px;
+        font-size: 18px;
+    }
+}
+
+/* For very small devices */
+@media (max-width: 375px) {
+    .call-button {
+        padding: 12px;
+        justify-content: center;
+        width: auto;
+    }
+
+    .call-text {
+        display: none;
+    }
+
+    .phone-icon {
+        margin-right: 0;
+    }
+}
