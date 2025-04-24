@@ -499,3 +499,7 @@ body {
 .leshen-columns-default .svg-image path {
     filter: invert(100%);
 }
+
+.leshen-columns-default .svg-image svg[data-name="Layer 1"] path {
+    filter: none !important;
+}
