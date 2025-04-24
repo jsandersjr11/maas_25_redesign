@@ -409,6 +409,10 @@ body {
 }
 
 /* For sticky cta */
+.dynamicnumberctaheader {
+    display: block;
+}
+
 .call-button {
     display: flex;
     align-items: center;
@@ -462,3 +466,4 @@ body {
         margin-right: 0;
     }
 }
+
