@@ -87,7 +87,7 @@
     max-width: unset;
     box-shadow: 0 0 1rem 0 rgb(23 37 84 / 10%);
     border-radius: 6px;
-    padding: 2rem;
+    padding: 2rem 1rem;
 }
 /* text color changes */
 .leshen-package-card .title, .leshen-package-card .leshen-price-currency, .leshen-package-card .leshen-price-dollar {
