@@ -261,6 +261,10 @@ body {
     border-radius: 8px;
 }
 
+.leshen-billboard .content-full .leshen-typography-h5 {
+    color: #172554;
+}
+
 .image-split {display: masonry;}
 
 .leshen-typography-h3 {
