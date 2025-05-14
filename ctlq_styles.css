@@ -248,8 +248,14 @@ body {
 }
 
 
-.leshen-billboard .content-split, .leshen-billboard .content-full {
+.leshen-billboard .content-split {
     background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.leshen-billboard .content-full {
+    /* background: #fff; */
     padding: 2rem;
     border-radius: 8px;
 }
