@@ -87,7 +87,7 @@
     max-width: unset;
     box-shadow: 0 0 1rem 0 rgb(23 37 84 / 10%);
     border-radius: 6px;
-    padding: 2rem;
+    padding: 2rem 1.5rem;
 }
 /* text color changes */
 .leshen-package-card .title, .leshen-package-card .leshen-price-currency, .leshen-package-card .leshen-price-dollar {
@@ -175,6 +175,7 @@ body {
 
 .leshen-variable-content {
     background-color: #fff!important;
+    padding: 1rem;
 }
 
 .css-1f6qadj {
@@ -314,9 +315,9 @@ body {
     display: none;
 }
 
-.leshen-billboard-section-full .leshen-typography-h2 {
+/* .leshen-billboard-section-full .leshen-typography-h2 {
     color: #fff
-}
+} */
 
 .leshen-billboard-section-full .leshen-typography-body {
     color: #172554
