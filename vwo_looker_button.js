@@ -54,7 +54,7 @@ console.log('Extracted Number:', extractedNumber);
 var lookerUrl = "https://clearlink.cloud.looker.com/dashboards/1926?Brand=&Channel=&Language+Marketed=&Dynamic+Metric+Picker=Leads&Paid+Channel+Account=&Paid+Channel+Campaign=&Promo+Code=&Paid+Channel+Provider=&Table+Date+Grouping=No+Date+Grouping&Graph+Date+Grouping=Date&Date+Range="+formattedDate1+"+to+"+formattedDate2+"&Domain+-+Landing+Page=&Experiment+ID="+extractedNumber+"&Variation+ID="
 
 const buttonContainer = document.querySelector('.Mb\\(10px\\).D\\(f\\).Ai\\(c\\).W\\(100\\%\\)');
-const htmlToInject = `<a type="button" href="`+lookerUrl+`" class="btn btn--neutral" style="
+const htmlToInject = `<a type="button" target="_blank" href="`+lookerUrl+`" class="btn btn--neutral" style="
     margin-left: auto;
 ">  <span data-qa="duvesutuxo">Review in Looker</span> </a>`;
 if (buttonContainer) {
