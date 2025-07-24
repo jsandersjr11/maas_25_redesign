@@ -1,10 +1,10 @@
 // Function to check if element exists and process it
 function processElement() {
-  console.log('Attempting to find element with data-qa="hosoyiruza"...');
-  const element = document.querySelector('[data-qa="hosoyiruza"]');
+  console.log('Attempting to find element with data-qa="dugufituda"...');
+  const element = document.querySelector('[data-qa="dugufituda"]');
   
   if (element && element.textContent) {
-    console.log('Found element with data-qa="hosoyiruza"');
+    console.log('Found element with data-qa="dugufituda"');
     
     // Extract dates
     let date1 = null;
@@ -17,7 +17,7 @@ function processElement() {
     processScript(date1, date2);
   } else {
     // Element not found yet, try again after a short delay
-    console.log('Waiting for element with data-qa="hosoyiruza" to appear...');
+    console.log('Waiting for element with data-qa="dugufituda" to appear...');
     setTimeout(processElement, 500); // Check again after 500ms
   }
 }

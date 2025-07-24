@@ -1,0 +1,10 @@
+#twilio-customer-frame {/* transform: rotate(45deg); */}
+
+button.Twilio.Twilio-EntryPoint {
+    transform: rotate(-90deg);
+    border-radius: 8px 8px 0 0;
+    bottom: 50%;
+    right: -45px;
+    -webkit-box-pack: center;
+    justify-content: center;
+}

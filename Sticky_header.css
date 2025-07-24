@@ -1,0 +1,60 @@
+/* For sticky cta */
+.dynamicnumberctaheader {
+    display: block !important;
+}
+
+.call-button {
+    display: flex;
+    align-items: center;
+    background-color: #e6f0ff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.call-button:hover {
+    background-color: #d9e7ff;
+    transform: translateY(-2px);
+}
+
+.phone-icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.call-text {
+    font-weight: 600;
+}
+
+.leshen-header-mobile {
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    margin: 0;
+    /* padding-top: 2rem; */
+    padding-bottom: 1rem;
+    box-shadow: 0 0.25rem 1rem 0 rgb(23 37 84 / 10%);
+}
+
+.leshen-header-mobile-nav {
+    position: sticky;
+    top: 70px;
+    z-index: 99;
+    box-shadow: 0 0.25rem 1rem 0 rgb(23 37 84 / 10%);
+}
+
+/* For sticky cta */
+.dynamicnumberctaheader {
+    display: block !important;
+}
+
+.leshen-cta-bar {
+    display: none;
+}
