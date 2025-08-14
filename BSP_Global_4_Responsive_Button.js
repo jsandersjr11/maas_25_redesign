@@ -1,12 +1,12 @@
 (function() {
     console.log('[BSP Cart Script] Script initialized');
     
-    // Function to check localStorage for 15 seconds
+    // Function to check localStorage with enhanced polling
     function checkLocalStorageWithPolling() {
-        console.log('[BSP Cart Script] Starting localStorage check with 1-second polling for up to 15 seconds');
+        console.log('[BSP Cart Script] Starting enhanced localStorage check with polling');
         
         let checkCount = 0;
-        const maxChecks = 15; // Check for 15 seconds
+        const maxChecks = 30; // Extended to 30 seconds for more reliability
         
         function checkLocalStorage() {
             checkCount++;
@@ -16,14 +16,37 @@
             const mapiData = localStorage.getItem('mapi');
             if (mapiData) {
                 console.log('[BSP Cart Script] Success! MAPI data found in localStorage');
-                console.log('[BSP Cart Script] MAPI data preview:', mapiData.substring(0, 200) + '...');
-                initializeMainScript(); // Initialize the main script when data is found
-                return true; // Data found, stop checking
+                
+                try {
+                    // Validate that we can parse the JSON data
+                    const parsedData = JSON.parse(mapiData);
+                    if (parsedData) {
+                        console.log('[BSP Cart Script] MAPI data successfully parsed');
+                        console.log('[BSP Cart Script] MAPI data preview:', mapiData.substring(0, 200) + '...');
+                        
+                        // Check if the data contains the expected structure
+                        const hasRequestData = parsedData.requestData && 
+                                              parsedData.requestData.fullResponse && 
+                                              parsedData.requestData.fullResponse.data;
+                                              
+                        if (hasRequestData) {
+                            console.log('[BSP Cart Script] MAPI data contains expected structure');
+                            initializeMainScript(parsedData); // Pass the parsed data to avoid parsing twice
+                            return true; // Valid data found, stop checking
+                        } else {
+                            console.log('[BSP Cart Script] MAPI data found but missing expected structure, continuing to poll...');
+                            return false; // Continue checking for complete data
+                        }
+                    }
+                } catch (error) {
+                    console.error('[BSP Cart Script] Error parsing MAPI data:', error);
+                    return false; // Continue checking if parsing fails
+                }
             }
             
             // Check if we've reached the maximum number of checks
             if (checkCount >= maxChecks) {
-                console.log('[BSP Cart Script] Maximum check count reached (15 seconds). Proceeding anyway.');
+                console.log('[BSP Cart Script] Maximum check count reached (30 seconds). Proceeding anyway.');
                 initializeMainScript(); // Initialize anyway after timeout
                 return true; // Max checks reached, stop checking
             }
@@ -34,7 +57,7 @@
         
         // Initial check
         if (checkLocalStorage()) {
-            return; // Data found on first check
+            return; // Data found and validated on first check
         }
         
         // Set up interval for checking
@@ -46,7 +69,7 @@
     }
     
     // Main script function that will be called after localStorage check
-    function initializeMainScript() {
+    function initializeMainScript(parsedMapiData = null) {
         console.log('[BSP Cart Script] Initializing main script');
         
         // Define the promo code to sales code mapping
@@ -297,10 +320,13 @@
     let clearlinkeventid = '';
     
     try {
-        const mapiData = localStorage.getItem('mapi');
-        if (mapiData) {
-            const parsedData = JSON.parse(mapiData);
-            
+        // Use the already parsed data if provided, otherwise get it from localStorage
+        const parsedData = parsedMapiData || (() => {
+            const mapiData = localStorage.getItem('mapi');
+            return mapiData ? JSON.parse(mapiData) : null;
+        })();
+        
+        if (parsedData) {
             // Log the MAPI data structure for debugging
             console.log('[BSP Cart Script] MAPI data structure found');
             
