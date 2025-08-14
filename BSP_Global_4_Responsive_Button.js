@@ -22,19 +22,25 @@
                     const parsedData = JSON.parse(mapiData);
                     if (parsedData) {
                         console.log('[BSP Cart Script] MAPI data successfully parsed');
-                        console.log('[BSP Cart Script] MAPI data preview:', mapiData.substring(0, 200) + '...');
+                        console.log('[BSP Cart Script] MAPI data structure:', JSON.stringify(parsedData, null, 2).substring(0, 200) + '...');
+                        
+                        // Log the keys at the root level to help with debugging
+                        console.log('[BSP Cart Script] Root level keys:', Object.keys(parsedData));
                         
                         // Check if the data contains the expected structure
-                        const hasRequestData = parsedData.requestData && 
-                                              parsedData.requestData.fullResponse && 
-                                              parsedData.requestData.fullResponse.data;
+                        // We're now more flexible about what constitutes valid data
+                        const hasRequestId = parsedData.requestId || 
+                                           (parsedData.requestData && parsedData.requestData.requestId) || 
+                                           (parsedData.requestData && parsedData.requestData.fullResponse && 
+                                            parsedData.requestData.fullResponse.data && 
+                                            parsedData.requestData.fullResponse.data.request_id);
                                               
-                        if (hasRequestData) {
-                            console.log('[BSP Cart Script] MAPI data contains expected structure');
+                        if (hasRequestId) {
+                            console.log('[BSP Cart Script] MAPI data contains request ID');
                             initializeMainScript(parsedData); // Pass the parsed data to avoid parsing twice
                             return true; // Valid data found, stop checking
                         } else {
-                            console.log('[BSP Cart Script] MAPI data found but missing expected structure, continuing to poll...');
+                            console.log('[BSP Cart Script] MAPI data found but missing request ID, continuing to poll...');
                             return false; // Continue checking for complete data
                         }
                     }
@@ -329,57 +335,73 @@
         if (parsedData) {
             // Log the MAPI data structure for debugging
             console.log('[BSP Cart Script] MAPI data structure found');
+            console.log('[BSP Cart Script] Root level keys:', Object.keys(parsedData));
             
-            // Extract request_id specifically from requestData.fullResponse.data.request_id
-            if (parsedData.requestData && 
-                parsedData.requestData.fullResponse && 
-                parsedData.requestData.fullResponse.data && 
-                parsedData.requestData.fullResponse.data.request_id) {
-                
+            // Extract request_id - check all possible locations
+            if (parsedData.requestId) {
+                clearlinkeventid = parsedData.requestId;
+                console.log('[BSP Cart Script] Extracted requestId (ACSID) from root level:', clearlinkeventid);
+            } else if (parsedData.requestData && parsedData.requestData.requestId) {
+                clearlinkeventid = parsedData.requestData.requestId;
+                console.log('[BSP Cart Script] Extracted requestId (ACSID) from requestData:', clearlinkeventid);
+            } else if (parsedData.requestData && 
+                      parsedData.requestData.fullResponse && 
+                      parsedData.requestData.fullResponse.data && 
+                      parsedData.requestData.fullResponse.data.request_id) {
                 clearlinkeventid = parsedData.requestData.fullResponse.data.request_id;
-                console.log('[BSP Cart Script] Extracted request_id (ACSID) from requestData.fullResponse.data:', clearlinkeventid);
+                console.log('[BSP Cart Script] Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
             } else {
-                console.log('[BSP Cart Script] Could not find request_id in requestData.fullResponse.data');
-                // Log the path we're looking for to help debug
-                console.log('[BSP Cart Script] Looking for: parsedData.requestData.fullResponse.data.request_id');
-                
-                // Check if each part of the path exists
+                console.log('[BSP Cart Script] Could not find request_id in any expected location');
+                // Log available paths to help debug
                 if (parsedData.requestData) {
-                    console.log('[BSP Cart Script] parsedData.requestData exists');
+                    console.log('[BSP Cart Script] requestData keys:', Object.keys(parsedData.requestData));
                     if (parsedData.requestData.fullResponse) {
-                        console.log('[BSP Cart Script] parsedData.requestData.fullResponse exists');
+                        console.log('[BSP Cart Script] fullResponse keys:', Object.keys(parsedData.requestData.fullResponse));
                         if (parsedData.requestData.fullResponse.data) {
-                            console.log('[BSP Cart Script] parsedData.requestData.fullResponse.data exists');
-                            console.log('[BSP Cart Script] Available properties:', Object.keys(parsedData.requestData.fullResponse.data));
+                            console.log('[BSP Cart Script] fullResponse.data keys:', Object.keys(parsedData.requestData.fullResponse.data));
                         }
                     }
                 }
             }
             
-            // Extract promo_code specifically from requestData.fullResponse.data.promo_code
+            // Extract promo_code - check all possible locations
             let promoCode = null;
             
+            // First check in fullResponse.data.promo_code (as shown in your example)
             if (parsedData.requestData && 
                 parsedData.requestData.fullResponse && 
                 parsedData.requestData.fullResponse.data && 
                 parsedData.requestData.fullResponse.data.promo_code) {
                 
                 promoCode = parsedData.requestData.fullResponse.data.promo_code;
-                console.log('[BSP Cart Script] Extracted promo_code from requestData.fullResponse.data:', promoCode);
+                console.log('[BSP Cart Script] Extracted promo_code from fullResponse.data:', promoCode);
+            } 
+            // Then check in promo_data.data.promo_code
+            else if (parsedData.requestData && 
+                     parsedData.requestData.fullResponse && 
+                     parsedData.requestData.fullResponse.data && 
+                     parsedData.requestData.fullResponse.data.promo_data && 
+                     parsedData.requestData.fullResponse.data.promo_data.data && 
+                     parsedData.requestData.fullResponse.data.promo_data.data.promo_code) {
+                promoCode = parsedData.requestData.fullResponse.data.promo_data.data.promo_code;
+                console.log('[BSP Cart Script] Extracted promo_code from promo_data.data:', promoCode);
+            }
+            // Check other possible locations
+            else if (parsedData.promo_code) {
+                promoCode = parsedData.promo_code;
+                console.log('[BSP Cart Script] Extracted promo_code from root level:', promoCode);
+            } else if (parsedData.lastPromo) {
+                promoCode = parsedData.lastPromo;
+                console.log('[BSP Cart Script] Extracted lastPromo from root level:', promoCode);
             } else {
-                console.log('[BSP Cart Script] Could not find promo_code in requestData.fullResponse.data');
-                // Log the path we're looking for to help debug
-                console.log('[BSP Cart Script] Looking for: parsedData.requestData.fullResponse.data.promo_code');
-                
-                // Check if each part of the path exists
-                if (parsedData.requestData) {
-                    console.log('[BSP Cart Script] parsedData.requestData exists');
-                    if (parsedData.requestData.fullResponse) {
-                        console.log('[BSP Cart Script] parsedData.requestData.fullResponse exists');
-                        if (parsedData.requestData.fullResponse.data) {
-                            console.log('[BSP Cart Script] parsedData.requestData.fullResponse.data exists');
-                            console.log('[BSP Cart Script] Available properties:', Object.keys(parsedData.requestData.fullResponse.data));
-                        }
+                console.log('[BSP Cart Script] Could not find promo_code in any expected location');
+                // Log available paths to help debug
+                if (parsedData.requestData && parsedData.requestData.fullResponse && parsedData.requestData.fullResponse.data) {
+                    console.log('[BSP Cart Script] Available properties in fullResponse.data:', 
+                                Object.keys(parsedData.requestData.fullResponse.data));
+                    if (parsedData.requestData.fullResponse.data.promo_data) {
+                        console.log('[BSP Cart Script] promo_data keys:', 
+                                    Object.keys(parsedData.requestData.fullResponse.data.promo_data));
                     }
                 }
             }
@@ -425,20 +447,51 @@
             const mapiData = localStorage.getItem('mapi');
             if (mapiData) {
                 const parsedData = JSON.parse(mapiData);
+                console.log('[BSP Cart Script] Re-extracting values from mapi data');
                 
-                // Extract request_id
-                extractedValues.clearlinkeventid = parsedData.requestId || initialValues.clearlinkeventid;
+                // Extract request_id - check all possible locations
+                if (parsedData.requestId) {
+                    extractedValues.clearlinkeventid = parsedData.requestId;
+                    console.log('[BSP Cart Script] Found requestId at root level:', extractedValues.clearlinkeventid);
+                } else if (parsedData.requestData && parsedData.requestData.requestId) {
+                    extractedValues.clearlinkeventid = parsedData.requestData.requestId;
+                    console.log('[BSP Cart Script] Found requestId in requestData:', extractedValues.clearlinkeventid);
+                } else if (parsedData.requestData && 
+                          parsedData.requestData.fullResponse && 
+                          parsedData.requestData.fullResponse.data && 
+                          parsedData.requestData.fullResponse.data.request_id) {
+                    extractedValues.clearlinkeventid = parsedData.requestData.fullResponse.data.request_id;
+                    console.log('[BSP Cart Script] Found request_id in fullResponse.data:', extractedValues.clearlinkeventid);
+                }
                 
-                // Extract promo_code
+                // Extract promo_code - check all possible locations
                 let promoCode = null;
-                if (parsedData.requestData && parsedData.requestData.fullResponse && 
+                
+                // First check in fullResponse.data.promo_code (as shown in your example)
+                if (parsedData.requestData && 
+                    parsedData.requestData.fullResponse && 
                     parsedData.requestData.fullResponse.data && 
                     parsedData.requestData.fullResponse.data.promo_code) {
                     promoCode = parsedData.requestData.fullResponse.data.promo_code;
-                } else if (parsedData.promo_code) {
+                    console.log('[BSP Cart Script] Found promo_code in fullResponse.data:', promoCode);
+                } 
+                // Then check in promo_data.data.promo_code
+                else if (parsedData.requestData && 
+                         parsedData.requestData.fullResponse && 
+                         parsedData.requestData.fullResponse.data && 
+                         parsedData.requestData.fullResponse.data.promo_data && 
+                         parsedData.requestData.fullResponse.data.promo_data.data && 
+                         parsedData.requestData.fullResponse.data.promo_data.data.promo_code) {
+                    promoCode = parsedData.requestData.fullResponse.data.promo_data.data.promo_code;
+                    console.log('[BSP Cart Script] Found promo_code in promo_data.data:', promoCode);
+                }
+                // Check other possible locations
+                else if (parsedData.promo_code) {
                     promoCode = parsedData.promo_code;
+                    console.log('[BSP Cart Script] Found promo_code at root level:', promoCode);
                 } else if (parsedData.lastPromo) {
                     promoCode = parsedData.lastPromo;
+                    console.log('[BSP Cart Script] Found lastPromo at root level:', promoCode);
                 }
                 
                 if (promoCode) {
