@@ -1,81 +1,72 @@
 (function() {
     console.log('[BSP Cart Script] Script initialized');
     
-    // Function to check localStorage with enhanced polling
-    function checkLocalStorageWithPolling() {
-        console.log('[BSP Cart Script] Starting enhanced localStorage check with polling');
+    // Set up a fallback timeout in case the event never fires
+    let scriptInitialized = false;
+    const fallbackTimeout = setTimeout(() => {
+        if (!scriptInitialized) {
+            console.log('[BSP Cart Script] Fallback timeout reached. Initializing script anyway.');
+            initializeMainScript();
+        }
+    }, 30000); // 30 second fallback
+    
+    // Listen for the mapiRequestIdReady event
+    document.addEventListener("mapiRequestIdReady", (e) => {
+        console.log('[BSP Cart Script] mapiRequestIdReady event received');
+        const requestId = e?.detail?.requestId;
+        console.log('[BSP Cart Script] Request ID from event:', requestId);
         
-        let checkCount = 0;
-        const maxChecks = 30; // Extended to 30 seconds for more reliability
-        
-        function checkLocalStorage() {
-            checkCount++;
-            console.log(`[BSP Cart Script] Check #${checkCount} for localStorage data...`);
+        if (requestId && !scriptInitialized) {
+            scriptInitialized = true;
+            clearTimeout(fallbackTimeout);
             
-            // Check if mapi data exists in localStorage
-            const mapiData = localStorage.getItem('mapi');
-            if (mapiData) {
-                console.log('[BSP Cart Script] Success! MAPI data found in localStorage');
-                
-                try {
-                    // Validate that we can parse the JSON data
+            // Try to get the full mapi data from localStorage
+            try {
+                const mapiData = localStorage.getItem('mapi');
+                if (mapiData) {
                     const parsedData = JSON.parse(mapiData);
-                    if (parsedData) {
-                        console.log('[BSP Cart Script] MAPI data successfully parsed');
-                        console.log('[BSP Cart Script] MAPI data structure:', JSON.stringify(parsedData, null, 2).substring(0, 200) + '...');
-                        
-                        // Log the keys at the root level to help with debugging
-                        console.log('[BSP Cart Script] Root level keys:', Object.keys(parsedData));
-                        
-                        // Check if the data contains the expected structure
-                        // We're now more flexible about what constitutes valid data
-                        const hasRequestId = parsedData.requestId || 
-                                           (parsedData.requestData && parsedData.requestData.requestId) || 
-                                           (parsedData.requestData && parsedData.requestData.fullResponse && 
-                                            parsedData.requestData.fullResponse.data && 
-                                            parsedData.requestData.fullResponse.data.request_id);
-                                              
-                        if (hasRequestId) {
-                            console.log('[BSP Cart Script] MAPI data contains request ID');
-                            initializeMainScript(parsedData); // Pass the parsed data to avoid parsing twice
-                            return true; // Valid data found, stop checking
-                        } else {
-                            console.log('[BSP Cart Script] MAPI data found but missing request ID, continuing to poll...');
-                            return false; // Continue checking for complete data
-                        }
-                    }
-                } catch (error) {
-                    console.error('[BSP Cart Script] Error parsing MAPI data:', error);
-                    return false; // Continue checking if parsing fails
+                    console.log('[BSP Cart Script] MAPI data found in localStorage');
+                    initializeMainScript(parsedData, requestId);
+                } else {
+                    console.log('[BSP Cart Script] No MAPI data in localStorage, using event data only');
+                    // Create a minimal data object with just the requestId
+                    const minimalData = { requestId: requestId };
+                    initializeMainScript(minimalData, requestId);
                 }
+            } catch (error) {
+                console.error('[BSP Cart Script] Error processing MAPI data:', error);
+                // Create a minimal data object with just the requestId
+                const minimalData = { requestId: requestId };
+                initializeMainScript(minimalData, requestId);
             }
-            
-            // Check if we've reached the maximum number of checks
-            if (checkCount >= maxChecks) {
-                console.log('[BSP Cart Script] Maximum check count reached (30 seconds). Proceeding anyway.');
-                initializeMainScript(); // Initialize anyway after timeout
-                return true; // Max checks reached, stop checking
-            }
-            
-            // Continue checking
-            return false;
+        } else if (!requestId) {
+            console.log('[BSP Cart Script] Event received but no requestId found in event details');
         }
-        
-        // Initial check
-        if (checkLocalStorage()) {
-            return; // Data found and validated on first check
-        }
-        
-        // Set up interval for checking
-        const checkInterval = setInterval(() => {
-            if (checkLocalStorage()) {
-                clearInterval(checkInterval); // Stop checking if data found or max checks reached
+    });
+    
+    // Also check localStorage immediately in case the event has already fired
+    try {
+        const mapiData = localStorage.getItem('mapi');
+        if (mapiData && !scriptInitialized) {
+            const parsedData = JSON.parse(mapiData);
+            if (parsedData && (parsedData.requestId || 
+                (parsedData.requestData && parsedData.requestData.requestId) || 
+                (parsedData.requestData && parsedData.requestData.fullResponse && 
+                 parsedData.requestData.fullResponse.data && 
+                 parsedData.requestData.fullResponse.data.request_id))) {
+                
+                console.log('[BSP Cart Script] MAPI data already exists in localStorage with requestId');
+                scriptInitialized = true;
+                clearTimeout(fallbackTimeout);
+                initializeMainScript(parsedData);
             }
-        }, 1000); // Check once per second
+        }
+    } catch (error) {
+        console.error('[BSP Cart Script] Error checking initial localStorage:', error);
     }
     
-    // Main script function that will be called after localStorage check
-    function initializeMainScript(parsedMapiData = null) {
+    // Main script function that will be called after event or localStorage check
+    function initializeMainScript(parsedMapiData = null, eventRequestId = null) {
         console.log('[BSP Cart Script] Initializing main script');
         
         // Define the promo code to sales code mapping
@@ -326,6 +317,12 @@
     let clearlinkeventid = '';
     
     try {
+        // If we have an event requestId, use it as the primary source
+        if (eventRequestId) {
+            clearlinkeventid = eventRequestId;
+            console.log('[BSP Cart Script] Using requestId from event:', clearlinkeventid);
+        }
+        
         // Use the already parsed data if provided, otherwise get it from localStorage
         const parsedData = parsedMapiData || (() => {
             const mapiData = localStorage.getItem('mapi');
@@ -337,28 +334,30 @@
             console.log('[BSP Cart Script] MAPI data structure found');
             console.log('[BSP Cart Script] Root level keys:', Object.keys(parsedData));
             
-            // Extract request_id - check all possible locations
-            if (parsedData.requestId) {
-                clearlinkeventid = parsedData.requestId;
-                console.log('[BSP Cart Script] Extracted requestId (ACSID) from root level:', clearlinkeventid);
-            } else if (parsedData.requestData && parsedData.requestData.requestId) {
-                clearlinkeventid = parsedData.requestData.requestId;
-                console.log('[BSP Cart Script] Extracted requestId (ACSID) from requestData:', clearlinkeventid);
-            } else if (parsedData.requestData && 
-                      parsedData.requestData.fullResponse && 
-                      parsedData.requestData.fullResponse.data && 
-                      parsedData.requestData.fullResponse.data.request_id) {
-                clearlinkeventid = parsedData.requestData.fullResponse.data.request_id;
-                console.log('[BSP Cart Script] Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
-            } else {
-                console.log('[BSP Cart Script] Could not find request_id in any expected location');
-                // Log available paths to help debug
-                if (parsedData.requestData) {
-                    console.log('[BSP Cart Script] requestData keys:', Object.keys(parsedData.requestData));
-                    if (parsedData.requestData.fullResponse) {
-                        console.log('[BSP Cart Script] fullResponse keys:', Object.keys(parsedData.requestData.fullResponse));
-                        if (parsedData.requestData.fullResponse.data) {
-                            console.log('[BSP Cart Script] fullResponse.data keys:', Object.keys(parsedData.requestData.fullResponse.data));
+            // Extract request_id - check all possible locations if we don't already have it from the event
+            if (!clearlinkeventid) {
+                if (parsedData.requestId) {
+                    clearlinkeventid = parsedData.requestId;
+                    console.log('[BSP Cart Script] Extracted requestId (ACSID) from root level:', clearlinkeventid);
+                } else if (parsedData.requestData && parsedData.requestData.requestId) {
+                    clearlinkeventid = parsedData.requestData.requestId;
+                    console.log('[BSP Cart Script] Extracted requestId (ACSID) from requestData:', clearlinkeventid);
+                } else if (parsedData.requestData && 
+                          parsedData.requestData.fullResponse && 
+                          parsedData.requestData.fullResponse.data && 
+                          parsedData.requestData.fullResponse.data.request_id) {
+                    clearlinkeventid = parsedData.requestData.fullResponse.data.request_id;
+                    console.log('[BSP Cart Script] Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
+                } else {
+                    console.log('[BSP Cart Script] Could not find request_id in any expected location');
+                    // Log available paths to help debug
+                    if (parsedData.requestData) {
+                        console.log('[BSP Cart Script] requestData keys:', Object.keys(parsedData.requestData));
+                        if (parsedData.requestData.fullResponse) {
+                            console.log('[BSP Cart Script] fullResponse keys:', Object.keys(parsedData.requestData.fullResponse));
+                            if (parsedData.requestData.fullResponse.data) {
+                                console.log('[BSP Cart Script] fullResponse.data keys:', Object.keys(parsedData.requestData.fullResponse.data));
+                            }
                         }
                     }
                 }
@@ -578,7 +577,7 @@
     console.log('[BSP Cart Script] Main script execution completed');
 }
 
-// Start the process by checking localStorage first
-checkLocalStorageWithPolling();
+// Script initialization happens via the event listener
+// No need to call any function here as the event listener is already set up
 
 })();
