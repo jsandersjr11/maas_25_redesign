@@ -426,7 +426,7 @@
     }
 
     // Initial construction of the dynamic URL with ACSID parameter using the extracted request_id
-    let buyflowUrl = `http://brspdnextcaqa2.brightspeed.com/?affprog=clearlink&salescode=${salescode}&cookietime=30day${clearlinkeventid ? `&acsid=${clearlinkeventid}` : ''}`;
+    let buyflowUrl = `https://brspdnextcaqa2.brightspeed.com/?affprog=clearlink&salescode=${salescode}&cookietime=30day${clearlinkeventid ? `&acsid=${clearlinkeventid}` : ''}`;
     
     // Store initial values for comparison after page load
     const initialValues = {
@@ -530,7 +530,7 @@
         // If values changed, update the URL and button href
         if (valuesChanged) {
             console.log('Values changed after page load, updating button URL...');
-            buyflowUrl = `http://brspdnextcaqa2.brightspeed.com/?affprog=clearlink&salescode=${updatedValues.salescode}&cookietime=30day${updatedValues.clearlinkeventid ? `&acsid=${updatedValues.clearlinkeventid}` : ''}`;
+            buyflowUrl = `https://brspdnextcaqa2.brightspeed.com/?affprog=clearlink&salescode=${updatedValues.salescode}&cookietime=30day${updatedValues.clearlinkeventid ? `&acsid=${updatedValues.clearlinkeventid}` : ''}`;
             
             // Find the button and update its href
             const buttonLink = document.querySelector('.bsp-cart .leshen-link');
