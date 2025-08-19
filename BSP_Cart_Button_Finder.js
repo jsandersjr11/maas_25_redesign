@@ -474,7 +474,8 @@
      // Process all cart links on the entire page
      function processAllCartLinks(url) {
        console.log('[BSP Cart Button Finder] Searching for all cart links on the page');
-       const allCartLinks = document.querySelectorAll('a[href*="/cart"]');
+       // Updated selector to catch both href="/cart" exactly and href containing "/cart"
+       const allCartLinks = document.querySelectorAll('a[href="/cart"], a[href*="/cart"]');
        
        if (allCartLinks.length === 0) {
          console.log('[BSP Cart Button Finder] No cart links found on the page');
