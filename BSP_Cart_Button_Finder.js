@@ -471,9 +471,65 @@
        }
      }
 
+     // Process all cart links on the entire page
+     function processAllCartLinks(url) {
+       console.log('[BSP Cart Button Finder] Searching for all cart links on the page');
+       const allCartLinks = document.querySelectorAll('a[href*="/cart"]');
+       
+       if (allCartLinks.length === 0) {
+         console.log('[BSP Cart Button Finder] No cart links found on the page');
+         return;
+       }
+       
+       console.log(`[BSP Cart Button Finder] Found ${allCartLinks.length} cart links on the page`);
+       
+       allCartLinks.forEach((link, index) => {
+         try {
+           // Skip links that were already processed by processScopedLinks
+           if (link.dataset.bspUpdated === '1') {
+             console.log(`[BSP Cart Button Finder] Skipping already updated cart link #${index + 1}`);
+             return;
+           }
+           
+           link.href = url;
+           link.dataset.bspUpdated = '1';
+           console.log(`[BSP Cart Button Finder] Updated cart link #${index + 1}`);
+         } catch (e) {
+           console.error(`[BSP Cart Button Finder] Failed updating cart link #${index + 1}`, e);
+         }
+       });
+     }
+
      // Initial values snapshot and initial apply
      const initialValues = { salescode, clearlinkeventid };
      processScopedLinks(buyflowUrl);
+     processAllCartLinks(buyflowUrl);
+
+     // Re-check on load
+     window.addEventListener('load', function () {
+       console.log('[BSP Cart Button Finder] Page fully loaded, checking mapi values again...');
+       const updatedValues = extractMapiValues();
+       let valuesChanged = false;
+
+       if (updatedValues.salescode !== initialValues.salescode) {
+         console.log(`Sales code changed: ${initialValues.salescode} -> ${updatedValues.salescode}`);
+         valuesChanged = true;
+       }
+       if (updatedValues.clearlinkeventid !== initialValues.clearlinkeventid) {
+         console.log(`ACSID changed: ${initialValues.clearlinkeventid} -> ${updatedValues.clearlinkeventid}`);
+         valuesChanged = true;
+       }
+
+       if (valuesChanged) {
+         buyflowUrl = `https://brspdnextcaqa2.brightspeed.com/?affprog=clearlink&salescode=${updatedValues.salescode}&cookietime=30day${
+           updatedValues.clearlinkeventid ? `&acsid=${updatedValues.clearlinkeventid}` : ''
+         }`;
+         processScopedLinks(buyflowUrl);
+         processAllCartLinks(buyflowUrl);
+       } else {
+         console.log('[BSP Cart Button Finder] No changes to mapi values after page load');
+       }
+     });
 
      function extractMapiValues() {
        let extractedValues = {
@@ -536,31 +592,6 @@
 
        return extractedValues;
      }
-
-     // Re-check on load
-     window.addEventListener('load', function () {
-       console.log('[BSP Cart Button Finder] Page fully loaded, checking mapi values again...');
-       const updatedValues = extractMapiValues();
-       let valuesChanged = false;
-
-       if (updatedValues.salescode !== initialValues.salescode) {
-         console.log(`Sales code changed: ${initialValues.salescode} -> ${updatedValues.salescode}`);
-         valuesChanged = true;
-       }
-       if (updatedValues.clearlinkeventid !== initialValues.clearlinkeventid) {
-         console.log(`ACSID changed: ${initialValues.clearlinkeventid} -> ${updatedValues.clearlinkeventid}`);
-         valuesChanged = true;
-       }
-
-       if (valuesChanged) {
-         buyflowUrl = `https://brspdnextcaqa2.brightspeed.com/?affprog=clearlink&salescode=${updatedValues.salescode}&cookietime=30day${
-           updatedValues.clearlinkeventid ? `&acsid=${updatedValues.clearlinkeventid}` : ''
-         }`;
-         processScopedLinks(buyflowUrl);
-       } else {
-         console.log('[BSP Cart Button Finder] No changes to mapi values after page load');
-       }
-     });
 
      console.log('[BSP Cart Button Finder] Main script execution completed');
    }
