@@ -486,8 +486,13 @@
          // Add a unique ID to make it easier to find and re-inject if removed
          const buttonId = 'bsp-injected-button-' + Math.floor(Math.random() * 10000);
          
+         // Create a more resilient button that's harder to remove
          const newButtonHtml = `
-         <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0" href="${url}" data-bsp-injected="1" visibility="All devices">
+         <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0" href="${url}" data-bsp-injected="1" visibility="All devices" style="
+             display: block !important;
+             visibility: visible !important;
+             opacity: 1 !important;
+         ">
              <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button" style="
                  padding-top: 16px;
                  padding-bottom: 16px;
@@ -496,23 +501,60 @@
                  box-shadow: none;
                  margin-top: 24px;
                  position: relative;
-                 z-index: 1000;
+                 z-index: 9999 !important;
                  pointer-events: auto !important;
+                 display: block !important;
+                 visibility: visible !important;
+                 opacity: 1 !important;
              ">
                  <span class="button-text css-2qtueq e1hk20aw0" style="
                      font-weight: 500;
                      font-size: calc(0.5555555555555556vw + 17.333333333333332px);
                      line-height: calc(1.1111111111111112vw + 18.666666666666668px);
                      pointer-events: auto !important;
+                     display: inline !important;
+                     visibility: visible !important;
+                     opacity: 1 !important;
                  ">Check availability</span>
              </button>
          </a>`;
 
          try {
-           telAnchor.insertAdjacentHTML('afterend', newButtonHtml);
-           console.log('[BSP Cart Button Finder] Injected buyflow button after tel: link');
+           // Try multiple insertion methods to ensure the button gets added
+           try {
+             // Method 1: Standard insertion
+             telAnchor.insertAdjacentHTML('afterend', newButtonHtml);
+             console.log('[BSP Cart Button Finder] Injected buyflow button after tel: link');
+           } catch (innerError) {
+             console.warn('[BSP Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
+             
+             // Method 2: Create element and append
+             const tempDiv = document.createElement('div');
+             tempDiv.innerHTML = newButtonHtml;
+             const buttonElement = tempDiv.firstElementChild;
+             telAnchor.parentNode.insertBefore(buttonElement, telAnchor.nextSibling);
+             console.log('[BSP Cart Button Finder] Injected buyflow button using alternative method');
+           }
+           
+           // Add protection against DOM manipulation
+           protectInjectedElements();
          } catch (e) {
-           console.error('[BSP Cart Button Finder] Failed injecting button near tel: link', e);
+           console.error('[BSP Cart Button Finder] All insertion methods failed', e);
+           
+           // Last resort: Try to insert at the end of the section
+           try {
+             const parentSection = content.closest('section');
+             if (parentSection) {
+               const tempDiv = document.createElement('div');
+               tempDiv.innerHTML = newButtonHtml;
+               const buttonElement = tempDiv.firstElementChild;
+               parentSection.appendChild(buttonElement);
+               console.log('[BSP Cart Button Finder] Injected buyflow button at end of section as last resort');
+               protectInjectedElements();
+             }
+           } catch (lastError) {
+             console.error('[BSP Cart Button Finder] Even last resort insertion failed', lastError);
+           }
          }
          return;
        }
@@ -573,9 +615,19 @@
      
      // Schedule multiple re-injections at increasing intervals
      function scheduleReinjection(url) {
-       const delays = [500, 1000, 2000, 3000, 5000];
+       // Initial delays for quick checks
+       const initialDelays = [500, 1000, 2000, 3000, 5000];
        
-       delays.forEach(delay => {
+       // Add longer-term periodic checks
+       const longTermDelays = [];
+       for (let i = 10; i <= 60; i += 10) {
+         longTermDelays.push(i * 1000); // 10s, 20s, 30s, etc. up to 60s
+       }
+       
+       const allDelays = [...initialDelays, ...longTermDelays];
+       
+       // Schedule all the checks
+       allDelays.forEach(delay => {
          setTimeout(() => {
            console.log(`[BSP Cart Button Finder] Scheduled re-injection check after ${delay}ms`);
            const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
@@ -587,6 +639,62 @@
              processAllCartLinks(url);
            }
          }, delay);
+       });
+       
+       // Also set up a continuous check that runs every 5 seconds for 10 minutes
+       let checkCount = 0;
+       const maxChecks = 120; // 10 minutes (120 * 5s = 600s = 10min)
+       
+       const intervalId = setInterval(() => {
+         if (checkCount >= maxChecks) {
+           clearInterval(intervalId);
+           console.log('[BSP Cart Button Finder] Ending continuous checks after 5 minutes');
+           return;
+         }
+         
+         checkCount++;
+         const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
+         const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+         
+         if (injectedElements.length === 0 || updatedElements.length === 0) {
+           console.log('[BSP Cart Button Finder] Continuous check: Missing elements detected, re-applying');
+           processScopedLinks(url);
+           processAllCartLinks(url);
+         }
+       }, 5000); // Check every 5 seconds
+     }
+     
+     // Function to protect injected elements from removal
+     function protectInjectedElements() {
+       const injectedElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+       
+       injectedElements.forEach(element => {
+         // Make it harder to remove the element
+         const originalRemove = element.remove;
+         element.remove = function() {
+           console.log('[BSP Cart Button Finder] Prevented removal of injected element');
+           return false;
+         };
+         
+         // Prevent style changes that would hide the element
+         const originalSetAttribute = element.setAttribute;
+         element.setAttribute = function(name, value) {
+           if (name === 'style' && (value.includes('display: none') || value.includes('visibility: hidden') || value.includes('opacity: 0'))) {
+             console.log('[BSP Cart Button Finder] Prevented style attribute change that would hide element');
+             return false;
+           }
+           return originalSetAttribute.call(this, name, value);
+         };
+         
+         // Prevent class changes that might hide the element
+         const originalClassListAdd = element.classList.add;
+         element.classList.add = function(className) {
+           if (className.includes('hidden') || className.includes('invisible') || className.includes('removed')) {
+             console.log('[BSP Cart Button Finder] Prevented adding class that might hide element:', className);
+             return false;
+           }
+           return originalClassListAdd.call(this, className);
+         };
        });
      }
      
