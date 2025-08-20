@@ -1,0 +1,7 @@
+notes 
+
+
+document.addEventListener("mapiRequestIdReady", (e) => {
+  const requestId = e?.detail?.requestId
+  console.log("Request ID:", requestId)
+})
