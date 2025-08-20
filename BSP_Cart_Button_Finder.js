@@ -70,7 +70,7 @@
 
      // Define the promo code to sales code mapping (updated from CSV data)
      const promoToSalesCodeMap = {
-      "162677": "20001142",
+      "162677": "20001141",
       "162668": "20001141",
       "169046": "20001137",
       "169047": "20001139",
