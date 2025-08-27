@@ -609,8 +609,21 @@
 
      // Initial values snapshot and initial apply
      const initialValues = { salescode, clearlinkeventid };
+  
+     // Add a global verification flag to track successful URL modifications
+     window.bspCartButtonFinderSuccess = false;
+  
      processScopedLinks(buyflowUrl);
      processAllCartLinks(buyflowUrl);
+  
+     // Check if initial application was successful
+     const initialInjectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
+     const initialUpdatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+  
+     if (initialInjectedElements.length > 0 || initialUpdatedElements.length > 0) {
+       console.log('[BSP Cart Button Finder] Initial URL modifications successful');
+       window.bspCartButtonFinderSuccess = true;
+     }
      
      // Set up a MutationObserver to detect when our buttons might be removed
      setupMutationObserver(buyflowUrl);
@@ -636,15 +649,34 @@
        allDelays.forEach(delay => {
          setTimeout(() => {
            console.log(`[BSP Cart Button Finder] Scheduled re-injection check after ${delay}ms`);
-           const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
-           const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
-           
-           if (injectedElements.length === 0 || updatedElements.length === 0) {
-             console.log('[BSP Cart Button Finder] Scheduled re-injection: Missing elements detected, re-applying');
-             processScopedLinks(url);
-             processAllCartLinks(url);
-           }
-         }, delay);
+          
+          // If we've already verified success and elements are still present, don't reapply
+          if (window.bspCartButtonFinderSuccess) {
+            const currentElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+            if (currentElements.length > 0) {
+              console.log('[BSP Cart Button Finder] URL modifications already verified successful, skipping re-injection');
+              return;
+            }
+          }
+          
+          const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
+          const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+          
+          if (injectedElements.length === 0 || updatedElements.length === 0) {
+            console.log('[BSP Cart Button Finder] Scheduled re-injection: Missing elements detected, re-applying');
+            processScopedLinks(url);
+            processAllCartLinks(url);
+            
+            // Check if this re-injection was successful
+            setTimeout(() => {
+              const newElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+              if (newElements.length > 0) {
+                console.log('[BSP Cart Button Finder] Re-injection successful, marking as verified');
+                window.bspCartButtonFinderSuccess = true;
+              }
+            }, 100);
+          }
+        }, delay);
        });
        
        // Also set up a continuous check that runs every 5 seconds for 10 minutes
@@ -652,21 +684,41 @@
        const maxChecks = 120; // 10 minutes (120 * 5s = 600s = 10min)
        
        const intervalId = setInterval(() => {
-         if (checkCount >= maxChecks) {
-           clearInterval(intervalId);
-           console.log('[BSP Cart Button Finder] Ending continuous checks after 5 minutes');
-           return;
-         }
-         
-         checkCount++;
-         const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
-         const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
-         
-         if (injectedElements.length === 0 || updatedElements.length === 0) {
-           console.log('[BSP Cart Button Finder] Continuous check: Missing elements detected, re-applying');
-           processScopedLinks(url);
-           processAllCartLinks(url);
-         }
+        if (checkCount >= maxChecks) {
+          clearInterval(intervalId);
+          console.log('[BSP Cart Button Finder] Ending continuous checks after 5 minutes');
+          return;
+        }
+        
+        checkCount++;
+        
+        // If we've already verified success and elements are still present, don't reapply
+        if (window.bspCartButtonFinderSuccess) {
+          const currentElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+          if (currentElements.length > 0) {
+            console.log('[BSP Cart Button Finder] Continuous check: URL modifications already verified successful, skipping');
+            return;
+          }
+        }
+        
+        const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
+        const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+        
+        if (injectedElements.length === 0 || updatedElements.length === 0) {
+          console.log('[BSP Cart Button Finder] Continuous check: Missing elements detected, re-applying');
+          processScopedLinks(url);
+          processAllCartLinks(url);
+          
+          // Check if this re-injection was successful
+          setTimeout(() => {
+            const newElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+            if (newElements.length > 0) {
+              console.log('[BSP Cart Button Finder] Continuous check re-injection successful, marking as verified');
+              window.bspCartButtonFinderSuccess = true;
+            }
+          }, 100);
+        }
+        
        }, 5000); // Check every 5 seconds
      }
      
@@ -738,24 +790,37 @@
            }
          });
          
-         // If our elements were removed, reapply them
+         // If our elements were removed, reapply them only if not already verified successful
          if (needToReapply) {
-           console.log('[BSP Cart Button Finder] Re-applying button modifications after detected removal');
-           setTimeout(() => {
-             processScopedLinks(url);
-             processAllCartLinks(url);
-           }, 100); // Small delay to ensure DOM is settled
+           // Check if we've already verified success
+           if (window.bspCartButtonFinderSuccess) {
+             console.log('[BSP Cart Button Finder] Elements removed but URL modifications already verified successful, skipping re-application');
+           } else {
+             console.log('[BSP Cart Button Finder] Re-applying button modifications after detected removal');
+             setTimeout(() => {
+               processScopedLinks(url);
+               processAllCartLinks(url);
+               
+               // Check if this re-injection was successful
+               setTimeout(() => {
+                 const newElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+                 if (newElements.length > 0) {
+                   console.log('[BSP Cart Button Finder] MutationObserver re-injection successful, marking as verified');
+                   window.bspCartButtonFinderSuccess = true;
+                 }
+               }, 100);
+             }, 100); // Small delay to ensure DOM is settled
+           }
          }
-       });
-       
-       // Start observing the document with the configured parameters
-       observer.observe(document.body, {
-         childList: true,
-         subtree: true
        });
        
        // Also set up a periodic check as a fallback
        setInterval(() => {
+         // If we've already verified success, skip the check
+         if (window.bspCartButtonFinderSuccess) {
+           return;
+         }
+        
          const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
          const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
          
@@ -764,6 +829,15 @@
            console.log('[BSP Cart Button Finder] Periodic check: No injected/updated elements found, re-applying');
            processScopedLinks(url);
            processAllCartLinks(url);
+           
+           // Check if this re-injection was successful
+           setTimeout(() => {
+             const newElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+             if (newElements.length > 0) {
+               console.log('[BSP Cart Button Finder] Periodic check re-injection successful, marking as verified');
+               window.bspCartButtonFinderSuccess = true;
+             }
+           }, 100);
          }
        }, 2000); // Check every 2 seconds
      }
@@ -771,6 +845,13 @@
      // Re-check on load
      window.addEventListener('load', function () {
        console.log('[BSP Cart Button Finder] Page fully loaded, checking mapi values again...');
+       
+       // If we've already verified success, skip the update
+       if (window.bspCartButtonFinderSuccess) {
+         console.log('[BSP Cart Button Finder] URL modifications already verified successful, skipping load-time update');
+         return;
+       }
+       
        const updatedValues = extractMapiValues();
        let valuesChanged = false;
 
@@ -790,6 +871,15 @@
          }`;
          processScopedLinks(buyflowUrl);
          processAllCartLinks(buyflowUrl);
+         
+         // Check if this update was successful
+         setTimeout(() => {
+           const newElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+           if (newElements.length > 0) {
+             console.log('[BSP Cart Button Finder] Load-time update successful, marking as verified');
+             window.bspCartButtonFinderSuccess = true;
+           }
+         }, 100);
        } else {
          console.log('[BSP Cart Button Finder] No changes to mapi values after page load');
        }
