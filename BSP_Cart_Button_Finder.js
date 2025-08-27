@@ -500,8 +500,8 @@
              opacity: 1 !important;
          ">
              <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button" style="
-                 padding-top: 16px;
-                 padding-bottom: 16px;
+                 padding-top: 0.75rem;
+                 padding-bottom: 0.75rem;
                  padding-left: 2.75rem;
                  padding-right: 48px;
                  box-shadow: none;
