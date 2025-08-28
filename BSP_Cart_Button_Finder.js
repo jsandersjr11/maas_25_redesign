@@ -494,7 +494,7 @@
          
          // Create a more resilient button that's harder to remove
          const newButtonHtml = `
-         <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0" href="${url}" data-bsp-injected="1" visibility="All devices" style="
+         <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0 bsp-cart-link" href="${url}" data-bsp-injected="1" visibility="All devices" style="
              display: block !important;
              visibility: visible !important;
              opacity: 1 !important;
