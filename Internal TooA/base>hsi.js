@@ -14,7 +14,7 @@ const domainClassMap = {
     'centurylink': 'css-1s55t5c',
     'highspeed.centurylink': 'css-1s55t5c',
     'centurylinkquote': 'css-1xm84z4', //done
-    'getcenturylink': 'css-1rirpjz',
+    'getcenturylink': 'css-16rqpqn', //done
     'attsavings': 'css-1h8a45c',
     'attexperts': 'css-1cr3433',
     'frontierbundles': 'css-hnohsy',
