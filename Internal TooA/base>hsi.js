@@ -6,13 +6,14 @@
  * This script replaces the HSI button div with an anchor link
  * and pulls the zip code from localStorage to insert in the href.
  * The script detects the current domain and applies the appropriate CSS class.
+ * Uses MutationObserver to handle React re-renders.
  */
 // Domain-based CSS class lookup table
 const domainClassMap = {
-    'getquantumfiber': 'css-1vehp0y',
+    'getquantumfiber': 'css-1vehp0y', //done
     'centurylink': 'css-1s55t5c',
     'highspeed.centurylink': 'css-1s55t5c',
-    'centurylinkquote': 'css-1s55t5c',
+    'centurylinkquote': 'css-1xm84z4', //done
     'getcenturylink': 'css-1rirpjz',
     'attsavings': 'css-1h8a45c',
     'attexperts': 'css-1cr3433',
@@ -56,11 +57,8 @@ try {
     console.error('Error retrieving zip code from localStorage:', error);
 }
 
-// Find all HSI button divs with the gft-hsi-button class
-const hsiButtons = document.querySelectorAll('.gft-hsi-button');
-
 // HTML template for the replacement button
-const buttonTemplate = `
+const getButtonTemplate = (zipCode) => `
         <a class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0" 
            href="https://www.highspeedinternet.com/in-your-area?zip=${zipCode}&kbid=172539" 
            target="_blank" 
@@ -75,12 +73,72 @@ const buttonTemplate = `
         </a>
     `;
 
-// Replace each button div with the template
-hsiButtons.forEach(function (button) {
-    // Create a temporary container for the HTML
-    const temp = document.createElement('div');
-    temp.innerHTML = buttonTemplate.trim();
+// Function to replace HSI buttons
+function replaceHsiButtons() {
+    // Find all HSI button divs with the gft-hsi-button class
+    const hsiButtons = document.querySelectorAll('.gft-hsi-button:not(.processed)');
+    
+    if (hsiButtons.length > 0) {
+        console.log(`Found ${hsiButtons.length} HSI buttons to replace`);
+        
+        // Replace each button div with the template
+        hsiButtons.forEach(function (button) {
+            // Create a temporary container for the HTML
+            const temp = document.createElement('div');
+            temp.innerHTML = getButtonTemplate(zipCode).trim();
+            
+            // Mark the original button as processed to avoid duplicate processing
+            button.classList.add('processed');
+            
+            // Replace the button with the new content
+            button.parentNode.replaceChild(temp.firstChild, button);
+        });
+    }
+}
 
-    // Replace the button with the new content
-    button.parentNode.replaceChild(temp.firstChild, button);
+// Initial replacement
+replaceHsiButtons();
+
+// Set up MutationObserver to detect when React re-renders the page
+const observer = new MutationObserver((mutations) => {
+    let shouldReplace = false;
+    
+    // Check if any mutations added nodes that might contain our target elements
+    mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length > 0) {
+            for (let i = 0; i < mutation.addedNodes.length; i++) {
+                const node = mutation.addedNodes[i];
+                if (node.nodeType === 1 && (node.classList?.contains('gft-hsi-button') || 
+                    node.querySelector?.('.gft-hsi-button'))) {
+                    shouldReplace = true;
+                    break;
+                }
+            }
+        }
+    });
+    
+    if (shouldReplace) {
+        // Small delay to ensure React has finished rendering
+        setTimeout(replaceHsiButtons, 50);
+    }
 });
+
+// Start observing the document with the configured parameters
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// Also set up a periodic check for React-based pages that might load content asynchronously
+const intervalId = setInterval(() => {
+    const hsiButtons = document.querySelectorAll('.gft-hsi-button:not(.processed)');
+    if (hsiButtons.length > 0) {
+        replaceHsiButtons();
+    }
+}, 1000);
+
+// Clear interval after 30 seconds to avoid unnecessary processing
+setTimeout(() => {
+    clearInterval(intervalId);
+    console.log('HSI button replacement interval cleared');
+}, 30000);
