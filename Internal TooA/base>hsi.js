@@ -61,12 +61,12 @@ const hsiButtons = document.querySelectorAll('.gft-hsi-button');
 
 // HTML template for the replacement button
 const buttonTemplate = `
-        <a class="leshen-link leshen-link-button-wrapper ${buttonClass} e9y95tf0" 
+        <a class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0" 
            href="https://www.highspeedinternet.com/in-your-area?zip=${zipCode}&kbid=172539" 
            target="_blank" 
            rel="noopener noreferrer" 
            visibility="All devices">
-            <button class="leshen-link-button convert-link-button css-hnohsy ex50p320" 
+            <button class="leshen-link-button convert-link-button ${buttonClass} ex50p320" 
                     color="primary" 
                     tabindex="0" 
                     type="button">
