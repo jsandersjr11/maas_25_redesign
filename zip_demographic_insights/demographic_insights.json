@@ -1,0 +1,330 @@
+[
+  {
+    "zip": "75751",
+    "tier": "L1",
+    "state": "TX",
+    "serviceability": "53%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_75751.png"
+  },
+  {
+    "zip": "76522",
+    "tier": "L1",
+    "state": "TX",
+    "serviceability": "44%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_76522.png"
+  },
+  {
+    "zip": "8844",
+    "tier": "L1",
+    "state": "NJ",
+    "serviceability": "29%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_8844.png"
+  },
+  {
+    "zip": "76559",
+    "tier": "L1",
+    "state": "TX",
+    "serviceability": "68%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_76559.png"
+  },
+  {
+    "zip": "63366",
+    "tier": "L1",
+    "state": "MO",
+    "serviceability": "13%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_63366.png"
+  },
+  {
+    "zip": "38654",
+    "tier": "L1",
+    "state": "MS",
+    "serviceability": "10%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_38654.png"
+  },
+  {
+    "zip": "63376",
+    "tier": "L1",
+    "state": "MO",
+    "serviceability": "10%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_63376.png"
+  },
+  {
+    "zip": "7871",
+    "tier": "L1",
+    "state": "NJ",
+    "serviceability": "45%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_7871.png"
+  },
+  {
+    "zip": "76401",
+    "tier": "L3",
+    "state": "TX",
+    "serviceability": "36%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_76401.png"
+  },
+  {
+    "zip": "36323",
+    "tier": "M1",
+    "state": "AL",
+    "serviceability": "38%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_36323.png"
+  },
+  {
+    "zip": "8825",
+    "tier": "M1",
+    "state": "NJ",
+    "serviceability": "21%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_8825.png"
+  },
+  {
+    "zip": "36567",
+    "tier": "M1",
+    "state": "AL",
+    "serviceability": "37%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_36567.png"
+  },
+  {
+    "zip": "36576",
+    "tier": "M1",
+    "state": "AL",
+    "serviceability": "11%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_36576.png"
+  },
+  {
+    "zip": "71378",
+    "tier": "M1",
+    "state": "LA",
+    "serviceability": "48%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_71378.png"
+  },
+  {
+    "zip": "36420",
+    "tier": "M2",
+    "state": "AL",
+    "serviceability": "48%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_36420.png"
+  },
+  {
+    "zip": "36421",
+    "tier": "M2",
+    "state": "AL",
+    "serviceability": "15%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_36421.png"
+  },
+  {
+    "zip": "36340",
+    "tier": "M2",
+    "state": "AL",
+    "serviceability": "69%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_36340.png"
+  },
+  {
+    "zip": "78634",
+    "tier": "M2",
+    "state": "TX",
+    "serviceability": "12%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_78634.png"
+  },
+  {
+    "zip": "36467",
+    "tier": "M2",
+    "state": "AL",
+    "serviceability": "45%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_36467.png"
+  },
+  {
+    "zip": "63461",
+    "tier": "M2",
+    "state": "MO",
+    "serviceability": "56%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_63461.png"
+  },
+  {
+    "zip": "65775",
+    "tier": "M2",
+    "state": "MO",
+    "serviceability": "36%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_65775.png"
+  },
+  {
+    "zip": "65360",
+    "tier": "M2",
+    "state": "MO",
+    "serviceability": "43%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_65360.png"
+  },
+  {
+    "zip": "63435",
+    "tier": "M3",
+    "state": "MO",
+    "serviceability": "47%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_63435.png"
+  },
+  {
+    "zip": "35054",
+    "tier": "M3",
+    "state": "AL",
+    "serviceability": "57%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_35054.png"
+  },
+  {
+    "zip": "72834",
+    "tier": "M3",
+    "state": "AR",
+    "serviceability": "38%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_72834.png"
+  },
+  {
+    "zip": "72046",
+    "tier": "M3",
+    "state": "AR",
+    "serviceability": "54%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_72046.png"
+  },
+  {
+    "zip": "64644",
+    "tier": "M3",
+    "state": "MO",
+    "serviceability": "38%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_64644.png"
+  },
+  {
+    "zip": "72366",
+    "tier": "M3",
+    "state": "AR",
+    "serviceability": "62%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_72366.png"
+  },
+  {
+    "zip": "65712",
+    "tier": "M3",
+    "state": "MO",
+    "serviceability": "35%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_65712.png"
+  },
+  {
+    "zip": "65711",
+    "tier": "M3",
+    "state": "MO",
+    "serviceability": "42%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_65711.png"
+  },
+  {
+    "zip": "71465",
+    "tier": "M3",
+    "state": "LA",
+    "serviceability": "50%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_71465.png"
+  },
+  {
+    "zip": "72855",
+    "tier": "M3",
+    "state": "AR",
+    "serviceability": "36%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_72855.png"
+  },
+  {
+    "zip": "35125",
+    "tier": "M3",
+    "state": "AL",
+    "serviceability": "37%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_35125.png"
+  },
+  {
+    "zip": "35128",
+    "tier": "M3",
+    "state": "AL",
+    "serviceability": "39%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_35128.png"
+  },
+  {
+    "zip": "72454",
+    "tier": "M3",
+    "state": "AR",
+    "serviceability": "65%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_72454.png"
+  },
+  {
+    "zip": "72461",
+    "tier": "M3",
+    "state": "AR",
+    "serviceability": "50%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_72461.png"
+  },
+  {
+    "zip": "35135",
+    "tier": "M3",
+    "state": "AL",
+    "serviceability": "13%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_35135.png"
+  },
+  {
+    "zip": "71075",
+    "tier": "M3",
+    "state": "LA",
+    "serviceability": "67%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_71075.png"
+  },
+  {
+    "zip": "35178",
+    "tier": "M3",
+    "state": "AL",
+    "serviceability": "10%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_35178.png"
+  },
+  {
+    "zip": "72958",
+    "tier": "M3",
+    "state": "AR",
+    "serviceability": "38%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_72958.png"
+  },
+  {
+    "zip": "70591",
+    "tier": "M3",
+    "state": "LA",
+    "serviceability": "61%",
+    "demographics": {},
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_demographic_insights/demographic_70591.png"
+  }
+]

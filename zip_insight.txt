@@ -1,0 +1,46 @@
+Take the following data and ping each zip code by replacing it in the following url: https://m.clear.link/zip_code/84005
+Zip Code	Tiers	State	Serviceability
+75751	L1	TX	53%
+76522	L1	TX	44%
+8844	L1	NJ	29%
+76559	L1	TX	68%
+63366	L1	MO	13%
+38654	L1	MS	10%
+63376	L1	MO	10%
+7871	L1	NJ	45%
+76401	L3	TX	36%
+36323	M1	AL	38%
+8825	M1	NJ	21%
+36567	M1	AL	37%
+36576	M1	AL	11%
+71378	M1	LA	48%
+36420	M2	AL	48%
+36421	M2	AL	15%
+36340	M2	AL	69%
+78634	M2	TX	12%
+36467	M2	AL	45%
+63461	M2	MO	56%
+65775	M2	MO	36%
+65360	M2	MO	43%
+63435	M3	MO	47%
+35054	M3	AL	57%
+72834	M3	AR	38%
+72046	M3	AR	54%
+64644	M3	MO	38%
+72366	M3	AR	62%
+65712	M3	MO	35%
+65711	M3	MO	42%
+71465	M3	LA	50%
+72855	M3	AR	36%
+35125	M3	AL	37%
+35128	M3	AL	39%
+72454	M3	AR	65%
+72461	M3	AR	50%
+35135	M3	AL	13%
+71075	M3	LA	67%
+35178	M3	AL	10%
+72958	M3	AR	38%
+70591	M3	LA	61%
+After reviewing the data you get back from the https://m.clear.link/zip_code/[zip_code] create a detailed report on how we should be optimizing our PPC landing pages on brightspeedplans.com
+go.brightspeed.com
+brightspeedplans.com/business

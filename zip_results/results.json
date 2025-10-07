@@ -1,0 +1,605 @@
+[
+  {
+    "zip": "75751",
+    "tier": "L1",
+    "state": "TX",
+    "originalServiceability": "53%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":63679,\"zip_code\":\"75751\",\"city\":\"ATHENS\",\"state\":\"TX\",\"county\":\"HENDERSON\",\"area_code\":\"903\\/430\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"ATHENS\",\"latitude\":\"32.148030\",\"longitude\":\"-95.884116\",\"time_zone\":\"6\",\"elevation\":437,\"county_fips\":\"213\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W22809\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"48\",\"city_state_key\":\"W22809\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_ca",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_75751.png"
+  },
+  {
+    "zip": "76522",
+    "tier": "L1",
+    "state": "TX",
+    "originalServiceability": "44%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":64537,\"zip_code\":\"76522\",\"city\":\"COPPERAS COVE\",\"state\":\"TX\",\"county\":\"CORYELL\",\"area_code\":\"254\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"COPPERAS COVE\",\"latitude\":\"31.263364\",\"longitude\":\"-98.087825\",\"time_zone\":\"6\",\"elevation\":1136,\"county_fips\":\"99\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W23334\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"48\",\"city_state_key\":\"W23334\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_m",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_76522.png"
+  },
+  {
+    "zip": "8844",
+    "tier": "L1",
+    "state": "NJ",
+    "originalServiceability": "29%",
+    "textContent": "{\"error\":{\"code\":\"GEN-NOTFOUND\",\"http_code\":404,\"message\":\"Zip code not found\"}}",
+    "extractedData": {
+      "serviceAvailable": false
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_8844.png"
+  },
+  {
+    "zip": "76559",
+    "tier": "L1",
+    "state": "TX",
+    "originalServiceability": "68%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":64610,\"zip_code\":\"76559\",\"city\":\"NOLANVILLE\",\"state\":\"TX\",\"county\":\"BELL\",\"area_code\":\"254\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"NOLANVILLE\",\"latitude\":\"31.085302\",\"longitude\":\"-97.608651\",\"time_zone\":\"6\",\"elevation\":713,\"county_fips\":\"27\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W24914\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"48\",\"city_state_key\":\"W24914\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_76559.png"
+  },
+  {
+    "zip": "63366",
+    "tier": "L1",
+    "state": "MO",
+    "originalServiceability": "13%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":55336,\"zip_code\":\"63366\",\"city\":\"O FALLON\",\"state\":\"MO\",\"county\":\"SAINT CHARLES\",\"area_code\":\"636\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"COTTLEVILLE\",\"latitude\":\"38.853499\",\"longitude\":\"-90.702670\",\"time_zone\":\"6\",\"elevation\":437,\"county_fips\":\"183\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W17417\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"29\",\"city_state_key\":\"W16251\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mi",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63366.png"
+  },
+  {
+    "zip": "38654",
+    "tier": "L1",
+    "state": "MS",
+    "originalServiceability": "10%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":34631,\"zip_code\":\"38654\",\"city\":\"OLIVE BRANCH\",\"state\":\"MS\",\"county\":\"DESOTO\",\"area_code\":\"662\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"OLIVE BRANCH\",\"latitude\":\"34.911047\",\"longitude\":\"-89.812740\",\"time_zone\":\"6\",\"elevation\":369,\"county_fips\":\"33\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y14149\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"28\",\"city_state_key\":\"Y14149\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_38654.png"
+  },
+  {
+    "zip": "63376",
+    "tier": "L1",
+    "state": "MO",
+    "originalServiceability": "10%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":55364,\"zip_code\":\"63376\",\"city\":\"SAINT PETERS\",\"state\":\"MO\",\"county\":\"SAINT CHARLES\",\"area_code\":\"636\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"COTTLEVILLE\",\"latitude\":\"38.795082\",\"longitude\":\"-90.626787\",\"time_zone\":\"6\",\"elevation\":490,\"county_fips\":\"183\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W17848\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"29\",\"city_state_key\":\"W16251\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"cit",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63376.png"
+  },
+  {
+    "zip": "7871",
+    "tier": "L1",
+    "state": "NJ",
+    "originalServiceability": "45%",
+    "textContent": "{\"error\":{\"code\":\"GEN-NOTFOUND\",\"http_code\":404,\"message\":\"Zip code not found\"}}",
+    "extractedData": {
+      "serviceAvailable": false
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_7871.png"
+  },
+  {
+    "zip": "76401",
+    "tier": "L3",
+    "state": "TX",
+    "originalServiceability": "36%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":64446,\"zip_code\":\"76401\",\"city\":\"STEPHENVILLE\",\"state\":\"TX\",\"county\":\"ERATH\",\"area_code\":\"254\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"STEPHENVILLE\",\"latitude\":\"32.232048\",\"longitude\":\"-98.213330\",\"time_zone\":\"6\",\"elevation\":1291,\"county_fips\":\"143\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W25873\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"48\",\"city_state_key\":\"W25873\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixe",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_76401.png"
+  },
+  {
+    "zip": "36323",
+    "tier": "M1",
+    "state": "AL",
+    "originalServiceability": "38%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32928,\"zip_code\":\"36323\",\"city\":\"ELBA\",\"state\":\"AL\",\"county\":\"COFFEE\",\"area_code\":\"334\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"ELBA\",\"latitude\":\"31.419842\",\"longitude\":\"-86.089185\",\"time_zone\":\"6\",\"elevation\":229,\"county_fips\":\"31\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10376\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"1\",\"city_state_key\":\"Y10376\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Elba\",\"ci",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36323.png"
+  },
+  {
+    "zip": "8825",
+    "tier": "M1",
+    "state": "NJ",
+    "originalServiceability": "21%",
+    "textContent": "{\"error\":{\"code\":\"GEN-NOTFOUND\",\"http_code\":404,\"message\":\"Zip code not found\"}}",
+    "extractedData": {
+      "serviceAvailable": false
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_8825.png"
+  },
+  {
+    "zip": "36567",
+    "tier": "M1",
+    "state": "AL",
+    "originalServiceability": "37%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":33120,\"zip_code\":\"36567\",\"city\":\"ROBERTSDALE\",\"state\":\"AL\",\"county\":\"BALDWIN\",\"area_code\":\"251\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"BELL FOUNTAIN\",\"latitude\":\"30.614865\",\"longitude\":\"-87.564862\",\"time_zone\":\"6\",\"elevation\":30,\"county_fips\":\"3\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y11023\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"1\",\"city_state_key\":\"Y10094\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_c",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36567.png"
+  },
+  {
+    "zip": "36576",
+    "tier": "M1",
+    "state": "AL",
+    "originalServiceability": "11%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":33133,\"zip_code\":\"36576\",\"city\":\"SILVERHILL\",\"state\":\"AL\",\"county\":\"BALDWIN\",\"area_code\":\"251\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"SILVERHILL\",\"latitude\":\"30.519944\",\"longitude\":\"-87.763628\",\"time_zone\":\"6\",\"elevation\":119,\"county_fips\":\"3\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y11095\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"1\",\"city_state_key\":\"Y11095\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36576.png"
+  },
+  {
+    "zip": "71378",
+    "tier": "M1",
+    "state": "LA",
+    "originalServiceability": "48%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":60327,\"zip_code\":\"71378\",\"city\":\"WISNER\",\"state\":\"LA\",\"county\":\"FRANKLIN\",\"area_code\":\"318\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"ELAM\",\"latitude\":\"31.956639\",\"longitude\":\"-91.715554\",\"time_zone\":\"6\",\"elevation\":64,\"county_fips\":\"41\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y24678\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"22\",\"city_state_key\":\"Y23666\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_case\":\"Wisne",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_71378.png"
+  },
+  {
+    "zip": "36420",
+    "tier": "M2",
+    "state": "AL",
+    "originalServiceability": "48%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32964,\"zip_code\":\"36420\",\"city\":\"ANDALUSIA\",\"state\":\"AL\",\"county\":\"COVINGTON\",\"area_code\":\"334\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"ANDALUSIA\",\"latitude\":\"31.223546\",\"longitude\":\"-86.601949\",\"time_zone\":\"6\",\"elevation\":155,\"county_fips\":\"39\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10038\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"1\",\"city_state_key\":\"Y10038\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_cas",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36420.png"
+  },
+  {
+    "zip": "36421",
+    "tier": "M2",
+    "state": "AL",
+    "originalServiceability": "15%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32974,\"zip_code\":\"36421\",\"city\":\"ANDALUSIA\",\"state\":\"AL\",\"county\":\"COVINGTON\",\"area_code\":\"334\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"ANDALUSIA\",\"latitude\":\"31.335360\",\"longitude\":\"-86.408769\",\"time_zone\":\"6\",\"elevation\":287,\"county_fips\":\"39\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10038\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"1\",\"city_state_key\":\"Y10038\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_cas",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36421.png"
+  },
+  {
+    "zip": "36340",
+    "tier": "M2",
+    "state": "AL",
+    "originalServiceability": "69%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32933,\"zip_code\":\"36340\",\"city\":\"GENEVA\",\"state\":\"AL\",\"county\":\"GENEVA\",\"area_code\":\"334\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"EUNOLA\",\"latitude\":\"31.076365\",\"longitude\":\"-85.907536\",\"time_zone\":\"6\",\"elevation\":146,\"county_fips\":\"61\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10500\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"1\",\"city_state_key\":\"Y10402\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_case\":\"Genev",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36340.png"
+  },
+  {
+    "zip": "78634",
+    "tier": "M2",
+    "state": "TX",
+    "originalServiceability": "12%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":66601,\"zip_code\":\"78634\",\"city\":\"HUTTO\",\"state\":\"TX\",\"county\":\"WILLIAMSON\",\"area_code\":\"512\\/737\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"HUTTO\",\"latitude\":\"30.555076\",\"longitude\":\"-97.551952\",\"time_zone\":\"6\",\"elevation\":699,\"county_fips\":\"491\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W24157\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"48\",\"city_state_key\":\"W24157\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_cas",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_78634.png"
+  },
+  {
+    "zip": "36467",
+    "tier": "M2",
+    "state": "AL",
+    "originalServiceability": "45%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":33012,\"zip_code\":\"36467\",\"city\":\"OPP\",\"state\":\"AL\",\"county\":\"COVINGTON\",\"area_code\":\"334\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"OPP\",\"latitude\":\"31.276788\",\"longitude\":\"-86.283360\",\"time_zone\":\"6\",\"elevation\":261,\"county_fips\":\"39\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10894\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"1\",\"city_state_key\":\"Y10894\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Opp\",\"ci",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36467.png"
+  },
+  {
+    "zip": "63461",
+    "tier": "M2",
+    "state": "MO",
+    "originalServiceability": "56%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":55450,\"zip_code\":\"63461\",\"city\":\"PALMYRA\",\"state\":\"MO\",\"county\":\"MARION\",\"area_code\":\"573\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"ELY\",\"latitude\":\"39.788638\",\"longitude\":\"-91.530584\",\"time_zone\":\"6\",\"elevation\":654,\"county_fips\":\"127\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W17486\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"29\",\"city_state_key\":\"W16426\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_case\":\"Palmy",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63461.png"
+  },
+  {
+    "zip": "65775",
+    "tier": "M2",
+    "state": "MO",
+    "originalServiceability": "36%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":57003,\"zip_code\":\"65775\",\"city\":\"WEST PLAINS\",\"state\":\"MO\",\"county\":\"HOWELL\",\"area_code\":\"417\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"LANTON\",\"latitude\":\"36.712532\",\"longitude\":\"-91.885615\",\"time_zone\":\"6\",\"elevation\":1064,\"county_fips\":\"91\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W18629\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"29\",\"city_state_key\":\"W17004\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_case\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65775.png"
+  },
+  {
+    "zip": "65360",
+    "tier": "M2",
+    "state": "MO",
+    "originalServiceability": "43%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":56716,\"zip_code\":\"65360\",\"city\":\"WINDSOR\",\"state\":\"MO\",\"county\":\"HENRY\",\"area_code\":\"660\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"WINDSOR\",\"latitude\":\"38.541132\",\"longitude\":\"-93.520483\",\"time_zone\":\"6\",\"elevation\":880,\"county_fips\":\"83\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W18660\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"29\",\"city_state_key\":\"W18660\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Win",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65360.png"
+  },
+  {
+    "zip": "63435",
+    "tier": "M3",
+    "state": "MO",
+    "originalServiceability": "47%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":55414,\"zip_code\":\"63435\",\"city\":\"CANTON\",\"state\":\"MO\",\"county\":\"LEWIS\",\"area_code\":\"573\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"CANTON\",\"latitude\":\"40.176872\",\"longitude\":\"-91.640765\",\"time_zone\":\"6\",\"elevation\":655,\"county_fips\":\"111\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W16077\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"29\",\"city_state_key\":\"W16077\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Cant",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63435.png"
+  },
+  {
+    "zip": "35054",
+    "tier": "M3",
+    "state": "AL",
+    "originalServiceability": "57%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":31997,\"zip_code\":\"35054\",\"city\":\"CROPWELL\",\"state\":\"AL\",\"county\":\"SAINT CLAIR\",\"area_code\":\"205\\/256\\/659\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"CROPWELL\",\"latitude\":\"33.505938\",\"longitude\":\"-86.323944\",\"time_zone\":\"6\",\"elevation\":490,\"county_fips\":\"115\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10286\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"1\",\"city_state_key\":\"Y10286\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"cit",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35054.png"
+  },
+  {
+    "zip": "72834",
+    "tier": "M3",
+    "state": "AR",
+    "originalServiceability": "38%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":61791,\"zip_code\":\"72834\",\"city\":\"DARDANELLE\",\"state\":\"AR\",\"county\":\"YELL\",\"area_code\":\"479\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"DARDANELLE\",\"latitude\":\"35.186975\",\"longitude\":\"-93.195135\",\"time_zone\":\"6\",\"elevation\":394,\"county_fips\":\"149\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y20296\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"5\",\"city_state_key\":\"Y20296\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72834.png"
+  },
+  {
+    "zip": "72046",
+    "tier": "M3",
+    "state": "AR",
+    "originalServiceability": "54%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":61027,\"zip_code\":\"72046\",\"city\":\"ENGLAND\",\"state\":\"AR\",\"county\":\"LONOKE\",\"area_code\":\"501\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"ENGLAND\",\"latitude\":\"34.543234\",\"longitude\":\"-91.940800\",\"time_zone\":\"6\",\"elevation\":220,\"county_fips\":\"85\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y20371\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"5\",\"city_state_key\":\"Y20371\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Eng",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72046.png"
+  },
+  {
+    "zip": "64644",
+    "tier": "M3",
+    "state": "MO",
+    "originalServiceability": "38%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":56189,\"zip_code\":\"64644\",\"city\":\"HAMILTON\",\"state\":\"MO\",\"county\":\"CALDWELL\",\"area_code\":\"816\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"HAMILTON\",\"latitude\":\"39.726826\",\"longitude\":\"-93.981579\",\"time_zone\":\"6\",\"elevation\":956,\"county_fips\":\"25\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W16690\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"29\",\"city_state_key\":\"W16690\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_64644.png"
+  },
+  {
+    "zip": "72366",
+    "tier": "M3",
+    "state": "AR",
+    "originalServiceability": "62%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":61419,\"zip_code\":\"72366\",\"city\":\"MARVELL\",\"state\":\"AR\",\"county\":\"PHILLIPS\",\"area_code\":\"870\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"MARVELL\",\"latitude\":\"34.514720\",\"longitude\":\"-90.960157\",\"time_zone\":\"6\",\"elevation\":184,\"county_fips\":\"107\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y20759\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"5\",\"city_state_key\":\"Y20759\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72366.png"
+  },
+  {
+    "zip": "65712",
+    "tier": "M3",
+    "state": "MO",
+    "originalServiceability": "35%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":56929,\"zip_code\":\"65712\",\"city\":\"MOUNT VERNON\",\"state\":\"MO\",\"county\":\"LAWRENCE\",\"area_code\":\"417\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"HOBERG\",\"latitude\":\"37.098370\",\"longitude\":\"-93.770372\",\"time_zone\":\"6\",\"elevation\":1262,\"county_fips\":\"109\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W17329\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"29\",\"city_state_key\":\"W16769\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_c",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65712.png"
+  },
+  {
+    "zip": "65711",
+    "tier": "M3",
+    "state": "MO",
+    "originalServiceability": "42%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":56926,\"zip_code\":\"65711\",\"city\":\"MOUNTAIN GROVE\",\"state\":\"MO\",\"county\":\"WRIGHT\",\"area_code\":\"417\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"MANES\",\"latitude\":\"37.265940\",\"longitude\":\"-92.269685\",\"time_zone\":\"6\",\"elevation\":1266,\"county_fips\":\"229\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"W17330\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"29\",\"city_state_key\":\"W17147\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_ca",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65711.png"
+  },
+  {
+    "zip": "71465",
+    "tier": "M3",
+    "state": "LA",
+    "originalServiceability": "50%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":60510,\"zip_code\":\"71465\",\"city\":\"OLLA\",\"state\":\"LA\",\"county\":\"LA SALLE\",\"area_code\":\"318\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"OLLA\",\"latitude\":\"31.911968\",\"longitude\":\"-92.270114\",\"time_zone\":\"6\",\"elevation\":95,\"county_fips\":\"59\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y24272\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"22\",\"city_state_key\":\"Y24272\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Olla\",\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_71465.png"
+  },
+  {
+    "zip": "72855",
+    "tier": "M3",
+    "state": "AR",
+    "originalServiceability": "36%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":61809,\"zip_code\":\"72855\",\"city\":\"PARIS\",\"state\":\"AR\",\"county\":\"LOGAN\",\"area_code\":\"479\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"PARIS\",\"latitude\":\"35.275751\",\"longitude\":\"-93.684532\",\"time_zone\":\"6\",\"elevation\":757,\"county_fips\":\"83\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y20938\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"5\",\"city_state_key\":\"Y20938\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Paris\",\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72855.png"
+  },
+  {
+    "zip": "35125",
+    "tier": "M3",
+    "state": "AL",
+    "originalServiceability": "37%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32065,\"zip_code\":\"35125\",\"city\":\"PELL CITY\",\"state\":\"AL\",\"county\":\"SAINT CLAIR\",\"area_code\":\"205\\/659\",\"city_type\":\"N\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"EDEN\",\"latitude\":\"33.630641\",\"longitude\":\"-86.293897\",\"time_zone\":\"6\",\"elevation\":576,\"county_fips\":\"115\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10923\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"1\",\"city_state_key\":\"Y10368\",\"city_alias_code\":\"\",\"primary_record\":\" \",\"city_mixed_",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35125.png"
+  },
+  {
+    "zip": "35128",
+    "tier": "M3",
+    "state": "AL",
+    "originalServiceability": "39%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32074,\"zip_code\":\"35128\",\"city\":\"PELL CITY\",\"state\":\"AL\",\"county\":\"SAINT CLAIR\",\"area_code\":\"205\\/659\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"PELL CITY\",\"latitude\":\"33.542210\",\"longitude\":\"-86.348795\",\"time_zone\":\"6\",\"elevation\":559,\"county_fips\":\"115\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y10923\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"1\",\"city_state_key\":\"Y10923\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_m",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35128.png"
+  },
+  {
+    "zip": "72454",
+    "tier": "M3",
+    "state": "AR",
+    "originalServiceability": "65%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":61487,\"zip_code\":\"72454\",\"city\":\"PIGGOTT\",\"state\":\"AR\",\"county\":\"CLAY\",\"area_code\":\"870\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"PIGGOTT\",\"latitude\":\"36.414220\",\"longitude\":\"-90.230124\",\"time_zone\":\"6\",\"elevation\":429,\"county_fips\":\"21\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y20968\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"5\",\"city_state_key\":\"Y20968\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Piggo",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72454.png"
+  },
+  {
+    "zip": "72461",
+    "tier": "M3",
+    "state": "AR",
+    "originalServiceability": "50%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":61495,\"zip_code\":\"72461\",\"city\":\"RECTOR\",\"state\":\"AR\",\"county\":\"CLAY\",\"area_code\":\"870\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"RECTOR\",\"latitude\":\"36.273748\",\"longitude\":\"-90.254661\",\"time_zone\":\"6\",\"elevation\":264,\"county_fips\":\"21\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y21028\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"5\",\"city_state_key\":\"Y21028\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Rector\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72461.png"
+  },
+  {
+    "zip": "35135",
+    "tier": "M3",
+    "state": "AL",
+    "originalServiceability": "13%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32081,\"zip_code\":\"35135\",\"city\":\"RIVERSIDE\",\"state\":\"AL\",\"county\":\"SAINT CLAIR\",\"area_code\":\"205\\/659\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"RIVERSIDE\",\"latitude\":\"33.623474\",\"longitude\":\"-86.203040\",\"time_zone\":\"6\",\"elevation\":609,\"county_fips\":\"115\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y11018\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"1\",\"city_state_key\":\"Y11018\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_m",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35135.png"
+  },
+  {
+    "zip": "71075",
+    "tier": "M3",
+    "state": "LA",
+    "originalServiceability": "67%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":59871,\"zip_code\":\"71075\",\"city\":\"SPRINGHILL\",\"state\":\"LA\",\"county\":\"WEBSTER\",\"area_code\":\"318\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"SPRINGHILL\",\"latitude\":\"32.988234\",\"longitude\":\"-93.482026\",\"time_zone\":\"6\",\"elevation\":239,\"county_fips\":\"119\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y24501\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"22\",\"city_state_key\":\"Y24501\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_c",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_71075.png"
+  },
+  {
+    "zip": "35178",
+    "tier": "M3",
+    "state": "AL",
+    "originalServiceability": "10%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":32119,\"zip_code\":\"35178\",\"city\":\"VINCENT\",\"state\":\"AL\",\"county\":\"SHELBY\",\"area_code\":\"205\\/659\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"VINCENT\",\"latitude\":\"33.419458\",\"longitude\":\"-86.396571\",\"time_zone\":\"6\",\"elevation\":493,\"county_fips\":\"117\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y11243\",\"classification_code\":\" \",\"multi_county\":\"Y\",\"state_fips\":\"1\",\"city_state_key\":\"Y11243\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35178.png"
+  },
+  {
+    "zip": "72958",
+    "tier": "M3",
+    "state": "AR",
+    "originalServiceability": "38%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":61862,\"zip_code\":\"72958\",\"city\":\"WALDRON\",\"state\":\"AR\",\"county\":\"SCOTT\",\"area_code\":\"479\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"WALDRON\",\"latitude\":\"34.924519\",\"longitude\":\"-94.077924\",\"time_zone\":\"6\",\"elevation\":711,\"county_fips\":\"127\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y21258\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"5\",\"city_state_key\":\"Y21258\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\":\"Wal",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72958.png"
+  },
+  {
+    "zip": "70591",
+    "tier": "M3",
+    "state": "LA",
+    "originalServiceability": "61%",
+    "textContent": "{\"data\":{\"zipCodes\":[{\"id\":59556,\"zip_code\":\"70591\",\"city\":\"WELSH\",\"state\":\"LA\",\"county\":\"JEFFERSON DAVIS\",\"area_code\":\"337\",\"city_type\":\"P\",\"city_alias_abbreviation\":\"\",\"city_alias_name\":\"WELSH\",\"latitude\":\"30.264244\",\"longitude\":\"-92.826628\",\"time_zone\":\"6\",\"elevation\":10,\"county_fips\":\"53\",\"day_light_saving\":\"Y\",\"preferred_last_line_key\":\"Y24647\",\"classification_code\":\" \",\"multi_county\":\" \",\"state_fips\":\"22\",\"city_state_key\":\"Y24647\",\"city_alias_code\":\"\",\"primary_record\":\"P\",\"city_mixed_case\"",
+    "extractedData": {
+      "serviceAvailable": true,
+      "prices": [
+        "$1000",
+        "$1000"
+      ]
+    },
+    "screenshotPath": "/Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_70591.png"
+  }
+]

@@ -1,0 +1,326 @@
+=== ZIP CODE CHECK REPORT ===
+
+Total zip codes checked: 41
+Successful checks: 41
+Failed checks: 0
+
+
+=== RESULTS BY TIER ===
+
+Tier L1 (8 zip codes):
+Service availability rate: 75.0%
+Zip codes: 75751, 76522, 8844, 76559, 63366, 38654, 63376, 7871
+
+Tier L3 (1 zip codes):
+Service availability rate: 100.0%
+Zip codes: 76401
+
+Tier M1 (5 zip codes):
+Service availability rate: 80.0%
+Zip codes: 36323, 8825, 36567, 36576, 71378
+
+Tier M2 (8 zip codes):
+Service availability rate: 100.0%
+Zip codes: 36420, 36421, 36340, 78634, 36467, 63461, 65775, 65360
+
+Tier M3 (19 zip codes):
+Service availability rate: 100.0%
+Zip codes: 63435, 35054, 72834, 72046, 64644, 72366, 65712, 65711, 71465, 72855, 35125, 35128, 72454, 72461, 35135, 71075, 35178, 72958, 70591
+
+=== RESULTS BY STATE ===
+
+State TX (5 zip codes):
+Service availability rate: 100.0%
+Zip codes: 75751, 76522, 76559, 76401, 78634
+
+State NJ (3 zip codes):
+Service availability rate: 0.0%
+Zip codes: 8844, 7871, 8825
+
+State MO (9 zip codes):
+Service availability rate: 100.0%
+Zip codes: 63366, 63376, 63461, 65775, 65360, 63435, 64644, 65712, 65711
+
+State MS (1 zip codes):
+Service availability rate: 100.0%
+Zip codes: 38654
+
+State AL (12 zip codes):
+Service availability rate: 100.0%
+Zip codes: 36323, 36567, 36576, 36420, 36421, 36340, 36467, 35054, 35125, 35128, 35135, 35178
+
+State LA (4 zip codes):
+Service availability rate: 100.0%
+Zip codes: 71378, 71465, 71075, 70591
+
+State AR (7 zip codes):
+Service availability rate: 100.0%
+Zip codes: 72834, 72046, 72366, 72855, 72454, 72461, 72958
+
+=== DETAILED RESULTS ===
+
+Zip: 75751 (L1, TX)
+Original Serviceability: 53%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_75751.png
+
+Zip: 76522 (L1, TX)
+Original Serviceability: 44%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_76522.png
+
+Zip: 8844 (L1, NJ)
+Original Serviceability: 29%
+Service Available: No
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_8844.png
+
+Zip: 76559 (L1, TX)
+Original Serviceability: 68%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_76559.png
+
+Zip: 63366 (L1, MO)
+Original Serviceability: 13%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63366.png
+
+Zip: 38654 (L1, MS)
+Original Serviceability: 10%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_38654.png
+
+Zip: 63376 (L1, MO)
+Original Serviceability: 10%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63376.png
+
+Zip: 7871 (L1, NJ)
+Original Serviceability: 45%
+Service Available: No
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_7871.png
+
+Zip: 76401 (L3, TX)
+Original Serviceability: 36%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_76401.png
+
+Zip: 36323 (M1, AL)
+Original Serviceability: 38%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36323.png
+
+Zip: 8825 (M1, NJ)
+Original Serviceability: 21%
+Service Available: No
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_8825.png
+
+Zip: 36567 (M1, AL)
+Original Serviceability: 37%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36567.png
+
+Zip: 36576 (M1, AL)
+Original Serviceability: 11%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36576.png
+
+Zip: 71378 (M1, LA)
+Original Serviceability: 48%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_71378.png
+
+Zip: 36420 (M2, AL)
+Original Serviceability: 48%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36420.png
+
+Zip: 36421 (M2, AL)
+Original Serviceability: 15%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36421.png
+
+Zip: 36340 (M2, AL)
+Original Serviceability: 69%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36340.png
+
+Zip: 78634 (M2, TX)
+Original Serviceability: 12%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_78634.png
+
+Zip: 36467 (M2, AL)
+Original Serviceability: 45%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_36467.png
+
+Zip: 63461 (M2, MO)
+Original Serviceability: 56%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63461.png
+
+Zip: 65775 (M2, MO)
+Original Serviceability: 36%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65775.png
+
+Zip: 65360 (M2, MO)
+Original Serviceability: 43%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65360.png
+
+Zip: 63435 (M3, MO)
+Original Serviceability: 47%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_63435.png
+
+Zip: 35054 (M3, AL)
+Original Serviceability: 57%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35054.png
+
+Zip: 72834 (M3, AR)
+Original Serviceability: 38%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72834.png
+
+Zip: 72046 (M3, AR)
+Original Serviceability: 54%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72046.png
+
+Zip: 64644 (M3, MO)
+Original Serviceability: 38%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_64644.png
+
+Zip: 72366 (M3, AR)
+Original Serviceability: 62%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72366.png
+
+Zip: 65712 (M3, MO)
+Original Serviceability: 35%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65712.png
+
+Zip: 65711 (M3, MO)
+Original Serviceability: 42%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_65711.png
+
+Zip: 71465 (M3, LA)
+Original Serviceability: 50%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_71465.png
+
+Zip: 72855 (M3, AR)
+Original Serviceability: 36%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72855.png
+
+Zip: 35125 (M3, AL)
+Original Serviceability: 37%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35125.png
+
+Zip: 35128 (M3, AL)
+Original Serviceability: 39%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35128.png
+
+Zip: 72454 (M3, AR)
+Original Serviceability: 65%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72454.png
+
+Zip: 72461 (M3, AR)
+Original Serviceability: 50%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72461.png
+
+Zip: 35135 (M3, AL)
+Original Serviceability: 13%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35135.png
+
+Zip: 71075 (M3, LA)
+Original Serviceability: 67%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_71075.png
+
+Zip: 35178 (M3, AL)
+Original Serviceability: 10%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_35178.png
+
+Zip: 72958 (M3, AR)
+Original Serviceability: 38%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_72958.png
+
+Zip: 70591 (M3, LA)
+Original Serviceability: 61%
+Service Available: Yes
+Prices: $1000, $1000
+Screenshot: /Users/jeffery.sandersjr/Documents/GitHub/maas_25_redesign/zip_results/zip_70591.png
+
+=== PPC LANDING PAGE OPTIMIZATION RECOMMENDATIONS ===
+
+Based on the data collected, here are recommendations for optimizing PPC landing pages:
+
+1. Geographic Targeting:
+   - Focus PPC spend on states with higher service availability rates
+   - Consider different ad messaging for areas with lower availability
+
+2. Tier-Based Optimization:
+   - Create specific landing pages for different tier groups
+   - Adjust bidding strategy based on tier performance
+
+3. Speed and Price Messaging:
+   - Highlight the most common speeds available in ad copy
+   - Emphasize competitive pricing where applicable
+
+4. Landing Page Content:
+   - Ensure landing pages clearly communicate service availability
+   - Include prominent zip code checkers on landing pages
+   - Customize content based on tier and state data
+
+=== END OF REPORT ===
