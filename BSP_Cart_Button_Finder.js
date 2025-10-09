@@ -459,19 +459,14 @@
 
      // Process inside <main> > first <section> > .content per scenarios
      function processScopedLinks(url) {
-       const mainEl = document.querySelector('main');
-       if (!mainEl) {
-         console.log('[BSP Cart Button Finder] <main> not found');
+       const heroEl = document.querySelector('.leshen-hero');
+       if (!heroEl) {
+         console.log('[BSP Cart Button Finder] .leshen-hero not found');
          return;
        }
-       const firstSection = mainEl.querySelector('section');
-       if (!firstSection) {
-         console.log('[BSP Cart Button Finder] No <section> inside <main>');
-         return;
-       }
-       const content = firstSection.querySelector('.content');
+       const content = heroEl.querySelector(".content");
        if (!content) {
-         console.log('[BSP Cart Button Finder] .content not found inside first <section>');
+         console.log("[BSP Cart Button Finder] .content not found inside .leshen-hero");
          return;
        }
 
@@ -515,23 +510,29 @@
              opacity: 1 !important;
          ">
              <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button" style="
-                 padding-top: 0.75rem;
-                 padding-bottom: 0.75rem;
-                 padding-left: 2.75rem;
-                 padding-right: 48px;
+                 padding-top: 0.15rem;
+                 padding-bottom: 0.15rem;
+                 padding-left: 1rem;
+                 padding-right: 1rem;
                  box-shadow: none;
-                 margin-top: 24px;
+                 margin-top: 1.5rem;
                  position: relative;
                  z-index: 9999 !important;
                  pointer-events: auto !important;
                  display: block !important;
                  visibility: visible !important;
                  opacity: 1 !important;
+                 border: 2px solid #404040;
+                 color: #404040;
+                 background: #fff;
+                 border-radius: 2em;
+                  cursor: pointer;
+
              ">
                  <span class="button-text css-2qtueq e1hk20aw0" style="
                      font-weight: 500;
-                     font-size: calc(0.5555555555555556vw + 17.333333333333332px);
-                     line-height: calc(1.1111111111111112vw + 18.666666666666668px);
+                     font-size: calc(0.5555555555555556vw + 0.5rem);
+                     line-height: calc(1.1111111111111112vw + 0.75rem);
                      pointer-events: auto !important;
                      display: inline !important;
                      visibility: visible !important;
