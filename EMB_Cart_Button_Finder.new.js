@@ -3,7 +3,7 @@
 // The click event listener will send an event to the Clearlink event tracking system
 
 (function () {
-  console.log('[BSP Cart Button Finder] Script loaded');
+  console.log('[EMB Cart Button Finder] Script loaded');
 
   // Check for localStorage data first
   try {
@@ -11,30 +11,30 @@
     if (mapiData) {
       const parsedData = JSON.parse(mapiData);
       if (parsedData) {
-        console.log('[BSP Cart Button Finder] Found MAPI data in localStorage');
+        console.log('[EMB Cart Button Finder] Found MAPI data in localStorage');
         initializeMainScript(parsedData);
       } else {
-        console.log('[BSP Cart Button Finder] No MAPI data found in localStorage');
+        console.log('[EMB Cart Button Finder] No MAPI data found in localStorage');
         // Set a fallback timeout to initialize the script without MAPI data
         const fallbackTimeout = setTimeout(() => {
-          console.log('[BSP Cart Button Finder] Fallback initialization');
+          console.log('[EMB Cart Button Finder] Fallback initialization');
           initializeMainScript();
         }, 2000);
 
         // Listen for the MAPI data event
         window.addEventListener('mapi:ready', (event) => {
-          console.log('[BSP Cart Button Finder] Received MAPI data event');
+          console.log('[EMB Cart Button Finder] Received MAPI data event');
           clearTimeout(fallbackTimeout);
           initializeMainScript(parsedData);
         });
       }
     }
   } catch (error) {
-    console.error('[BSP Cart Button Finder] Error checking initial localStorage:', error);
+    console.error('[EMB Cart Button Finder] Error checking initial localStorage:', error);
   }
 
   function initializeMainScript(parsedMapiData = null, eventRequestId = null) {
-    console.log('[BSP Cart Button Finder] Initializing main script');
+    console.log('[EMB Cart Button Finder] Initializing main script');
 
     // Function to build promo code map from CSV data
     function buildPromoMap(csvText) {
@@ -925,7 +925,7 @@
     try {
       if (eventRequestId) {
         clearlinkeventid = eventRequestId;
-        console.log('[BSP Cart Button Finder] Using requestId from event:', clearlinkeventid);
+        console.log('[EMB Cart Button Finder] Using requestId from event:', clearlinkeventid);
       }
 
       const parsedData =
@@ -936,17 +936,17 @@
         })();
 
       if (parsedData) {
-        console.log('[BSP Cart Button Finder] MAPI data structure found');
-        console.log('[BSP Cart Button Finder] Root level keys:', Object.keys(parsedData));
+        console.log('[EMB Cart Button Finder] MAPI data structure found');
+        console.log('[EMB Cart Button Finder] Root level keys:', Object.keys(parsedData));
         
         // Extract request_id - check all possible locations if we don't already have it from the event
         if (!clearlinkeventid) {
           if (parsedData.requestId) {
             clearlinkeventid = parsedData.requestId;
-            console.log('[BSP Cart Button Finder] Extracted requestId (ACSID) from root level:', clearlinkeventid);
+            console.log('[EMB Cart Button Finder] Extracted requestId (ACSID) from root level:', clearlinkeventid);
           } else if (parsedData.requestData && parsedData.requestData.requestId) {
             clearlinkeventid = parsedData.requestData.requestId;
-            console.log('[BSP Cart Button Finder] Extracted requestId (ACSID) from requestData:', clearlinkeventid);
+            console.log('[EMB Cart Button Finder] Extracted requestId (ACSID) from requestData:', clearlinkeventid);
           } else if (
             parsedData.requestData &&
             parsedData.requestData.fullResponse &&
@@ -954,9 +954,9 @@
             parsedData.requestData.fullResponse.data.request_id
           ) {
             clearlinkeventid = parsedData.requestData.fullResponse.data.request_id;
-            console.log('[BSP Cart Button Finder] Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
+            console.log('[EMB Cart Button Finder] Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
           } else {
-            console.log('[BSP Cart Button Finder] Could not find request_id in any expected location');
+            console.log('[EMB Cart Button Finder] Could not find request_id in any expected location');
           }
         }
 
@@ -971,7 +971,7 @@
           parsedData.requestData.fullResponse.data.promo_code
         ) {
           promoCode = parsedData.requestData.fullResponse.data.promo_code;
-          console.log('[BSP Cart Button Finder] Extracted promo_code from fullResponse.data:', promoCode);
+          console.log('[EMB Cart Button Finder] Extracted promo_code from fullResponse.data:', promoCode);
         } 
         // Then check in promo_data.data.promo_code
         else if (
@@ -983,17 +983,17 @@
           parsedData.requestData.fullResponse.data.promo_data.data.promo_code
         ) {
           promoCode = parsedData.requestData.fullResponse.data.promo_data.data.promo_code;
-          console.log('[BSP Cart Button Finder] Extracted promo_code from promo_data.data:', promoCode);
+          console.log('[EMB Cart Button Finder] Extracted promo_code from promo_data.data:', promoCode);
         }
         // Check other possible locations
         else if (parsedData.promo_code) {
           promoCode = parsedData.promo_code;
-          console.log('[BSP Cart Button Finder] Extracted promo_code from root level:', promoCode);
+          console.log('[EMB Cart Button Finder] Extracted promo_code from root level:', promoCode);
         } else if (parsedData.lastPromo) {
           promoCode = parsedData.lastPromo;
-          console.log('[BSP Cart Button Finder] Extracted lastPromo from root level:', promoCode);
+          console.log('[EMB Cart Button Finder] Extracted lastPromo from root level:', promoCode);
         } else {
-          console.log('[BSP Cart Button Finder] Could not find promo_code in any expected location');
+          console.log('[EMB Cart Button Finder] Could not find promo_code in any expected location');
         }
 
         // Map promo code to sales code
@@ -1001,9 +1001,9 @@
           const promoCodeStr = String(promoCode);
           if (promoToSalesCodeMap[promoCodeStr]) {
             salescode = promoToSalesCodeMap[promoCodeStr];
-            console.log('[BSP Cart Button Finder] Mapped promo code', promoCodeStr, 'to sales code:', salescode);
+            console.log('[EMB Cart Button Finder] Mapped promo code', promoCodeStr, 'to sales code:', salescode);
           } else {
-            console.log('[BSP Cart Button Finder] No mapping found for promo code:', promoCodeStr);
+            console.log('[EMB Cart Button Finder] No mapping found for promo code:', promoCodeStr);
           }
         }
       }
@@ -1013,29 +1013,29 @@
         clearlinkeventid ? `&acsid=${clearlinkeventid}` : ''
       }`;
 
-      console.log('[BSP Cart Button Finder] Constructed buyflow URL:', buyflowUrl);
+      console.log('[EMB Cart Button Finder] Constructed buyflow URL:', buyflowUrl);
 
       // Process inside <main> > first <section> > .content per scenarios
       function processScopedLinks(url) {
         const mainEl = document.querySelector('main');
         if (!mainEl) {
-          console.log('[BSP Cart Button Finder] <main> not found');
+          console.log('[EMB Cart Button Finder] <main> not found');
           return;
         }
         const firstSection = mainEl.querySelector('section');
         if (!firstSection) {
-          console.log('[BSP Cart Button Finder] No <section> inside <main>');
+          console.log('[EMB Cart Button Finder] No <section> inside <main>');
           return;
         }
         const content = firstSection.querySelector('.content');
         if (!content) {
-          console.log('[BSP Cart Button Finder] .content not found inside first <section>');
+          console.log('[EMB Cart Button Finder] .content not found inside first <section>');
           return;
         }
 
         // If we find an <input>, do nothing
         if (content.querySelector('input')) {
-          console.log('[BSP Cart Button Finder] <input> found in scope; skipping');
+          console.log('[EMB Cart Button Finder] <input> found in scope; skipping');
           return;
         }
 
@@ -1046,10 +1046,10 @@
         if (telAnchor && cartAnchor) {
           try {
             cartAnchor.href = url;
-            cartAnchor.dataset.bspUpdated = '1';
-            console.log('[BSP Cart Button Finder] Updated existing /cart link in scope');
+            cartAnchor.dataset.EMBUpdated = '1';
+            console.log('[EMB Cart Button Finder] Updated existing /cart link in scope');
           } catch (e) {
-            console.error('[BSP Cart Button Finder] Failed updating /cart link', e);
+            console.error('[EMB Cart Button Finder] Failed updating /cart link', e);
           }
           return;
         }
@@ -1057,15 +1057,15 @@
         // If only tel exists: append the button anchor
         if (telAnchor && !cartAnchor) {
           // Avoid duplicating if already injected
-          if (content.querySelector('a.leshen-link-button-wrapper[data-bsp-injected="1"]')) {
-            console.log('[BSP Cart Button Finder] Button already injected; skipping');
+          if (content.querySelector('a.leshen-link-button-wrapper[data-EMB-injected="1"]')) {
+            console.log('[EMB Cart Button Finder] Button already injected; skipping');
             return;
           }
 
-          const buttonId = 'bsp-injected-button-' + Math.floor(Math.random() * 10000);
+          const buttonId = 'EMB-injected-button-' + Math.floor(Math.random() * 10000);
           
           const newButtonHtml = `
-          <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0 bsp-cart-link" href="${url}" data-bsp-injected="1" visibility="All devices" style="
+          <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0 EMB-cart-link" href="${url}" data-EMB-injected="1" visibility="All devices" style="
               display: block !important;
               visibility: visible !important;
               opacity: 1 !important;
@@ -1116,18 +1116,18 @@
           try {
             try {
               telAnchor.insertAdjacentHTML('afterend', newButtonHtml);
-              console.log('[BSP Cart Button Finder] Injected buyflow button after tel: link');
+              console.log('[EMB Cart Button Finder] Injected buyflow button after tel: link');
             } catch (innerError) {
-              console.warn('[BSP Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
+              console.warn('[EMB Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
               const tempDiv = document.createElement('div');
               tempDiv.innerHTML = newButtonHtml;
               const buttonElement = tempDiv.firstElementChild;
               telAnchor.parentNode.insertBefore(buttonElement, telAnchor.nextSibling);
-              console.log('[BSP Cart Button Finder] Injected buyflow button using alternative method');
+              console.log('[EMB Cart Button Finder] Injected buyflow button using alternative method');
             }
             protectInjectedElements();
           } catch (e) {
-            console.error('[BSP Cart Button Finder] All insertion methods failed', e);
+            console.error('[EMB Cart Button Finder] All insertion methods failed', e);
             try {
               const parentSection = content.closest('section');
               if (parentSection) {
@@ -1135,11 +1135,11 @@
                 tempDiv.innerHTML = newButtonHtml;
                 const buttonElement = tempDiv.firstElementChild;
                 parentSection.appendChild(buttonElement);
-                console.log('[BSP Cart Button Finder] Injected buyflow button at end of section as last resort');
+                console.log('[EMB Cart Button Finder] Injected buyflow button at end of section as last resort');
                 protectInjectedElements();
               }
             } catch (lastError) {
-              console.error('[BSP Cart Button Finder] Even last resort insertion failed', lastError);
+              console.error('[EMB Cart Button Finder] Even last resort insertion failed', lastError);
             }
           }
           return;
@@ -1149,45 +1149,45 @@
         if (!telAnchor && cartAnchor) {
           try {
             cartAnchor.href = url;
-            cartAnchor.dataset.bspUpdated = '1';
-            console.log('[BSP Cart Button Finder] Updated /cart link (no tel present)');
+            cartAnchor.dataset.EMBUpdated = '1';
+            console.log('[EMB Cart Button Finder] Updated /cart link (no tel present)');
           } catch (e) {
-            console.error('[BSP Cart Button Finder] Failed updating /cart link (no tel)', e);
+            console.error('[EMB Cart Button Finder] Failed updating /cart link (no tel)', e);
           }
         }
       }
 
       // Process all cart links on the entire page
       function processAllCartLinks(url) {
-        console.log('[BSP Cart Button Finder] Searching for all cart links on the page');
+        console.log('[EMB Cart Button Finder] Searching for all cart links on the page');
         const allCartLinks = document.querySelectorAll('a[href="/cart"], a[href*="/cart"]');
         
         if (allCartLinks.length === 0) {
-          console.log('[BSP Cart Button Finder] No cart links found on the page');
+          console.log('[EMB Cart Button Finder] No cart links found on the page');
           return;
         }
         
-        console.log(`[BSP Cart Button Finder] Found ${allCartLinks.length} cart links on the page`);
+        console.log(`[EMB Cart Button Finder] Found ${allCartLinks.length} cart links on the page`);
         
         allCartLinks.forEach((link, index) => {
           try {
-            if (link.dataset.bspUpdated === '1') {
-              console.log(`[BSP Cart Button Finder] Skipping already updated cart link #${index + 1}`);
+            if (link.dataset.EMBUpdated === '1') {
+              console.log(`[EMB Cart Button Finder] Skipping already updated cart link #${index + 1}`);
               return;
             }
             
             link.href = url;
-            link.dataset.bspUpdated = '1';
-            console.log(`[BSP Cart Button Finder] Updated cart link #${index + 1}`);
+            link.dataset.EMBUpdated = '1';
+            console.log(`[EMB Cart Button Finder] Updated cart link #${index + 1}`);
           } catch (e) {
-            console.error(`[BSP Cart Button Finder] Failed updating cart link #${index + 1}`, e);
+            console.error(`[EMB Cart Button Finder] Failed updating cart link #${index + 1}`, e);
           }
         });
       }
 
       // Function to protect injected elements from removal
       function protectInjectedElements() {
-        const injectedElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+        const injectedElements = document.querySelectorAll('[data-EMB-injected="1"], [data-EMB-updated="1"]');
         
         injectedElements.forEach(element => {
           // Store reference to parent for re-injection
@@ -1197,7 +1197,7 @@
           // Override remove method
           const originalRemove = element.remove;
           element.remove = function() {
-            console.log('[BSP Cart Button Finder] Prevented removal of injected element via remove()');
+            console.log('[EMB Cart Button Finder] Prevented removal of injected element via remove()');
             return false;
           };
           
@@ -1205,8 +1205,8 @@
           if (parentElement && parentElement.removeChild) {
             const originalRemoveChild = parentElement.removeChild;
             parentElement.removeChild = function(child) {
-              if (child === element || child.dataset?.bspInjected === '1' || child.dataset?.bspUpdated === '1') {
-                console.log('[BSP Cart Button Finder] Prevented removal of injected element via removeChild()');
+              if (child === element || child.dataset?.EMBInjected === '1' || child.dataset?.EMBUpdated === '1') {
+                console.log('[EMB Cart Button Finder] Prevented removal of injected element via removeChild()');
                 return child;
               }
               return originalRemoveChild.call(this, child);
@@ -1217,7 +1217,7 @@
           const originalSetAttribute = element.setAttribute;
           element.setAttribute = function(name, value) {
             if (name === 'style' && (value.includes('display: none') || value.includes('visibility: hidden') || value.includes('opacity: 0'))) {
-              console.log('[BSP Cart Button Finder] Prevented style attribute change that would hide element');
+              console.log('[EMB Cart Button Finder] Prevented style attribute change that would hide element');
               return false;
             }
             return originalSetAttribute.call(this, name, value);
@@ -1227,7 +1227,7 @@
           const originalClassListAdd = element.classList.add;
           element.classList.add = function(className) {
             if (className.includes('hidden') || className.includes('invisible') || className.includes('removed')) {
-              console.log('[BSP Cart Button Finder] Prevented adding class that might hide element:', className);
+              console.log('[EMB Cart Button Finder] Prevented adding class that might hide element:', className);
               return false;
             }
             return originalClassListAdd.call(this, className);
@@ -1252,7 +1252,7 @@
 
       // Function to set up aggressive mutation observer for React protection
       function setupReactProtectionObserver(url) {
-        console.log('[BSP Cart Button Finder] Setting up React protection MutationObserver');
+        console.log('[EMB Cart Button Finder] Setting up React protection MutationObserver');
         
         const observer = new MutationObserver((mutations) => {
           let needToReapply = false;
@@ -1264,14 +1264,14 @@
                 const node = mutation.removedNodes[i];
                 
                 if (node.nodeType === 1) { // ELEMENT_NODE
-                  if (node.dataset && (node.dataset.bspInjected === '1' || node.dataset.bspUpdated === '1')) {
-                    console.log('[BSP Cart Button Finder] React removed our injected element - re-injecting immediately');
+                  if (node.dataset && (node.dataset.EMBInjected === '1' || node.dataset.EMBUpdated === '1')) {
+                    console.log('[EMB Cart Button Finder] React removed our injected element - re-injecting immediately');
                     needToReapply = true;
                     break;
                   }
                   
-                  if (node.querySelector && node.querySelector('[data-bsp-injected="1"], [data-bsp-updated="1"]')) {
-                    console.log('[BSP Cart Button Finder] React removed container with our elements - re-injecting immediately');
+                  if (node.querySelector && node.querySelector('[data-EMB-injected="1"], [data-EMB-updated="1"]')) {
+                    console.log('[EMB Cart Button Finder] React removed container with our elements - re-injecting immediately');
                     needToReapply = true;
                     break;
                   }
@@ -1283,7 +1283,7 @@
           if (needToReapply) {
             // Immediate re-injection
             setTimeout(() => {
-              console.log('[BSP Cart Button Finder] Re-applying after React removal');
+              console.log('[EMB Cart Button Finder] Re-applying after React removal');
               processScopedLinks(url);
               processAllCartLinks(url);
             }, 10); // Very short delay
@@ -1297,12 +1297,12 @@
           attributes: false
         });
         
-        console.log('[BSP Cart Button Finder] React protection observer active');
+        console.log('[EMB Cart Button Finder] React protection observer active');
       }
 
       // Continuous monitoring function to detect and re-inject
       function setupContinuousMonitoring(url) {
-        console.log('[BSP Cart Button Finder] Setting up continuous monitoring');
+        console.log('[EMB Cart Button Finder] Setting up continuous monitoring');
         
         // Check every 500ms for the first 30 seconds
         let quickCheckCount = 0;
@@ -1313,15 +1313,15 @@
           
           if (quickCheckCount >= quickCheckMax) {
             clearInterval(quickInterval);
-            console.log('[BSP Cart Button Finder] Quick monitoring phase complete');
+            console.log('[EMB Cart Button Finder] Quick monitoring phase complete');
             return;
           }
           
-          const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
-          const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+          const injectedElements = document.querySelectorAll('[data-EMB-injected="1"]');
+          const updatedElements = document.querySelectorAll('[data-EMB-updated="1"]');
           
           if (injectedElements.length === 0 && updatedElements.length === 0) {
-            console.log('[BSP Cart Button Finder] Quick check: Elements missing, re-injecting');
+            console.log('[EMB Cart Button Finder] Quick check: Elements missing, re-injecting');
             processScopedLinks(url);
             processAllCartLinks(url);
           }
@@ -1329,11 +1329,11 @@
         
         // Then check every 2 seconds indefinitely
         setInterval(() => {
-          const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
-          const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+          const injectedElements = document.querySelectorAll('[data-EMB-injected="1"]');
+          const updatedElements = document.querySelectorAll('[data-EMB-updated="1"]');
           
           if (injectedElements.length === 0 && updatedElements.length === 0) {
-            console.log('[BSP Cart Button Finder] Periodic check: Elements missing, re-injecting');
+            console.log('[EMB Cart Button Finder] Periodic check: Elements missing, re-injecting');
             processScopedLinks(url);
             processAllCartLinks(url);
           }
@@ -1344,19 +1344,19 @@
       const initialValues = { salescode, clearlinkeventid };
    
       // Add a global verification flag to track successful URL modifications
-      window.bspCartButtonFinderSuccess = false;
+      window.EMBCartButtonFinderSuccess = false;
    
       // Initial injection
       processScopedLinks(buyflowUrl);
       processAllCartLinks(buyflowUrl);
    
       // Check if initial application was successful
-      const initialInjectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
-      const initialUpdatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+      const initialInjectedElements = document.querySelectorAll('[data-EMB-injected="1"]');
+      const initialUpdatedElements = document.querySelectorAll('[data-EMB-updated="1"]');
    
       if (initialInjectedElements.length > 0 || initialUpdatedElements.length > 0) {
-        console.log('[BSP Cart Button Finder] Initial URL modifications successful');
-        window.bspCartButtonFinderSuccess = true;
+        console.log('[EMB Cart Button Finder] Initial URL modifications successful');
+        window.EMBCartButtonFinderSuccess = true;
       }
       
       // Set up React-specific protection mechanisms
@@ -1365,7 +1365,7 @@
       
       // Also re-inject on common React lifecycle events
       window.addEventListener('popstate', () => {
-        console.log('[BSP Cart Button Finder] popstate event - re-injecting');
+        console.log('[EMB Cart Button Finder] popstate event - re-injecting');
         setTimeout(() => {
           processScopedLinks(buyflowUrl);
           processAllCartLinks(buyflowUrl);
@@ -1378,7 +1378,7 @@
       
       history.pushState = function() {
         originalPushState.apply(this, arguments);
-        console.log('[BSP Cart Button Finder] pushState detected - re-injecting');
+        console.log('[EMB Cart Button Finder] pushState detected - re-injecting');
         setTimeout(() => {
           processScopedLinks(buyflowUrl);
           processAllCartLinks(buyflowUrl);
@@ -1387,16 +1387,16 @@
       
       history.replaceState = function() {
         originalReplaceState.apply(this, arguments);
-        console.log('[BSP Cart Button Finder] replaceState detected - re-injecting');
+        console.log('[EMB Cart Button Finder] replaceState detected - re-injecting');
         setTimeout(() => {
           processScopedLinks(buyflowUrl);
           processAllCartLinks(buyflowUrl);
         }, 100);
       };
 
-      console.log('[BSP Cart Button Finder] Main script execution completed with React protection');
+      console.log('[EMB Cart Button Finder] Main script execution completed with React protection');
     } catch (error) {
-      console.error('[BSP Cart Button Finder] Error in main script:', error);
+      console.error('[EMB Cart Button Finder] Error in main script:', error);
     }
   }
 })();
