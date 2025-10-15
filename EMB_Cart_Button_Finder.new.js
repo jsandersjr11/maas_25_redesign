@@ -1109,7 +1109,7 @@
                       display: inline !important;
                       visibility: visible !important;
                       opacity: 1 !important;
-                  ">Check availability</span>
+                  ">Order Online</span>
               </button>
           </a>`;
 
