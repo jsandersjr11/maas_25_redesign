@@ -936,74 +936,305 @@
         })();
 
       if (parsedData) {
-        console.log('[BSP Cart Button Finder] Using MAPI data:', parsedData);
-
-        // Get promo code from MAPI data
-        const promoCode = parsedData.promoCode;
-        if (promoCode) {
-          console.log('[BSP Cart Button Finder] Found promo code:', promoCode);
-
-          // Look up sales code from promo code
-          if (promoToSalesCodeMap[promoCode]) {
-            salescode = promoToSalesCodeMap[promoCode];
-            console.log('[BSP Cart Button Finder] Found sales code:', salescode);
+        console.log('[BSP Cart Button Finder] MAPI data structure found');
+        console.log('[BSP Cart Button Finder] Root level keys:', Object.keys(parsedData));
+        
+        // Extract request_id - check all possible locations if we don't already have it from the event
+        if (!clearlinkeventid) {
+          if (parsedData.requestId) {
+            clearlinkeventid = parsedData.requestId;
+            console.log('[BSP Cart Button Finder] Extracted requestId (ACSID) from root level:', clearlinkeventid);
+          } else if (parsedData.requestData && parsedData.requestData.requestId) {
+            clearlinkeventid = parsedData.requestData.requestId;
+            console.log('[BSP Cart Button Finder] Extracted requestId (ACSID) from requestData:', clearlinkeventid);
+          } else if (
+            parsedData.requestData &&
+            parsedData.requestData.fullResponse &&
+            parsedData.requestData.fullResponse.data &&
+            parsedData.requestData.fullResponse.data.request_id
+          ) {
+            clearlinkeventid = parsedData.requestData.fullResponse.data.request_id;
+            console.log('[BSP Cart Button Finder] Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
           } else {
-            console.log('[BSP Cart Button Finder] No sales code found for promo code:', promoCode);
+            console.log('[BSP Cart Button Finder] Could not find request_id in any expected location');
           }
-        } else {
-          console.log('[BSP Cart Button Finder] No promo code found in MAPI data');
         }
 
-        // Get request ID from MAPI data
-        if (parsedData.requestId) {
-          clearlinkeventid = parsedData.requestId;
-          console.log('[BSP Cart Button Finder] Using requestId from MAPI:', clearlinkeventid);
+        // Extract promo_code - check all possible locations
+        let promoCode = null;
+        
+        // First check in fullResponse.data.promo_code
+        if (
+          parsedData.requestData &&
+          parsedData.requestData.fullResponse &&
+          parsedData.requestData.fullResponse.data &&
+          parsedData.requestData.fullResponse.data.promo_code
+        ) {
+          promoCode = parsedData.requestData.fullResponse.data.promo_code;
+          console.log('[BSP Cart Button Finder] Extracted promo_code from fullResponse.data:', promoCode);
+        } 
+        // Then check in promo_data.data.promo_code
+        else if (
+          parsedData.requestData &&
+          parsedData.requestData.fullResponse &&
+          parsedData.requestData.fullResponse.data &&
+          parsedData.requestData.fullResponse.data.promo_data &&
+          parsedData.requestData.fullResponse.data.promo_data.data &&
+          parsedData.requestData.fullResponse.data.promo_data.data.promo_code
+        ) {
+          promoCode = parsedData.requestData.fullResponse.data.promo_data.data.promo_code;
+          console.log('[BSP Cart Button Finder] Extracted promo_code from promo_data.data:', promoCode);
+        }
+        // Check other possible locations
+        else if (parsedData.promo_code) {
+          promoCode = parsedData.promo_code;
+          console.log('[BSP Cart Button Finder] Extracted promo_code from root level:', promoCode);
+        } else if (parsedData.lastPromo) {
+          promoCode = parsedData.lastPromo;
+          console.log('[BSP Cart Button Finder] Extracted lastPromo from root level:', promoCode);
+        } else {
+          console.log('[BSP Cart Button Finder] Could not find promo_code in any expected location');
+        }
+
+        // Map promo code to sales code
+        if (promoCode) {
+          const promoCodeStr = String(promoCode);
+          if (promoToSalesCodeMap[promoCodeStr]) {
+            salescode = promoToSalesCodeMap[promoCodeStr];
+            console.log('[BSP Cart Button Finder] Mapped promo code', promoCodeStr, 'to sales code:', salescode);
+          } else {
+            console.log('[BSP Cart Button Finder] No mapping found for promo code:', promoCodeStr);
+          }
         }
       }
 
-      // Find all cart buttons
-      const cartButtons = document.querySelectorAll('a.btn-cart, a.btn--cart, a.cart-button, a.cart-btn, a.add-to-cart');
-      console.log('[BSP Cart Button Finder] Found cart buttons:', cartButtons.length);
+      // Build the buyflow URL with the extracted values
+      let buyflowUrl = `https://px-demo-ordering.lumen.com/index?salescode=${salescode}&partnerId=clearlink${
+        clearlinkeventid ? `&acsid=${clearlinkeventid}` : ''
+      }`;
 
-      // Add click event listener to each cart button
-      cartButtons.forEach((button) => {
-        button.addEventListener('click', (event) => {
-          console.log('[BSP Cart Button Finder] Cart button clicked');
+      console.log('[BSP Cart Button Finder] Constructed buyflow URL:', buyflowUrl);
 
-          // Send event to Clearlink event tracking system
-          if (typeof window.clEvent === 'function') {
-            window.clEvent('cart', {
-              salescode,
-              clearlinkeventid,
-            });
-            console.log('[BSP Cart Button Finder] Sent event to Clearlink:', { salescode, clearlinkeventid });
-          } else {
-            console.error('[BSP Cart Button Finder] clEvent function not found');
+      // Process inside <main> > first <section> > .content per scenarios
+      function processScopedLinks(url) {
+        const mainEl = document.querySelector('main');
+        if (!mainEl) {
+          console.log('[BSP Cart Button Finder] <main> not found');
+          return;
+        }
+        const firstSection = mainEl.querySelector('section');
+        if (!firstSection) {
+          console.log('[BSP Cart Button Finder] No <section> inside <main>');
+          return;
+        }
+        const content = firstSection.querySelector('.content');
+        if (!content) {
+          console.log('[BSP Cart Button Finder] .content not found inside first <section>');
+          return;
+        }
+
+        // If we find an <input>, do nothing
+        if (content.querySelector('input')) {
+          console.log('[BSP Cart Button Finder] <input> found in scope; skipping');
+          return;
+        }
+
+        const telAnchor = content.querySelector('a[href^="tel:"]');
+        const cartAnchor = content.querySelector('a[href*="/cart"]');
+
+        // If both exist: update only the /cart link
+        if (telAnchor && cartAnchor) {
+          try {
+            cartAnchor.href = url;
+            cartAnchor.dataset.bspUpdated = '1';
+            console.log('[BSP Cart Button Finder] Updated existing /cart link in scope');
+          } catch (e) {
+            console.error('[BSP Cart Button Finder] Failed updating /cart link', e);
+          }
+          return;
+        }
+
+        // If only tel exists: append the button anchor
+        if (telAnchor && !cartAnchor) {
+          // Avoid duplicating if already injected
+          if (content.querySelector('a.leshen-link-button-wrapper[data-bsp-injected="1"]')) {
+            console.log('[BSP Cart Button Finder] Button already injected; skipping');
+            return;
+          }
+
+          const buttonId = 'bsp-injected-button-' + Math.floor(Math.random() * 10000);
+          
+          const newButtonHtml = `
+          <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0 bsp-cart-link" href="${url}" data-bsp-injected="1" visibility="All devices" style="
+              display: block !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+          ">
+              <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button" style="
+                      display: -webkit-flex;
+                      display: -ms-flexbox;
+                      display: flex;
+                      -webkit-align-items: center;
+                      -webkit-box-align: center;
+                      -ms-flex-align: center;
+                      align-items: center;
+                      -webkit-box-pack: center;
+                      -ms-flex-pack: center;
+                      -webkit-justify-content: center;
+                      justify-content: center;
+                      padding: 8px 16px;
+                      font: inherit;
+                      color: #fff;
+                      background-color: #0047BB;
+                      color: #fff;
+                      border: 0;
+                      border-radius: 4px;
+                      cursor: pointer;
+                      -webkit-transition: all 0.3s;
+                      transition: all 0.3s;
+                      -webkit-appearance: button;
+                      box-shadow: 0 0.3rem 1rem 0 rgba(0, 0, 0, 0.1);
+                      padding-top: 16px;
+                      padding-bottom: 16px;
+                      padding-left: 48px;
+                      padding-right: 48px;
+                      margin-top: 1.5rem;
+
+              ">
+                  <span class="button-text css-2qtueq e1hk20aw0" style="
+                      font-weight: 500;
+                      font-size: 24px;
+                      line-height: calc(1.1111111111111112vw + 0.75rem);
+                      pointer-events: auto !important;
+                      display: inline !important;
+                      visibility: visible !important;
+                      opacity: 1 !important;
+                  ">Check availability</span>
+              </button>
+          </a>`;
+
+          try {
+            try {
+              telAnchor.insertAdjacentHTML('afterend', newButtonHtml);
+              console.log('[BSP Cart Button Finder] Injected buyflow button after tel: link');
+            } catch (innerError) {
+              console.warn('[BSP Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = newButtonHtml;
+              const buttonElement = tempDiv.firstElementChild;
+              telAnchor.parentNode.insertBefore(buttonElement, telAnchor.nextSibling);
+              console.log('[BSP Cart Button Finder] Injected buyflow button using alternative method');
+            }
+            protectInjectedElements();
+          } catch (e) {
+            console.error('[BSP Cart Button Finder] All insertion methods failed', e);
+            try {
+              const parentSection = content.closest('section');
+              if (parentSection) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = newButtonHtml;
+                const buttonElement = tempDiv.firstElementChild;
+                parentSection.appendChild(buttonElement);
+                console.log('[BSP Cart Button Finder] Injected buyflow button at end of section as last resort');
+                protectInjectedElements();
+              }
+            } catch (lastError) {
+              console.error('[BSP Cart Button Finder] Even last resort insertion failed', lastError);
+            }
+          }
+          return;
+        }
+
+        // If only /cart exists (no tel): update it
+        if (!telAnchor && cartAnchor) {
+          try {
+            cartAnchor.href = url;
+            cartAnchor.dataset.bspUpdated = '1';
+            console.log('[BSP Cart Button Finder] Updated /cart link (no tel present)');
+          } catch (e) {
+            console.error('[BSP Cart Button Finder] Failed updating /cart link (no tel)', e);
+          }
+        }
+      }
+
+      // Process all cart links on the entire page
+      function processAllCartLinks(url) {
+        console.log('[BSP Cart Button Finder] Searching for all cart links on the page');
+        const allCartLinks = document.querySelectorAll('a[href="/cart"], a[href*="/cart"]');
+        
+        if (allCartLinks.length === 0) {
+          console.log('[BSP Cart Button Finder] No cart links found on the page');
+          return;
+        }
+        
+        console.log(`[BSP Cart Button Finder] Found ${allCartLinks.length} cart links on the page`);
+        
+        allCartLinks.forEach((link, index) => {
+          try {
+            if (link.dataset.bspUpdated === '1') {
+              console.log(`[BSP Cart Button Finder] Skipping already updated cart link #${index + 1}`);
+              return;
+            }
+            
+            link.href = url;
+            link.dataset.bspUpdated = '1';
+            console.log(`[BSP Cart Button Finder] Updated cart link #${index + 1}`);
+          } catch (e) {
+            console.error(`[BSP Cart Button Finder] Failed updating cart link #${index + 1}`, e);
           }
         });
-      });
+      }
 
-      // Find all checkout buttons
-      const checkoutButtons = document.querySelectorAll('a.btn-checkout, a.btn--checkout, a.checkout-button, a.checkout-btn');
-      console.log('[BSP Cart Button Finder] Found checkout buttons:', checkoutButtons.length);
-
-      // Add click event listener to each checkout button
-      checkoutButtons.forEach((button) => {
-        button.addEventListener('click', (event) => {
-          console.log('[BSP Cart Button Finder] Checkout button clicked');
-
-          // Send event to Clearlink event tracking system
-          if (typeof window.clEvent === 'function') {
-            window.clEvent('checkout', {
-              salescode,
-              clearlinkeventid,
-            });
-            console.log('[BSP Cart Button Finder] Sent event to Clearlink:', { salescode, clearlinkeventid });
-          } else {
-            console.error('[BSP Cart Button Finder] clEvent function not found');
-          }
+      // Function to protect injected elements from removal
+      function protectInjectedElements() {
+        const injectedElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
+        
+        injectedElements.forEach(element => {
+          const originalRemove = element.remove;
+          element.remove = function() {
+            console.log('[BSP Cart Button Finder] Prevented removal of injected element');
+            return false;
+          };
+          
+          const originalSetAttribute = element.setAttribute;
+          element.setAttribute = function(name, value) {
+            if (name === 'style' && (value.includes('display: none') || value.includes('visibility: hidden') || value.includes('opacity: 0'))) {
+              console.log('[BSP Cart Button Finder] Prevented style attribute change that would hide element');
+              return false;
+            }
+            return originalSetAttribute.call(this, name, value);
+          };
+          
+          const originalClassListAdd = element.classList.add;
+          element.classList.add = function(className) {
+            if (className.includes('hidden') || className.includes('invisible') || className.includes('removed')) {
+              console.log('[BSP Cart Button Finder] Prevented adding class that might hide element:', className);
+              return false;
+            }
+            return originalClassListAdd.call(this, className);
+          };
         });
-      });
+      }
+
+      // Initial values snapshot and initial apply
+      const initialValues = { salescode, clearlinkeventid };
+   
+      // Add a global verification flag to track successful URL modifications
+      window.bspCartButtonFinderSuccess = false;
+   
+      processScopedLinks(buyflowUrl);
+      processAllCartLinks(buyflowUrl);
+   
+      // Check if initial application was successful
+      const initialInjectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
+      const initialUpdatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+   
+      if (initialInjectedElements.length > 0 || initialUpdatedElements.length > 0) {
+        console.log('[BSP Cart Button Finder] Initial URL modifications successful');
+        window.bspCartButtonFinderSuccess = true;
+      }
+
+      console.log('[BSP Cart Button Finder] Main script execution completed');
     } catch (error) {
       console.error('[BSP Cart Button Finder] Error in main script:', error);
     }
