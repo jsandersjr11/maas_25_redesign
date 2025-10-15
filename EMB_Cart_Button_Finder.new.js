@@ -1190,12 +1190,30 @@
         const injectedElements = document.querySelectorAll('[data-bsp-injected="1"], [data-bsp-updated="1"]');
         
         injectedElements.forEach(element => {
+          // Store reference to parent for re-injection
+          const parentElement = element.parentNode;
+          const nextSibling = element.nextSibling;
+          
+          // Override remove method
           const originalRemove = element.remove;
           element.remove = function() {
-            console.log('[BSP Cart Button Finder] Prevented removal of injected element');
+            console.log('[BSP Cart Button Finder] Prevented removal of injected element via remove()');
             return false;
           };
           
+          // Override removeChild on parent
+          if (parentElement && parentElement.removeChild) {
+            const originalRemoveChild = parentElement.removeChild;
+            parentElement.removeChild = function(child) {
+              if (child === element || child.dataset?.bspInjected === '1' || child.dataset?.bspUpdated === '1') {
+                console.log('[BSP Cart Button Finder] Prevented removal of injected element via removeChild()');
+                return child;
+              }
+              return originalRemoveChild.call(this, child);
+            };
+          }
+          
+          // Prevent style changes that would hide the element
           const originalSetAttribute = element.setAttribute;
           element.setAttribute = function(name, value) {
             if (name === 'style' && (value.includes('display: none') || value.includes('visibility: hidden') || value.includes('opacity: 0'))) {
@@ -1205,6 +1223,7 @@
             return originalSetAttribute.call(this, name, value);
           };
           
+          // Prevent class changes that might hide the element
           const originalClassListAdd = element.classList.add;
           element.classList.add = function(className) {
             if (className.includes('hidden') || className.includes('invisible') || className.includes('removed')) {
@@ -1213,7 +1232,112 @@
             }
             return originalClassListAdd.call(this, className);
           };
+          
+          // Make the element non-enumerable to React's reconciliation
+          Object.defineProperty(element, '__reactInternalInstance', {
+            value: null,
+            writable: false,
+            enumerable: false,
+            configurable: false
+          });
+          
+          Object.defineProperty(element, '__reactFiber', {
+            value: null,
+            writable: false,
+            enumerable: false,
+            configurable: false
+          });
         });
+      }
+
+      // Function to set up aggressive mutation observer for React protection
+      function setupReactProtectionObserver(url) {
+        console.log('[BSP Cart Button Finder] Setting up React protection MutationObserver');
+        
+        const observer = new MutationObserver((mutations) => {
+          let needToReapply = false;
+          
+          mutations.forEach((mutation) => {
+            // Check if nodes were removed
+            if (mutation.removedNodes.length > 0) {
+              for (let i = 0; i < mutation.removedNodes.length; i++) {
+                const node = mutation.removedNodes[i];
+                
+                if (node.nodeType === 1) { // ELEMENT_NODE
+                  if (node.dataset && (node.dataset.bspInjected === '1' || node.dataset.bspUpdated === '1')) {
+                    console.log('[BSP Cart Button Finder] React removed our injected element - re-injecting immediately');
+                    needToReapply = true;
+                    break;
+                  }
+                  
+                  if (node.querySelector && node.querySelector('[data-bsp-injected="1"], [data-bsp-updated="1"]')) {
+                    console.log('[BSP Cart Button Finder] React removed container with our elements - re-injecting immediately');
+                    needToReapply = true;
+                    break;
+                  }
+                }
+              }
+            }
+          });
+          
+          if (needToReapply) {
+            // Immediate re-injection
+            setTimeout(() => {
+              console.log('[BSP Cart Button Finder] Re-applying after React removal');
+              processScopedLinks(url);
+              processAllCartLinks(url);
+            }, 10); // Very short delay
+          }
+        });
+        
+        // Observe the entire document with aggressive settings
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: false
+        });
+        
+        console.log('[BSP Cart Button Finder] React protection observer active');
+      }
+
+      // Continuous monitoring function to detect and re-inject
+      function setupContinuousMonitoring(url) {
+        console.log('[BSP Cart Button Finder] Setting up continuous monitoring');
+        
+        // Check every 500ms for the first 30 seconds
+        let quickCheckCount = 0;
+        const quickCheckMax = 60; // 30 seconds at 500ms intervals
+        
+        const quickInterval = setInterval(() => {
+          quickCheckCount++;
+          
+          if (quickCheckCount >= quickCheckMax) {
+            clearInterval(quickInterval);
+            console.log('[BSP Cart Button Finder] Quick monitoring phase complete');
+            return;
+          }
+          
+          const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
+          const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+          
+          if (injectedElements.length === 0 && updatedElements.length === 0) {
+            console.log('[BSP Cart Button Finder] Quick check: Elements missing, re-injecting');
+            processScopedLinks(url);
+            processAllCartLinks(url);
+          }
+        }, 500);
+        
+        // Then check every 2 seconds indefinitely
+        setInterval(() => {
+          const injectedElements = document.querySelectorAll('[data-bsp-injected="1"]');
+          const updatedElements = document.querySelectorAll('[data-bsp-updated="1"]');
+          
+          if (injectedElements.length === 0 && updatedElements.length === 0) {
+            console.log('[BSP Cart Button Finder] Periodic check: Elements missing, re-injecting');
+            processScopedLinks(url);
+            processAllCartLinks(url);
+          }
+        }, 2000);
       }
 
       // Initial values snapshot and initial apply
@@ -1222,6 +1346,7 @@
       // Add a global verification flag to track successful URL modifications
       window.bspCartButtonFinderSuccess = false;
    
+      // Initial injection
       processScopedLinks(buyflowUrl);
       processAllCartLinks(buyflowUrl);
    
@@ -1233,8 +1358,43 @@
         console.log('[BSP Cart Button Finder] Initial URL modifications successful');
         window.bspCartButtonFinderSuccess = true;
       }
+      
+      // Set up React-specific protection mechanisms
+      setupReactProtectionObserver(buyflowUrl);
+      setupContinuousMonitoring(buyflowUrl);
+      
+      // Also re-inject on common React lifecycle events
+      window.addEventListener('popstate', () => {
+        console.log('[BSP Cart Button Finder] popstate event - re-injecting');
+        setTimeout(() => {
+          processScopedLinks(buyflowUrl);
+          processAllCartLinks(buyflowUrl);
+        }, 100);
+      });
+      
+      // Watch for React Router navigation
+      const originalPushState = history.pushState;
+      const originalReplaceState = history.replaceState;
+      
+      history.pushState = function() {
+        originalPushState.apply(this, arguments);
+        console.log('[BSP Cart Button Finder] pushState detected - re-injecting');
+        setTimeout(() => {
+          processScopedLinks(buyflowUrl);
+          processAllCartLinks(buyflowUrl);
+        }, 100);
+      };
+      
+      history.replaceState = function() {
+        originalReplaceState.apply(this, arguments);
+        console.log('[BSP Cart Button Finder] replaceState detected - re-injecting');
+        setTimeout(() => {
+          processScopedLinks(buyflowUrl);
+          processAllCartLinks(buyflowUrl);
+        }, 100);
+      };
 
-      console.log('[BSP Cart Button Finder] Main script execution completed');
+      console.log('[BSP Cart Button Finder] Main script execution completed with React protection');
     } catch (error) {
       console.error('[BSP Cart Button Finder] Error in main script:', error);
     }
