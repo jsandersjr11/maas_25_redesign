@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Test - Address Qualification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #0055b3; }
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+        .alert-info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1976d2;
+        }
+        .alert-success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        .alert-warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+        .code {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Quick Test Page</h1>
+        
+        <div class="alert alert-info">
+            <strong>Instructions:</strong><br>
+            1. Enter your Google Maps API key below<br>
+            2. Click "Load Script"<br>
+            3. The zip input will transform to address input<br>
+            4. Start typing an address to see autocomplete
+        </div>
+        
+        <div>
+            <label for="apiKey"><strong>Google Maps API Key:</strong></label>
+            <input type="text" id="apiKey" placeholder="Enter your API key here" style="width: 100%; margin: 10px 0;">
+            <button onclick="loadScript()" style="width: 100%;">Load Script</button>
+        </div>
+        
+        <div id="status" style="margin: 20px 0;"></div>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+        
+        <h2>Test Form</h2>
+        <form id="testForm">
+            <div class="input-group">
+                <input type="tel" name="zip" data-type="zip" id="plansHero" placeholder="Zip code" maxlength="5" minlength="5" required>
+                <button type="submit">Search</button>
+            </div>
+            <label class="error hidden" for="plansHero" style="color: #d32f2f; display: none;"></label>
+        </form>
+        
+        <div id="result" style="margin-top: 20px;"></div>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+        
+        <details>
+            <summary style="cursor: pointer; font-weight: bold; margin: 10px 0;">📖 How to get an API key</summary>
+            <div style="margin: 15px 0;">
+                <ol>
+                    <li>Go to <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                    <li>Create a new project or select existing</li>
+                    <li>Enable these APIs:
+                        <ul>
+                            <li>Maps JavaScript API</li>
+                            <li>Places API</li>
+                        </ul>
+                    </li>
+                    <li>Go to Credentials → Create Credentials → API Key</li>
+                    <li>Copy your API key</li>
+                    <li>(Optional) Restrict the key to your domain</li>
+                </ol>
+            </div>
+        </details>
+    </div>
+    
+    <script>
+        function loadScript() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const statusDiv = document.getElementById('status');
+            
+            if (!apiKey) {
+                statusDiv.innerHTML = '<div class="alert alert-warning">⚠️ Please enter your API key first</div>';
+                return;
+            }
+            
+            statusDiv.innerHTML = '<div class="alert alert-info">⏳ Loading Google Maps API...</div>';
+            
+            // Load Google Maps API first
+            const mapsScript = document.createElement('script');
+            mapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+            mapsScript.async = true;
+            
+            mapsScript.onload = function() {
+                statusDiv.innerHTML = '<div class="alert alert-success">✅ Google Maps API loaded! Now initializing autocomplete...</div>';
+                
+                // Initialize the address qualification functionality
+                setTimeout(() => {
+                    initAddressQualification();
+                }, 500);
+            };
+            
+            mapsScript.onerror = function() {
+                statusDiv.innerHTML = '<div class="alert alert-warning">❌ Failed to load Google Maps API. Check your API key and ensure Places API is enabled.</div>';
+            };
+            
+            document.head.appendChild(mapsScript);
+        }
+        
+        function initAddressQualification() {
+            const statusDiv = document.getElementById('status');
+            
+            try {
+                // Find and modify the input
+                const zipInput = document.querySelector('input[name="zip"][data-type="zip"]');
+                
+                if (!zipInput) {
+                    statusDiv.innerHTML = '<div class="alert alert-warning">❌ Could not find zip input field</div>';
+                    return;
+                }
+                
+                // Modify input attributes
+                zipInput.setAttribute('type', 'text');
+                zipInput.setAttribute('name', 'address');
+                zipInput.setAttribute('data-type', 'address');
+                zipInput.setAttribute('placeholder', 'Enter your address');
+                zipInput.removeAttribute('maxlength');
+                zipInput.removeAttribute('minlength');
+                zipInput.setAttribute('autocomplete', 'off');
+                
+                // Initialize Google Places Autocomplete
+                const autocomplete = new google.maps.places.Autocomplete(zipInput, {
+                    types: ['address'],
+                    componentRestrictions: { country: 'us' },
+                    fields: ['address_components', 'formatted_address', 'geometry', 'place_id']
+                });
+                
+                // Handle place selection
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+                    const resultDiv = document.getElementById('result');
+                    
+                    if (!place.geometry) {
+                        resultDiv.innerHTML = '<div class="alert alert-warning">⚠️ No details available for that address</div>';
+                        return;
+                    }
+                    
+                    // Parse address components
+                    const addressData = {
+                        formatted: place.formatted_address,
+                        components: {}
+                    };
+                    
+                    place.address_components.forEach(component => {
+                        const types = component.types;
+                        if (types.includes('street_number')) addressData.components.streetNumber = component.long_name;
+                        if (types.includes('route')) addressData.components.route = component.long_name;
+                        if (types.includes('locality')) addressData.components.city = component.long_name;
+                        if (types.includes('administrative_area_level_1')) addressData.components.state = component.short_name;
+                        if (types.includes('postal_code')) addressData.components.zip = component.long_name;
+                    });
+                    
+                    // Display result
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>✅ Address Selected!</strong><br><br>
+                            <strong>Formatted:</strong> ${addressData.formatted}<br><br>
+                            <strong>Components:</strong>
+                            <div class="code">${JSON.stringify(addressData.components, null, 2)}</div>
+                            <strong>Coordinates:</strong> ${place.geometry.location.lat()}, ${place.geometry.location.lng()}<br>
+                            <strong>Place ID:</strong> ${place.place_id}
+                        </div>
+                    `;
+                    
+                    // Store in input
+                    zipInput.dataset.selectedAddress = JSON.stringify(addressData);
+                    zipInput.style.borderColor = '#4caf50';
+                });
+                
+                // Handle form submission
+                document.getElementById('testForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const resultDiv = document.getElementById('result');
+                    
+                    if (!zipInput.dataset.selectedAddress) {
+                        resultDiv.innerHTML = '<div class="alert alert-warning">⚠️ Please select an address from the suggestions</div>';
+                        return;
+                    }
+                    
+                    const addressData = JSON.parse(zipInput.dataset.selectedAddress);
+                    const cartUrl = `/cart?address=${encodeURIComponent(addressData.formatted)}`;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-info">
+                            <strong>🚀 Form Submitted!</strong><br><br>
+                            Would redirect to:<br>
+                            <div class="code">${cartUrl}</div>
+                            <br>
+                            <small>(Redirect prevented for demo purposes)</small>
+                        </div>
+                    `;
+                });
+                
+                statusDiv.innerHTML = '<div class="alert alert-success">✅ Address qualification ready! Start typing an address above.</div>';
+                
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="alert alert-warning">❌ Error: ${error.message}</div>`;
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

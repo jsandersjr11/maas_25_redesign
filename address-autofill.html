@@ -1,0 +1,261 @@
+<!-- Radar Autocomplete Dependencies -->
+<link href="https://js.radar.com/v4.5.3/radar.css" rel="stylesheet">
+<script src="https://js.radar.com/v4.5.3/radar.min.js"></script>
+
+<style>
+    .columns.small-12.large-8 {
+        background-color: #1a2b4a;
+        padding: 3rem 2rem;
+        border-radius: 8px;
+    }
+    
+    .font-small.no-margin-bottom.small-padding {
+        color: #ffffff !important;
+        font-size: 1.5rem !important;
+        font-weight: 400 !important;
+        margin-bottom: 1.5rem !important;
+    }
+    
+    #autocomplete {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    #autocomplete input {
+        width: 100% !important;
+        height: 60px !important;
+        padding: 1rem 1.5rem !important;
+        border: none !important;
+        border-radius: 0 !important;
+        font-size: 1.25rem !important;
+        color: #666 !important;
+        background-color: #ffffff !important;
+    }
+    
+    #autocomplete input::placeholder {
+        color: #999 !important;
+        font-size: 1.25rem !important;
+    }
+    
+    .input-group {
+        display: flex;
+        align-items: stretch;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .input-group .button {
+        background-color: #e91e63 !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 1rem 3rem !important;
+        font-size: 1.25rem !important;
+        font-weight: 600 !important;
+        text-transform: capitalize !important;
+        min-width: 200px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .input-group .button:hover {
+        background-color: #c2185b !important;
+    }
+    
+    #addressError {
+        color: #ff6b6b;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="columns small-12 large-8" style="justify-content:center">
+    <div class="wpb_text_column wpb_content_element vc_custom_1741211791188">
+        <div class="wpb_wrapper"> </div>
+    </div>
+    <div class="wpb_text_column wpb_content_element">
+        <div class="wpb_wrapper">
+            <p class="font-small no-margin-bottom small-padding">Enter your Address for more accurate results.</p>
+        </div>
+    </div>
+    <div class="wpb_text_column wpb_content_element">
+        <div class="wpb_wrapper">
+            <form class="zip-finder" id="addressForm" method="post" accept-charset="UTF-8"> 
+                <input type="text" size="5" tabindex="-1" readonly="" style="position:fixed;-webkit-appearance:none;box-shadow:none;border:none;background:none;cursor:default;z-index:-1;width: 1px;height:1px;"> 
+                <input type="hidden" name="tab" value=""> 
+                <input type="hidden" name="redirect" value="sb-3">
+                <input type="hidden" name="zip" id="selectedZip" value="">
+                <div class="input-group">
+                    <div id="autocomplete"></div>
+                    <button type="submit" class="button square" data-component="body" id="searchButton">Search</button>
+                </div>
+                <label class="error hidden" id="addressError"></label>
+            </form>
+            <p></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize VWO event tracking
+    window.VWO = window.VWO || [];
+    VWO.event = VWO.event || function () {VWO.push(["event"].concat([].slice.call(arguments)));};
+
+    // Store selected zip code
+    let selectedZipCode = '';
+
+    // Initialize Radar Autocomplete
+    function initializeRadarAutocomplete() {
+        if (typeof Radar === 'undefined') {
+            console.error('Radar SDK not loaded');
+            setTimeout(initializeRadarAutocomplete, 500);
+            return;
+        }
+
+        try {
+            // Initialize Radar with your API key
+            Radar.initialize('prj_live_pk_d3a1113fc5c543c5fcd05f707d094fa5471b359d');
+
+            // Create autocomplete input
+            Radar.ui.autocomplete({
+                container: 'autocomplete',
+                showMarkers: false,
+                responsive: true,
+                width: '100%',
+                placeholder: 'Address',
+                limit: 8,
+                minCharacters: 3,
+                near: null,
+                onSelection: (address) => {
+                    console.log('Selected address:', address);
+                    
+                    // Save complete address to localStorage
+                    if (address) {
+                        localStorage.setItem('selectedAddress', JSON.stringify(address));
+                        console.log('Address saved to localStorage:', address);
+                    }
+                    
+                    // Extract zip code from the address
+                    if (address && address.postalCode) {
+                        selectedZipCode = address.postalCode;
+                        document.getElementById('selectedZip').value = selectedZipCode;
+                        localStorage.setItem('selectedZipCode', selectedZipCode);
+                        console.log('Zip code extracted:', selectedZipCode);
+                    } else {
+                        console.warn('No postal code found in selected address');
+                    }
+                },
+            });
+            
+            console.log('Radar autocomplete initialized successfully');
+        } catch (error) {
+            console.error('Error initializing Radar autocomplete:', error);
+        }
+    }
+
+    // Handle form submission
+    function setupFormHandler() {
+        const form = document.getElementById('addressForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Always prevent default first
+                
+                const zipInput = document.getElementById('selectedZip');
+                const errorLabel = document.getElementById('addressError');
+                
+                if (!zipInput.value || zipInput.value.length !== 5) {
+                    errorLabel.textContent = 'Please select a valid address with a ZIP code';
+                    errorLabel.classList.remove('hidden');
+                    return false;
+                }
+                
+                errorLabel.classList.add('hidden');
+                console.log('Submitting form with ZIP:', zipInput.value);
+                
+                // Trigger VWO event for zip code form submission
+                try {
+                    if (typeof VWO !== 'undefined' && typeof VWO.event === 'function') {
+                        VWO.event('zipCodeFormSubmission');
+                        console.log('VWO event triggered: zipCodeFormSubmission');
+                    } else {
+                        console.warn('VWO is not available');
+                    }
+                } catch (error) {
+                    console.error('Error triggering VWO event:', error);
+                }
+                
+                // Submit form after a short delay to ensure VWO event is sent
+                setTimeout(function() {
+                    console.log('Submitting form now...');
+                    form.submit();
+                }, 300);
+            });
+        }
+    }
+
+    function injectCustomChanges() {
+    try {
+        // --- 1. CONTENT REPLACEMENT ---
+        // This replaces the .geo-hero__zip element
+
+        const htmlToReplace = `<div class="geo-hero__zip" style="display:none"> <button type="button" class="geo-zip__button"> <img decoding="async" src="https://www.highspeedinternet.com/app/themes/bifrost-child/dist/images/svg/icon-search.svg" loading="lazy" height="28" width="28" alt="Search ZIP Codes" class="geo-zip__mag"> <span class="geo-zip__close">×</span> <div class="ball-spin-fade-loader"> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> </div> </button> <form class="geo-banner__form zip-finder"> <span data-tooltip="sdr3ub-tooltip" title="" data-tooltip-class="tooltip" class="find-zip__tooltip hidden has-tip" aria-describedby="44jns9-tooltip" data-yeti-box="44jns9-tooltip" data-toggle="44jns9-tooltip" data-resize="44jns9-tooltip" style="display: inline;"><button type="button" class="find-zip"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"> <path d="M24 16c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm17.88 6c-.92-8.34-7.54-14.96-15.88-15.88v-4.12h-4v4.12c-8.34.92-14.96 7.54-15.88 15.88h-4.12v4h4.12c.92 8.34 7.54 14.96 15.88 15.88v4.12h4v-4.12c8.34-.92 14.96-7.54 15.88-15.88h4.12v-4h-4.12zm-17.88 16c-7.73 0-14-6.27-14-14s6.27-14 14-14 14 6.27 14 14-6.27 14-14 14z"></path> </svg></button></span> <input type="tel" name="zip" id="banner-zip" placeholder="Enter ZIP Code" maxlength="5" minlength="5" autocomplete="off" required=""> <button type="submit" class="show-for-sr" data-component="body">Search ZIP Code</button> <label class="error hidden" for="banner-zip"></label> </form> </div>`;
+
+        const elementToReplace = document.querySelector(".geo-hero__zip");
+        if (elementToReplace) {
+            elementToReplace.outerHTML = htmlToReplace;
+        } else {
+            console.warn("Custom script: Could not find '.geo-hero__zip' to replace.");
+        }
+
+        // --- 2. ADD & REARRANGE ELEMENT (REMOVED) ---
+        // This section has been removed to prevent duplicate HTML insertion.
+        // The HTML is already present at the top of this file.
+
+        // --- 3. CUSTOM CODE (REMOVED) ---
+        // The original VWO event tracking code was here.
+        // It has been removed as it serves no purpose without VWO.
+
+    } catch (error) {
+        console.error("Error injecting custom script:", error);
+    }
+}
+
+// --- Initialize everything ---
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        injectCustomChanges();
+        initializeRadarAutocomplete();
+        setupFormHandler();
+    });
+} else {
+    injectCustomChanges();
+    initializeRadarAutocomplete();
+    setupFormHandler();
+}
+
+/*
+ * TO RETRIEVE THE ADDRESS ON ANOTHER PAGE:
+ * 
+ * // Get the complete address object
+ * const savedAddress = JSON.parse(localStorage.getItem('selectedAddress'));
+ * 
+ * // Get just the ZIP code
+ * const zipCode = localStorage.getItem('selectedZipCode');
+ * 
+ * // Access address properties:
+ * if (savedAddress) {
+ *     console.log('Full Address:', savedAddress.formattedAddress);
+ *     console.log('Street:', savedAddress.addressLabel);
+ *     console.log('City:', savedAddress.city);
+ *     console.log('State:', savedAddress.state);
+ *     console.log('ZIP Code:', savedAddress.postalCode);
+ *     console.log('Country:', savedAddress.country);
+ *     console.log('Latitude:', savedAddress.latitude);
+ *     console.log('Longitude:', savedAddress.longitude);
+ * }
+ * 
+ * // To clear the saved address:
+ * localStorage.removeItem('selectedAddress');
+ * localStorage.removeItem('selectedZipCode');
+ */
+</script>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Qualification Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        input[type="tel"],
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.25);
+        }
+        
+        button {
+            padding: 12px 24px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #0055b3;
+        }
+        
+        button:active {
+            background-color: #004499;
+        }
+        
+        .vwo_bl {
+            /* Placeholder for VWO classes */
+        }
+        
+        label.error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        label.error.hidden {
+            display: none;
+        }
+        
+        .instructions {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 4px;
+        }
+        
+        .instructions h2 {
+            margin-top: 0;
+            color: #1976d2;
+            font-size: 18px;
+        }
+        
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+        }
+        
+        .code-block {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .status.info {
+            background-color: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1976d2;
+            display: block;
+        }
+        
+        .status.success {
+            background-color: #e8f5e9;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+        }
+        
+        .status.error {
+            background-color: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Address Qualification Demo</h1>
+        <p class="description">
+            This page demonstrates the address qualification script. The original zip code input 
+            will be transformed into an address input with Google Places Autocomplete.
+        </p>
+        
+        <div class="status info" id="status">
+            <strong>Status:</strong> Waiting for script to load...
+        </div>
+        
+        <!-- Original HTML structure (will be modified by the script) -->
+        <form id="addressForm">
+            <div class="input-group vwo_bl">
+                <span data-tooltip="wv2vtm-tooltip" title="" data-tooltip-class="tooltip" class="find-zip__tooltip hidden has-tip vwo_bl" aria-describedby="1kuqcm-tooltip" data-yeti-box="1kuqcm-tooltip" data-toggle="1kuqcm-tooltip" data-resize="1kuqcm-tooltip" style="display: inline;" data-events="resize">
+                    <button type="button" class="find-zip vwo_bl" style="display: none !important;">
+                        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="vwo_bl">
+                            <path d="M24 16c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm17.88 6c-.92-8.34-7.54-14.96-15.88-15.88v-4.12h-4v4.12c-8.34.92-14.96 7.54-15.88 15.88h-4.12v4h4.12c.92 8.34 7.54 14.96 15.88 15.88v4.12h4v-4.12c8.34-.92 14.96-7.54 15.88-15.88h4.12v-4h-4.12zm-17.88 16c-7.73 0-14-6.27-14-14s6.27-14 14-14 14 6.27 14 14-6.27 14-14 14z" class="vwo_bl"></path>
+                        </svg>
+                    </button>
+                </span>
+                <input type="tel" name="zip" data-type="zip" id="plansHero" placeholder="Zip code" maxlength="5" minlength="5" required="" class="vwo_bl">
+                <button type="submit" class="button square vwo_bl" data-component="body">Search</button>
+                <label class="error hidden vwo_bl" for="plansHero"></label>
+            </div>
+        </form>
+        
+        <div class="instructions">
+            <h2>📋 How to Use This Demo</h2>
+            <ol>
+                <li>Open your browser's Developer Console (F12 or Cmd+Option+I)</li>
+                <li>Make sure you've added your Google Maps API key to the script</li>
+                <li>The script should automatically load and transform the zip input to address input</li>
+                <li>Start typing an address (e.g., "123 Main Street")</li>
+                <li>Select an address from the autocomplete suggestions</li>
+                <li>Click "Check Availability" to submit</li>
+            </ol>
+            
+            <h2>🔧 Setup Instructions</h2>
+            <p>Before the script will work, you need to:</p>
+            <ol>
+                <li>Get a Google Maps API key from <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                <li>Enable the Places API and Maps JavaScript API</li>
+                <li>Replace <code>YOUR_GOOGLE_MAPS_API_KEY</code> in AddressQualificationScript.js with your actual key</li>
+                <li>Load the script on this page (see options below)</li>
+            </ol>
+            
+            <h2>💉 Script Injection Options</h2>
+            
+            <p><strong>Option 1: Console Injection (Quick Test)</strong></p>
+            <div class="code-block">
+// Copy and paste this into your browser console
+var script = document.createElement('script');
+script.src = 'AddressQualificationScript.js';
+document.head.appendChild(script);
+            </div>
+            
+            <p><strong>Option 2: Bookmarklet (Reusable)</strong></p>
+            <div class="code-block">
+javascript:(function(){var s=document.createElement('script');s.src='AddressQualificationScript.js';document.head.appendChild(s);})();
+            </div>
+            <p>Create a bookmark with the above code as the URL</p>
+            
+            <p><strong>Option 3: Direct Script Tag (Development)</strong></p>
+            <div class="code-block">
+&lt;script src="AddressQualificationScript.js"&gt;&lt;/script&gt;
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Monitor for script injection and provide feedback
+        const statusEl = document.getElementById('status');
+        
+        // Check if script has been injected
+        const checkInterval = setInterval(() => {
+            const addressInput = document.querySelector('input[data-type="address"]');
+            if (addressInput) {
+                statusEl.className = 'status success';
+                statusEl.innerHTML = '<strong>✓ Success!</strong> Script loaded and input field transformed. Start typing an address to see autocomplete suggestions.';
+                clearInterval(checkInterval);
+            }
+        }, 500);
+        
+        // Stop checking after 30 seconds
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            const addressInput = document.querySelector('input[data-type="address"]');
+            if (!addressInput) {
+                statusEl.className = 'status error';
+                statusEl.innerHTML = '<strong>⚠ Not Loaded:</strong> Script not detected. Please inject the script using one of the methods in the instructions below.';
+            }
+        }, 30000);
+        
+        // Intercept form submission to show what would happen
+        document.getElementById('addressForm').addEventListener('submit', function(e) {
+            const addressInput = document.querySelector('input[data-type="address"]');
+            if (addressInput && addressInput.dataset.selectedAddress) {
+                // Let the script handle it, but also log for demo purposes
+                console.log('Form would submit with address:', addressInput.dataset.selectedAddress);
+            }
+        });
+    </script>
+</body>
+</html>

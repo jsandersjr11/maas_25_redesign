@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Retrieval Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .example-container {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        small {
+            display: block;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+        strong {
+            color: #333;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>Address Retrieval Example</h1>
+    
+    <div class="example-container">
+        <h2>Example 1: small strong</h2>
+        <small>Your address: <strong>Address will appear here</strong></small>
+    </div>
+
+    <div class="example-container">
+        <h2>Example 2: small > strong</h2>
+        <small><strong>Address will appear here</strong></small>
+    </div>
+
+    <div class="example-container">
+        <h2>Example 3: small :nth-child(2)</h2>
+        <small>
+            <span>Label:</span>
+            <strong>Address will appear here</strong>
+        </small>
+    </div>
+
+    <div class="example-container">
+        <h2>Saved Address Data</h2>
+        <div id="addressData"></div>
+        <button onclick="clearAddress()">Clear Saved Address</button>
+    </div>
+
+    <!-- Include the address retrieval script -->
+    <script src="address-retrieve.js"></script>
+
+    <!-- Additional helper script for this demo page -->
+    <script>
+        // Display all saved address data
+        function displayAddressData() {
+            const savedAddress = localStorage.getItem('selectedAddress');
+            const zipCode = localStorage.getItem('selectedZipCode');
+            const dataDiv = document.getElementById('addressData');
+            
+            if (savedAddress) {
+                const address = JSON.parse(savedAddress);
+                dataDiv.innerHTML = `
+                    <p><strong>Full Address:</strong> ${address.formattedAddress || 'N/A'}</p>
+                    <p><strong>Street:</strong> ${address.addressLabel || 'N/A'}</p>
+                    <p><strong>City:</strong> ${address.city || 'N/A'}</p>
+                    <p><strong>State:</strong> ${address.state || 'N/A'}</p>
+                    <p><strong>ZIP Code:</strong> ${address.postalCode || zipCode || 'N/A'}</p>
+                    <p><strong>Country:</strong> ${address.country || 'N/A'}</p>
+                `;
+            } else {
+                dataDiv.innerHTML = '<p style="color: #999;">No address saved yet. Please select an address on the previous page.</p>';
+            }
+        }
+
+        function clearAddress() {
+            localStorage.removeItem('selectedAddress');
+            localStorage.removeItem('selectedZipCode');
+            alert('Address cleared from localStorage');
+            location.reload();
+        }
+
+        // Display address data when page loads
+        displayAddressData();
+    </script>
+</body>
+</html>

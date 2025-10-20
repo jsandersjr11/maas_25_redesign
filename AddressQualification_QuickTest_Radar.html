@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Test - Radar Address Qualification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #0055b3; }
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+        .alert-info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1976d2;
+        }
+        .alert-success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        .alert-warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+        .code {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        #radar-autocomplete-container {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Quick Test - Radar</h1>
+        
+        <div class="alert alert-info">
+            <strong>Instructions:</strong><br>
+            1. Enter your Radar publishable key below (or use the demo key)<br>
+            2. Click "Load Script"<br>
+            3. The zip input will be replaced with Radar autocomplete<br>
+            4. Start typing an address to see autocomplete
+        </div>
+        
+        <div>
+            <label for="apiKey"><strong>Radar Publishable Key:</strong></label>
+            <input type="text" id="apiKey" value="prj_live_pk_d3a1113fc5c543c5fcd05f707d094fa5471b359d" placeholder="Enter your Radar key here" style="width: 100%; margin: 10px 0;">
+            <button onclick="loadScript()" style="width: 100%;">Load Script</button>
+        </div>
+        
+        <div id="status" style="margin: 20px 0;"></div>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+        
+        <h2>Test Form</h2>
+        <form id="testForm">
+            <div class="input-group vwo_bl">
+                <input type="tel" name="zip" data-type="zip" id="plansHero" placeholder="Zip code" maxlength="5" minlength="5" required>
+                <button type="submit">Search</button>
+            </div>
+            <label class="error hidden" for="plansHero" style="color: #d32f2f; display: none;"></label>
+        </form>
+        
+        <div id="result" style="margin-top: 20px;"></div>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+        
+        <details>
+            <summary style="cursor: pointer; font-weight: bold; margin: 10px 0;">📖 How to get a Radar key</summary>
+            <div style="margin: 15px 0;">
+                <ol>
+                    <li>Go to <a href="https://radar.com/signup" target="_blank">Radar Signup</a></li>
+                    <li>Create a free account (no credit card required)</li>
+                    <li>Navigate to your dashboard</li>
+                    <li>Copy your <strong>Publishable Key</strong> (starts with <code>prj_live_pk_</code>)</li>
+                    <li>Free tier includes 100,000 requests/month</li>
+                </ol>
+                <p><strong>Benefits of Radar:</strong></p>
+                <ul>
+                    <li>✅ Free tier with 100,000 requests/month</li>
+                    <li>✅ No credit card required</li>
+                    <li>✅ Simple setup</li>
+                    <li>✅ Better pricing than Google Maps</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+    
+    <script>
+        let radarAutocomplete = null;
+        
+        function loadScript() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const statusDiv = document.getElementById('status');
+            
+            if (!apiKey) {
+                statusDiv.innerHTML = '<div class="alert alert-warning">⚠️ Please enter your Radar key first</div>';
+                return;
+            }
+            
+            statusDiv.innerHTML = '<div class="alert alert-info">⏳ Loading Radar SDK...</div>';
+            
+            // Load Radar CSS
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = 'https://js.radar.com/v4.5.3/radar.css';
+            document.head.appendChild(cssLink);
+            
+            // Load Radar JavaScript
+            const radarScript = document.createElement('script');
+            radarScript.src = 'https://js.radar.com/v4.5.3/radar.min.js';
+            radarScript.async = true;
+            
+            radarScript.onload = function() {
+                statusDiv.innerHTML = '<div class="alert alert-success">✅ Radar SDK loaded! Now initializing autocomplete...</div>';
+                
+                setTimeout(() => {
+                    initRadarAutocomplete(apiKey);
+                }, 500);
+            };
+            
+            radarScript.onerror = function() {
+                statusDiv.innerHTML = '<div class="alert alert-warning">❌ Failed to load Radar SDK. Check your internet connection.</div>';
+            };
+            
+            document.head.appendChild(radarScript);
+        }
+        
+        function initRadarAutocomplete(apiKey) {
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                // Find and hide the original zip input
+                const zipInput = document.querySelector('input[name="zip"][data-type="zip"]');
+                const inputGroup = document.querySelector('.input-group.vwo_bl');
+                const submitButton = inputGroup.querySelector('button[type="submit"]');
+                
+                if (!zipInput || !inputGroup) {
+                    statusDiv.innerHTML = '<div class="alert alert-warning">❌ Could not find input elements</div>';
+                    return;
+                }
+                
+                // Hide original input
+                zipInput.style.display = 'none';
+                
+                // Create container for Radar autocomplete
+                const container = document.createElement('div');
+                container.id = 'radar-autocomplete-container';
+                container.style.flex = '1';
+                
+                // Insert before submit button
+                inputGroup.insertBefore(container, submitButton);
+                
+                // Update button text
+                submitButton.textContent = 'Check Availability';
+                
+                // Initialize Radar
+                Radar.initialize(apiKey);
+                
+                // Store selected address
+                let selectedAddress = null;
+                
+                // Create autocomplete widget
+                radarAutocomplete = Radar.ui.autocomplete({
+                    container: 'radar-autocomplete-container',
+                    responsive: true,
+                    placeholder: 'Enter your address',
+                    countryCode: 'US',
+                    layers: ['address'],
+                    limit: 8,
+                    minCharacters: 3,
+                    onSelection: (address) => {
+                        console.log('Address selected:', address);
+                        
+                        selectedAddress = {
+                            formatted: address.formattedAddress || address.addressLabel || '',
+                            street: address.addressLabel || (address.number ? `${address.number} ${address.street}` : address.street) || '',
+                            city: address.city || '',
+                            state: address.state || address.stateCode || '',
+                            zip: address.postalCode || '',
+                            country: address.country || address.countryCode || 'US',
+                            lat: address.latitude || address.geometry?.coordinates?.[1] || null,
+                            lng: address.longitude || address.geometry?.coordinates?.[0] || null
+                        };
+                        
+                        // Display result
+                        resultDiv.innerHTML = `
+                            <div class="alert alert-success">
+                                <strong>✅ Address Selected!</strong><br><br>
+                                <strong>Formatted:</strong> ${selectedAddress.formatted}<br><br>
+                                <strong>Components:</strong>
+                                <div class="code">${JSON.stringify({
+                                    street: selectedAddress.street,
+                                    city: selectedAddress.city,
+                                    state: selectedAddress.state,
+                                    zip: selectedAddress.zip
+                                }, null, 2)}</div>
+                                ${selectedAddress.lat && selectedAddress.lng ? `<strong>Coordinates:</strong> ${selectedAddress.lat}, ${selectedAddress.lng}<br>` : ''}
+                            </div>
+                        `;
+                        
+                        // Store in container
+                        container.dataset.selectedAddress = JSON.stringify(selectedAddress);
+                    },
+                    onError: (error) => {
+                        console.error('Radar error:', error);
+                        resultDiv.innerHTML = `<div class="alert alert-warning">⚠️ Error: ${error.message || 'Unknown error'}</div>`;
+                    }
+                });
+                
+                // Handle form submission
+                document.getElementById('testForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (!selectedAddress) {
+                        resultDiv.innerHTML = '<div class="alert alert-warning">⚠️ Please select an address from the suggestions</div>';
+                        return;
+                    }
+                    
+                    const cartUrl = `/cart?address=${encodeURIComponent(selectedAddress.formatted)}`;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-info">
+                            <strong>🚀 Form Submitted!</strong><br><br>
+                            Would redirect to:<br>
+                            <div class="code">${cartUrl}</div>
+                            <br>
+                            <small>(Redirect prevented for demo purposes)</small>
+                        </div>
+                    `;
+                });
+                
+                statusDiv.innerHTML = '<div class="alert alert-success">✅ Radar autocomplete ready! Start typing an address above.</div>';
+                
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="alert alert-warning">❌ Error: ${error.message}</div>`;
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
