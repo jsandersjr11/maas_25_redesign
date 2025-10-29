@@ -45,7 +45,7 @@
                 }
 
                 .address-finder {
-                    width: 100%;
+                    width: 100% !important;
                 }
                 
                 @media (max-width: 768px) {
