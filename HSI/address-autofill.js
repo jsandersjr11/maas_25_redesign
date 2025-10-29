@@ -14,18 +14,18 @@
     // Create the HTML content
     const htmlContent = `
         <div class="columns small-12 margin-bottom">
-            <p class="h3 margin-bottom">Enter your address below to find providers in the area.</p>
+            <div class="wpb_text_column wpb_content_element vwo_bl"> <div class="wpb_wrapper vwo_bl"> <p class="font-small no-margin-bottom small-padding vwo_bl">Enter your address below to find providers in the area.</p> </div> </div>
                         
-            <form id="addressForm" method="post" accept-charset="UTF-8">
+            <form id="addressForm" class="zip-finder address-finder" method="post" accept-charset="UTF-8">
                 <input type="text" size="5" tabindex="-1" readonly="" style="position:fixed;-webkit-appearance:none;box-shadow:none;border:none;background:none;cursor:default;z-index:-1;width: 1px;height:1px;">
                 <input type="hidden" name="tab" value="">
                 <input type="hidden" name="redirect" value="sb-3">
-                <input type="hidden" name="zip" id="selectedZip" value="">
+                <input type="hidden" name="zip" id="selectedZip" data-type="zip" value="">
                 
                 <label for="heroAddress" class="color-white show-for-sr">Search Providers near you</label>
-                <div class="input-group" style="width: 100vw; max-width: 700px;">
-                    <input type="text" name="address" data-type="address" id="heroAddress" style="border-radius: 0; height: 46px;" placeholder="Address" required="">
-                    <button type="submit" class="button square large" data-component="hero">Search Providers</button>
+                <div class="input-group address-input-wrapper">
+                    <input type="text" data-type="address" id="heroAddress" style="border-radius: 0; height: 46px;" placeholder="Address" required="">
+                    <button type="submit" class="button square large" data-component="hero">Search</button>
                     <label class="error hidden" for="heroAddress"></label>
                 </div>
             </form>
@@ -36,7 +36,17 @@
                 padding-top: 12px;
                 padding-bottom: 12px; }
                 .radar-autocomplete-search-icon {
-                top: 18px;}       
+                top: 18px;}   
+                .address-input-wrapper {
+                    display: flex;
+                }   
+                #heroAddressAutocomplete {
+                    flex-grow: 1;
+                }
+
+                .address-finder {
+                    width: 100%;
+                }
                 
                 @media (max-width: 768px) {
                     .input-group {
@@ -175,17 +185,19 @@
         }
     }
     
-    // Function to handle form submission
+    // Function to handle form submission validation
     function setupFormHandler() {
         const form = document.getElementById('addressForm');
         if (form) {
+            // Pre-submit validation to ensure zip code was extracted
             form.addEventListener('submit', function(e) {
                 const zipInput = document.getElementById('selectedZip');
                 const errorLabel = document.querySelector('.error');
                 
-                // Validate that zip code was extracted
+                // Validate that zip code was extracted from the address
                 if (!zipInput.value || zipInput.value.length !== 5) {
                     e.preventDefault();
+                    e.stopImmediatePropagation(); // Stop the site's .zip-finder handler
                     if (errorLabel) {
                         errorLabel.textContent = 'Please select a valid address with a ZIP code';
                         errorLabel.classList.remove('hidden');
@@ -193,13 +205,15 @@
                     return false;
                 }
                 
-                // Hide error and allow form submission
+                // Hide error - the site's existing .zip-finder handler will take over
                 if (errorLabel) {
                     errorLabel.classList.add('hidden');
                 }
-                console.log('Submitting form with ZIP:', zipInput.value);
-                console.log('Street address in localStorage:', localStorage.getItem('streetAddress'));
-            });
+                
+                console.log('ZIP validated:', zipInput.value);
+                console.log('Street address saved:', localStorage.getItem('streetAddress'));
+                // The site's .zip-finder handler will now handle the AJAX validation and redirect
+            }, true); // Use capture phase to run before the site's handler
         }
     }
 
