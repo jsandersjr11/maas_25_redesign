@@ -1009,7 +1009,7 @@
       }
 
       // Build the buyflow URL with the extracted values
-      let buyflowUrl = `https://px-test-ordering.lumen.com/index?salescode=${salescode}&partnerId=clearlink${
+      let buyflowUrl = `https://px-test-ordering.lumen.com/index?salescode=${salescode}&brnd=c&partnerId=clearlink${
         clearlinkeventid ? `&acsid=${clearlinkeventid}` : ''
       }`;
 
