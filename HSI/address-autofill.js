@@ -14,7 +14,7 @@
     // Create the HTML content
     const htmlContent = `
         <div class="columns small-12 margin-bottom">
-            <div class="wpb_text_column wpb_content_element vwo_bl"> <div class="wpb_wrapper vwo_bl"> <p class="font-small no-margin-bottom small-padding vwo_bl">Enter your address below to find providers in the area.</p> </div> </div>
+            <div class="wpb_text_column wpb_content_element vwo_bl"> <div class="wpb_wrapper vwo_bl"> <p class="font-small no-margin-bottom small-padding vwo_bl">Enter your address for more accurate results.</p> </div> </div>
                         
             <form id="addressForm" class="zip-finder address-finder" method="post" accept-charset="UTF-8">
                 <input type="text" size="5" tabindex="-1" readonly="" style="position:fixed;-webkit-appearance:none;box-shadow:none;border:none;background:none;cursor:default;z-index:-1;width: 1px;height:1px;">
