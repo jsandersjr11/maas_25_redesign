@@ -1,8 +1,12 @@
 (function () {
   console.log('[GFT Cart Button Finder] Script initialized');
 
-  // Initialize immediately as we don't need the mapi event data
-  initializeMainScript();
+  // Initialize when DOM is ready to support VWO head injection
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMainScript);
+  } else {
+    initializeMainScript();
+  }
 
   function initializeMainScript() {
     console.log('[GFT Cart Button Finder] Initializing main script');
@@ -423,6 +427,14 @@
           }
         }
       });
+
+      // Start observing the document body for changes
+      if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+        console.log('[GFT Cart Button Finder] MutationObserver started');
+      } else {
+        console.warn('[GFT Cart Button Finder] document.body not found, MutationObserver not started');
+      }
 
       // Also set up a periodic check as a fallback
       setInterval(() => {
