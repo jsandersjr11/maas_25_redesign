@@ -97,46 +97,8 @@
              visibility: visible !important;
              opacity: 1 !important;
          ">
-             <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button" style="
-                 display: -webkit-box !important;
-                 display: -webkit-flex !important;
-                 display: -ms-flexbox !important;
-                 display: flex !important;
-                 -webkit-align-items: center !important;
-                 -webkit-box-align: center !important;
-                 -ms-flex-align: center !important;
-                 align-items: center !important;
-                 -webkit-box-pack: center !important;
-                 -ms-flex-pack: center !important;
-                 -webkit-justify-content: center !important;
-                 justify-content: center !important;
-                 padding: 8px 16px !important;
-                 font: inherit !important;
-                 color: #000 !important;
-                 background-color: #FFC800 !important;
-                 border: 0 !important;
-                 border-radius: 2em !important;
-                 cursor: pointer !important;
-                 -webkit-transition: all 0.3s !important;
-                 transition: all 0.3s !important;
-                 -webkit-appearance: button !important;
-                 box-shadow: 0 0.3rem 1rem 0 rgba(0, 0, 0, 0.1) !important;
-                 margin-top: 1.5rem !important;
-                 position: relative !important;
-                 z-index: 9999 !important;
-                 pointer-events: auto !important;
-                 visibility: visible !important;
-                 opacity: 1 !important;
-             ">
-                 <span class="button-text css-2qtueq e1hk20aw0" style="
-                     font-weight: 500;
-                     font-size: calc(0.5555555555555556vw + 0.5rem);
-                     line-height: calc(1.1111111111111112vw + 0.75rem);
-                     pointer-events: auto !important;
-                     display: inline !important;
-                     visibility: visible !important;
-                     opacity: 1 !important;
-                 ">Order Now</span>
+             <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button">
+                 <span class="button-text css-1svb2z e1hk20aw0">Order Now</span>
              </button>
          </a>`;
 
