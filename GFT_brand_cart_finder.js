@@ -341,6 +341,21 @@
         let needToReapply = false;
 
         mutations.forEach((mutation) => {
+          // Check for added nodes (dynamic content loading)
+          if (mutation.addedNodes.length > 0) {
+            for (let i = 0; i < mutation.addedNodes.length; i++) {
+              const node = mutation.addedNodes[i];
+              if (node.nodeType === 1) { // ELEMENT_NODE
+                // Check if the added node is a target link or contains one
+                if ((node.matches && node.matches('a[href*="/ftr-buy"]')) || (node.querySelector && node.querySelector('a[href*="/ftr-buy"]'))) {
+                  console.log('[GFT Cart Button Finder] Detected added target link(s), processing');
+                  needToReapply = true;
+                  break;
+                }
+              }
+            }
+          }
+
           // Check if nodes were removed
           if (mutation.removedNodes.length > 0) {
             // Check if any of our injected/updated elements were removed
