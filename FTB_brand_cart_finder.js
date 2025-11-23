@@ -97,7 +97,7 @@
              visibility: visible !important;
              opacity: 1 !important;
          ">
-             <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button">
+             <button class="leshen-link-button convert-link-button css-4o5p4y" color="dark" tabindex="0" type="button" style="padding: 8px 16px !important; box-shadow: none !important; margin-top: 1.5rem !important; position: relative !important; z-index: 9999 !important; pointer-events: auto !important; display: block !important; visibility: visible !important; opacity: 1 !important; border: 2px solid rgb(64, 64, 64) !important; color: rgb(64, 64, 64) !important; background: rgb(255, 255, 255) !important; border-radius: 2em !important; cursor: pointer !important;background:none;border: none;">
                  <span class="button-text css-1svb2z e1hk20aw0">Order Now</span>
              </button>
          </a>`;
