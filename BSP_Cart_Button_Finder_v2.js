@@ -509,15 +509,15 @@
                padding-left: 16px !important;
                padding-right: 16px !important;
                box-shadow: none !important;
-               margin-top: 1.5rem !important;
+               margin-top: 1rem !important;
                position: relative !important;
                z-index: 9999 !important;
                pointer-events: auto !important;
                display: block !important;
                visibility: visible !important;
                opacity: 1 !important;
-               border: 2px solid #404040 !important;
-               color: #404040 !important;
+               border: 2px solid #000000 !important;
+               color: #000000 !important;
                background: #fff !important;
                border-radius: 2em !important;
                cursor: pointer !important;
@@ -573,7 +573,7 @@
              ">
                  <span class="button-text css-2qtueq e1hk20aw0" style="
                      font-weight: 500;
-                     font-size: calc(0.5555555555555556vw + 0.5rem);
+                     font-size: calc(1.15vw + 0.5rem);
                      line-height: calc(1.1111111111111112vw + 0.75rem);
                      pointer-events: auto !important;
                      display: inline !important;
