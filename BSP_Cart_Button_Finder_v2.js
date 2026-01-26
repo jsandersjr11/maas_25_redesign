@@ -553,7 +553,7 @@
                  -ms-flex-pack: center !important;
                  -webkit-justify-content: center !important;
                  justify-content: center !important;
-                 padding: 8px 16px !important;
+                 padding: 12px 20px !important;
                  font: inherit !important;
                  color: #000 !important;
                  background-color: #FFC800 !important;
