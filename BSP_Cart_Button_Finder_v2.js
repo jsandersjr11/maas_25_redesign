@@ -573,7 +573,7 @@
              ">
                  <span class="button-text css-2qtueq e1hk20aw0" style="
                      font-weight: 500;
-                     font-size: calc(1.15vw + 0.5rem);
+                     font-size: calc(0.75vw + 0.5rem);
                      line-height: calc(1.1111111111111112vw + 0.75rem);
                      pointer-events: auto !important;
                      display: inline !important;
