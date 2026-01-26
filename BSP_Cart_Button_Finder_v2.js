@@ -459,14 +459,14 @@
 
      // Process inside <main> > first <section> > .content per scenarios
      function processScopedLinks(url) {
-       const heroEl = document.querySelector('.leshen-hero');
+       const heroEl = document.querySelector('.leshen-hero') || document.querySelector('.leshen-billboard');
        if (!heroEl) {
-         console.log('[BSP Cart Button Finder] .leshen-hero not found');
+         console.log('[BSP Cart Button Finder] .leshen-hero or .leshen-billboard not found');
          return;
        }
        const content = heroEl.querySelector(".content");
        if (!content) {
-         console.log("[BSP Cart Button Finder] .content not found inside .leshen-hero");
+         console.log("[BSP Cart Button Finder] .content not found inside hero element");
          return;
        }
 
