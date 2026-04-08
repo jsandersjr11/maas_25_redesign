@@ -335,84 +335,54 @@
         clearlinkeventid ? `&PartnerReferenceID=${clearlinkeventid}` : ''
       }`;
  
-      // Process inside <main> > first <section> > .content per scenarios
+      function ensureQtmCartCtaHoverStyle() {
+        if (document.getElementById('qtm-cart-cta-hover-style')) return;
+        const style = document.createElement('style');
+        style.id = 'qtm-cart-cta-hover-style';
+        style.textContent =
+          'a.qtm-cart-link[data-qtm-injected="1"] .leshen-link-button:hover{background-color:#7b46ce!important;color:#fff!important;}' +
+          'a.qtm-cart-link[data-qtm-injected="1"] .leshen-link-button:hover .button-text{color:#fff!important;}';
+        document.head.appendChild(style);
+      }
+
+      // Process inside <main> > first <section> child
       function processScopedLinks(url) {
-        const heroEl = document.querySelector('.leshen-hero') || document.querySelector('.leshen-billboard');
-        if (!heroEl) {
-          console.log('[QTM Cart Button Finder] .leshen-hero or .leshen-billboard not found');
-          return;
-        }
-        const content = heroEl.querySelector(".content");
-        if (!content) {
-          console.log("[QTM Cart Button Finder] .content not found inside hero element");
+        const mainEl = document.querySelector('main');
+        if (!mainEl) {
+          console.log('[QTM Cart Button Finder] <main> not found; skipping scoped injection');
           return;
         }
  
-        // If we find an <input>, do nothing
-        if (content.querySelector('input')) {
-          console.log('[QTM Cart Button Finder] <input> found in scope; skipping');
-          return;
-        }
- 
-        const telAnchor = content.querySelector('a[href^="tel:"]');
-        const cartAnchor = content.querySelector('a[href*="/cart"]');
- 
-        // If both exist: update only the /cart link
-        if (telAnchor && cartAnchor) {
-          try {
-            cartAnchor.href = url;
-            cartAnchor.dataset.qtmUpdated = '1';
-            console.log('[QTM Cart Button Finder] Updated existing /cart link in scope');
-          } catch (e) {
-            console.error('[QTM Cart Button Finder] Failed updating /cart link', e);
+        const firstSectionEl = (() => {
+          for (const child of mainEl.children) {
+            if (child && child.tagName && child.tagName.toLowerCase() === 'section') return child;
           }
+          return null;
+        })();
+        if (!firstSectionEl) {
+          console.log('[QTM Cart Button Finder] No <section> child found under <main>; skipping scoped injection');
           return;
         }
  
-        // If only tel exists: append the button anchor like in QTM_Global_4_Responsive_Button.js
-        if (telAnchor && !cartAnchor) {
-          // Avoid duplicating if already injected
-          if (content.querySelector('a.leshen-link-button-wrapper[data-qtm-injected="1"]')) {
-            console.log('[QTM Cart Button Finder] Button already injected; skipping');
-            return;
-          }
+        // If we find the .leshen-form we won't insert anything (cart links still get updated globally)
+        if (firstSectionEl.querySelector('.leshen-form')) {
+          console.log('[QTM Cart Button Finder] .leshen-form found in scope; skipping CTA injection');
+          return;
+        }
  
-          // Apply button styling to the button inside the telephone link
-          try {
-            const telButton = telAnchor.querySelector('button');
-            if (telButton) {
-              telButton.style.cssText = `
-                padding-top: 8px !important;
-                padding-bottom: 8px !important;
-                padding-left: 16px !important;
-                padding-right: 16px !important;
-                box-shadow: none !important;
-                margin-top: 1rem !important;
-                position: relative !important;
-                z-index: 9999 !important;
-                pointer-events: auto !important;
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                border: 2px solid #000000 !important;
-                color: #000000 !important;
-                background: #fff !important;
-                border-radius: 2em !important;
-                cursor: pointer !important;
-              `;
-              console.log('[QTM Cart Button Finder] Applied button styling to button inside tel: link');
-            } else {
-              console.log('[QTM Cart Button Finder] No button found inside tel: link');
-            }
-          } catch (e) {
-            console.error('[QTM Cart Button Finder] Failed to apply styling to button inside tel: link', e);
-          }
+        const telAnchor = firstSectionEl.querySelector('a[href^="tel:"]');
+        if (!telAnchor) return;
  
-          // Add a unique ID to make it easier to find and re-inject if removed
-          const buttonId = 'qtm-injected-button-' + Math.floor(Math.random() * 10000);
-          
-          // Create a more resilient button that's harder to remove
-          const newButtonHtml = `
+        // Avoid duplicating if already injected (secondary button after tel link)
+        if (firstSectionEl.querySelector('a.leshen-link-button-wrapper[data-qtm-injected="1"]')) {
+          console.log('[QTM Cart Button Finder] CTA already injected; skipping');
+          return;
+        }
+ 
+        // Add a unique ID to make it easier to find and re-inject if removed
+        const buttonId = 'qtm-injected-button-' + Math.floor(Math.random() * 10000);
+        ensureQtmCartCtaHoverStyle();
+        const newButtonHtml = `
           <a id="${buttonId}" class="leshen-link leshen-link-button-wrapper css-1s55t5c e9y95tf0 qtm-cart-link" href="${url}" data-qtm-injected="1" visibility="All devices" style="
               display: block !important;
               visibility: visible !important;
@@ -434,7 +404,7 @@
                   padding: 12px 20px !important;
                   font: inherit !important;
                   color: #000 !important;
-                  background-color: #FFC800 !important;
+                  background-color: #ffffff4d;
                   border: 0 !important;
                   border-radius: 2em !important;
                   cursor: pointer !important;
@@ -442,12 +412,13 @@
                   transition: all 0.3s !important;
                   -webkit-appearance: button !important;
                   box-shadow: 0 0.3rem 1rem 0 rgba(0, 0, 0, 0.1) !important;
-                  margin-top: 1.5rem !important;
+                  margin-top: 1rem !important;
                   position: relative !important;
                   z-index: 9999 !important;
                   pointer-events: auto !important;
                   visibility: visible !important;
                   opacity: 1 !important;
+                  border: 2px solid #ad80e1 !important;
               ">
                   <span class="button-text css-2qtueq e1hk20aw0" style="
                       font-weight: 500;
@@ -460,56 +431,22 @@
                   ">Order Online</span>
               </button>
           </a>`;
- 
+
+        try {
           try {
-           // Try multiple insertion methods to ensure the button gets added
-           try {
-             // Method 1: Standard insertion
-             telAnchor.insertAdjacentHTML('beforebegin', newButtonHtml);
-             console.log('[QTM Cart Button Finder] Injected buyflow button before tel: link');
-           } catch (innerError) {
-             console.warn('[QTM Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
-             
-             // Method 2: Create element and append
-             const tempDiv = document.createElement('div');
-             tempDiv.innerHTML = newButtonHtml;
-             const buttonElement = tempDiv.firstElementChild;
-             telAnchor.parentNode.insertBefore(buttonElement, telAnchor);
-             console.log('[QTM Cart Button Finder] Injected buyflow button using alternative method');
-           }
-           
-           // Add protection against DOM manipulation
-           protectInjectedElements();
-         } catch (e) {
-            console.error('[QTM Cart Button Finder] All insertion methods failed', e);
-            
-            // Last resort: Try to insert at the end of the section
-            try {
-              const parentSection = content.closest('section');
-              if (parentSection) {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = newButtonHtml;
-                const buttonElement = tempDiv.firstElementChild;
-                parentSection.appendChild(buttonElement);
-                console.log('[QTM Cart Button Finder] Injected buyflow button at end of section as last resort');
-                protectInjectedElements();
-              }
-            } catch (lastError) {
-              console.error('[QTM Cart Button Finder] Even last resort insertion failed', lastError);
-            }
+            telAnchor.insertAdjacentHTML('afterend', newButtonHtml);
+            console.log('[QTM Cart Button Finder] Injected buyflow CTA after tel: link');
+          } catch (innerError) {
+            console.warn('[QTM Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newButtonHtml;
+            const buttonElement = tempDiv.firstElementChild;
+            telAnchor.parentNode.insertBefore(buttonElement, telAnchor.nextSibling);
+            console.log('[QTM Cart Button Finder] Injected buyflow CTA using alternative method');
           }
-          return;
-        }
- 
-        // If only /cart exists (no tel): update it
-        if (!telAnchor && cartAnchor) {
-          try {
-            cartAnchor.href = url;
-            cartAnchor.dataset.qtmUpdated = '1';
-            console.log('[QTM Cart Button Finder] Updated /cart link (no tel present)');
-          } catch (e) {
-            console.error('[QTM Cart Button Finder] Failed updating /cart link (no tel)', e);
-          }
+          protectInjectedElements();
+        } catch (e) {
+          console.error('[QTM Cart Button Finder] All scoped injection methods failed', e);
         }
       }
  
