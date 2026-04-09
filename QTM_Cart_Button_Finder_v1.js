@@ -599,9 +599,9 @@
            const injectedElements = document.querySelectorAll('[data-qtm-injected="1"]');
            const updatedElements = document.querySelectorAll('[data-qtm-updated="1"]');
            
-           if (injectedElements.length === 0 || updatedElements.length === 0) {
+          if (injectedElements.length === 0 || updatedElements.length === 0) {
              console.log('[QTM Cart Button Finder] Scheduled re-injection: Missing elements detected, re-applying');
-             processScopedLinks(url);
+            processScopedLinks(url, true);
              processAllCartLinks(url);
              
              // Check if this re-injection was successful
@@ -643,7 +643,7 @@
          
          if (injectedElements.length === 0 || updatedElements.length === 0) {
            console.log('[QTM Cart Button Finder] Continuous check: Missing elements detected, re-applying');
-           processScopedLinks(url);
+           processScopedLinks(url, true);
            processAllCartLinks(url);
            
            // Check if this re-injection was successful
@@ -727,27 +727,13 @@
             }
           });
           
-          // If our elements were removed, reapply them only if not already verified successful
+          // If our elements were removed, reapply them (React re-renders can remove injected DOM)
           if (needToReapply) {
-            // Check if we've already verified success
-            if (window.qtmCartButtonFinderSuccess) {
-              console.log('[QTM Cart Button Finder] Elements removed but URL modifications already verified successful, skipping re-application');
-            } else {
-              console.log('[QTM Cart Button Finder] Re-applying button modifications after detected removal');
-              setTimeout(() => {
-                processScopedLinks(url);
-                processAllCartLinks(url);
-                
-                // Check if this re-injection was successful
-                setTimeout(() => {
-                  const newElements = document.querySelectorAll('[data-qtm-injected="1"], [data-qtm-updated="1"]');
-                  if (newElements.length > 0) {
-                    console.log('[QTM Cart Button Finder] MutationObserver re-injection successful, marking as verified');
-                    window.qtmCartButtonFinderSuccess = true;
-                  }
-                }, 100);
-              }, 100); // Small delay to ensure DOM is settled
-            }
+            console.log('[QTM Cart Button Finder] Re-applying modifications after detected removal');
+            setTimeout(() => {
+              processScopedLinks(url, true);
+              processAllCartLinks(url);
+            }, 0); // next tick so DOM can settle
           }
         });
         
@@ -764,7 +750,7 @@
           // If we expected elements to be there but they're not, reapply
           if ((injectedElements.length === 0 && updatedElements.length === 0)) {
             console.log('[QTM Cart Button Finder] Periodic check: No injected/updated elements found, re-applying');
-            processScopedLinks(url);
+            processScopedLinks(url, true);
             processAllCartLinks(url);
             
             // Check if this re-injection was successful
