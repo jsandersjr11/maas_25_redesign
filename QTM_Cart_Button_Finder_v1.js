@@ -215,6 +215,7 @@
       // Defaults
       let salescode = '20001139';
       let clearlinkeventid = '';
+      let tn = '1111111111';
  
       try {
         if (eventRequestId) {
@@ -233,6 +234,19 @@
           // Log the MAPI data structure for debugging
           console.log('[QTM Cart Button Finder] MAPI data structure found');
           console.log('[QTM Cart Button Finder] Root level keys:', Object.keys(parsedData));
+
+          // Extract TN from phone > data > 0 > promo_number
+          try {
+            const promoNumber = parsedData?.phone?.data?.[0]?.promo_number;
+            if (promoNumber) {
+              tn = String(promoNumber);
+              console.log('[QTM Cart Button Finder] Extracted TN (promo_number) from phone.data[0]:', tn);
+            } else {
+              console.log('[QTM Cart Button Finder] No promo_number found in phone.data[0]; using default TN:', tn);
+            }
+          } catch (e) {
+            console.warn('[QTM Cart Button Finder] Error extracting promo_number for TN; using default TN:', tn, e);
+          }
           
           // Extract request_id - check all possible locations if we don't already have it from the event
           if (!clearlinkeventid) {
@@ -331,7 +345,9 @@
       }
  
       // Build URL
-      let buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=1111111111&OSTR=2222222222&salescode=${salescode}&cookietime=30day${
+      let buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
+        tn
+      )}&OSTR=2222222222&salescode=${salescode}&cookietime=30day${
         clearlinkeventid ? `&PartnerReferenceID=${clearlinkeventid}` : ''
       }`;
  
@@ -481,7 +497,7 @@
       }
  
       // Initial values snapshot and initial apply
-      const initialValues = { salescode, clearlinkeventid };
+      const initialValues = { salescode, clearlinkeventid, tn };
    
       // Add a global verification flag to track successful URL modifications
       window.qtmCartButtonFinderSuccess = false;
@@ -736,10 +752,16 @@
           console.log(`ACSID changed: ${initialValues.clearlinkeventid} -> ${updatedValues.clearlinkeventid}`);
           valuesChanged = true;
         }
+        if (updatedValues.tn !== initialValues.tn) {
+          console.log(`TN changed: ${initialValues.tn} -> ${updatedValues.tn}`);
+          valuesChanged = true;
+        }
  
         if (valuesChanged) {
           console.log('[QTM Cart Button Finder] Values changed after page load, updating button URLs...');
-          buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=1111111111&OSTR=2222222222&salescode=${updatedValues.salescode}&cookietime=30day${
+          buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
+            updatedValues.tn
+          )}&OSTR=2222222222&salescode=${updatedValues.salescode}&cookietime=30day${
             updatedValues.clearlinkeventid ? `&PartnerReferenceID=${updatedValues.clearlinkeventid}` : ''
           }`;
           processScopedLinks(buyflowUrl);
@@ -763,6 +785,7 @@
           salescode: initialValues.salescode,
           clearlinkeventid: initialValues.clearlinkeventid,
           promoCode: null,
+          tn: initialValues.tn,
         };
  
         try {
@@ -771,6 +794,14 @@
             const parsedData = JSON.parse(mapiData);
  
             console.log('[QTM Cart Button Finder] Re-extracting values from mapi data');
+
+            // Extract TN from phone > data > 0 > promo_number
+            try {
+              const promoNumber = parsedData?.phone?.data?.[0]?.promo_number;
+              if (promoNumber) extractedValues.tn = String(promoNumber);
+            } catch (e) {
+              // keep default tn
+            }
             
             // Extract request_id - check all possible locations
             if (parsedData.requestId) {
