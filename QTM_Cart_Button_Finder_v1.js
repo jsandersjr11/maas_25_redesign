@@ -373,7 +373,8 @@
       }
 
       // Process inside <main> > first <section> child
-      function processScopedLinks(url) {
+      let scopedCtaInjected = false;
+      function processScopedLinks(url, allowInject = false) {
         const mainEl = document.querySelector('main');
         if (!mainEl) {
           console.log('[QTM Cart Button Finder] <main> not found; skipping scoped injection');
@@ -400,12 +401,21 @@
         const telAnchor = firstSectionEl.querySelector('a[href^="tel:"]');
         if (!telAnchor) return;
  
-        // Avoid duplicating if already injected (secondary button after tel link)
-        if (firstSectionEl.querySelector('a.leshen-link-button-wrapper[data-qtm-injected="1"]')) {
-          console.log('[QTM Cart Button Finder] CTA already injected; skipping');
+        // If CTA already exists in scope, only update its href (no reinsertion/flicker)
+        const existingCta = firstSectionEl.querySelector('a.leshen-link-button-wrapper[data-qtm-injected="1"]');
+        if (existingCta) {
+          try {
+            if (existingCta.href !== url) existingCta.href = url;
+          } catch (e) {
+            // ignore
+          }
+          scopedCtaInjected = true;
           return;
         }
  
+        // Only inject once, and only when explicitly allowed (e.g. after load)
+        if (scopedCtaInjected || !allowInject) return;
+
         // Add a unique ID to make it easier to find and re-inject if removed
         const buttonId = 'qtm-injected-button-' + Math.floor(Math.random() * 10000);
         ensureQtmCartCtaHoverStyle();
@@ -463,6 +473,7 @@
           try {
             telAnchor.insertAdjacentHTML('afterend', newButtonHtml);
             console.log('[QTM Cart Button Finder] Injected buyflow CTA after tel: link');
+            scopedCtaInjected = true;
           } catch (innerError) {
             console.warn('[QTM Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
             const tempDiv = document.createElement('div');
@@ -470,6 +481,7 @@
             const buttonElement = tempDiv.firstElementChild;
             telAnchor.parentNode.insertBefore(buttonElement, telAnchor.nextSibling);
             console.log('[QTM Cart Button Finder] Injected buyflow CTA using alternative method');
+            scopedCtaInjected = true;
           }
           protectInjectedElements();
         } catch (e) {
@@ -513,7 +525,6 @@
       // Add a global verification flag to track successful URL modifications
       window.qtmCartButtonFinderSuccess = false;
    
-      processScopedLinks(buyflowUrl);
       processAllCartLinks(buyflowUrl);
 
       // If TN wasn't available yet, retry briefly after init/event.
@@ -531,7 +542,7 @@
               clearlinkeventid: updatedValues.clearlinkeventid,
               tn: updatedValues.tn,
             });
-            processScopedLinks(buyflowUrl);
+            processScopedLinks(buyflowUrl, false);
             processAllCartLinks(buyflowUrl);
             return;
           }
@@ -768,8 +779,16 @@
         }, 2000); // Check every 2 seconds
       }
  
-      // Re-check on load
-      window.addEventListener('load', function () {
+      function runOnceAfterLoad(fn) {
+        if (document.readyState === 'complete') {
+          fn();
+          return;
+        }
+        window.addEventListener('load', fn, { once: true });
+      }
+
+      // Re-check on load (or immediately if load already happened)
+      runOnceAfterLoad(function () {
         console.log('[QTM Cart Button Finder] Page fully loaded, checking mapi values again...');
 
         const updatedValues = extractMapiValues();
@@ -791,8 +810,9 @@
         if (valuesChanged) {
           console.log('[QTM Cart Button Finder] Values changed after page load, updating button URLs...');
           buyflowUrl = rebuildBuyflowUrl(updatedValues);
-          processScopedLinks(buyflowUrl);
           processAllCartLinks(buyflowUrl);
+          // Only inject CTA once, after load (prevents appear/disappear flicker)
+          setTimeout(() => processScopedLinks(buyflowUrl, true), 0);
           
           // Check if this update was successful
           setTimeout(() => {
@@ -803,6 +823,8 @@
             }
           }, 100);
         } else {
+          // Even if values didn't change, we still inject once after load (if needed).
+          setTimeout(() => processScopedLinks(buyflowUrl, true), 0);
           console.log('[QTM Cart Button Finder] No changes to mapi values after page load');
         }
       });
