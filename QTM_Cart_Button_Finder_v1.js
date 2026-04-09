@@ -483,7 +483,6 @@
             console.log('[QTM Cart Button Finder] Injected buyflow CTA using alternative method');
             scopedCtaInjected = true;
           }
-          protectInjectedElements();
         } catch (e) {
           console.error('[QTM Cart Button Finder] All scoped injection methods failed', e);
         }
@@ -605,136 +604,6 @@
       // Set up a MutationObserver to detect when our buttons might be removed
       setupMutationObserver(buyflowUrl);
       
-      // Also set up delayed re-injection to handle cases where site scripts remove our elements
-      // after initial injection but before MutationObserver is set up
-      scheduleReinjection(buyflowUrl);
-      
-      // Schedule multiple re-injections at increasing intervals
-      function scheduleReinjection(url) {
-        // Initial delays for quick checks
-        const initialDelays = [500, 1000, 2000, 3000, 5000];
-        
-        // Add longer-term periodic checks
-        const longTermDelays = [];
-        for (let i = 10; i <= 60; i += 10) {
-          longTermDelays.push(i * 1000); // 10s, 20s, 30s, etc. up to 60s
-        }
-        
-        const allDelays = [...initialDelays, ...longTermDelays];
-        
-        // Schedule all the checks
-        allDelays.forEach(delay => {
-          setTimeout(() => {
-            console.log(`[QTM Cart Button Finder] Scheduled re-injection check after ${delay}ms`);
-           
-           // If we've already verified success and CTA is still present, don't reapply
-           if (window.qtmCartButtonFinderSuccess) {
-             const currentInjected = document.querySelectorAll('[data-qtm-injected="1"]');
-             if (currentInjected.length > 0) {
-               console.log('[QTM Cart Button Finder] URL modifications already verified successful, skipping re-injection');
-               return;
-             }
-           }
-           
-           const injectedElements = document.querySelectorAll('[data-qtm-injected="1"]');
-           const updatedElements = document.querySelectorAll('[data-qtm-updated="1"]');
-           
-          if (injectedElements.length === 0 || updatedElements.length === 0) {
-             console.log('[QTM Cart Button Finder] Scheduled re-injection: Missing elements detected, re-applying');
-            processScopedLinks(url, true);
-             processAllCartLinks(url);
-             ensureScopedCta(url);
-             
-             // Check if this re-injection was successful
-             setTimeout(() => {
-               const newElements = document.querySelectorAll('[data-qtm-injected="1"], [data-qtm-updated="1"]');
-               if (newElements.length > 0) {
-                 console.log('[QTM Cart Button Finder] Re-injection successful, marking as verified');
-                 window.qtmCartButtonFinderSuccess = true;
-               }
-             }, 100);
-           }
-         }, delay);
-        });
-        
-        // Also set up a continuous check that runs every 5 seconds for 10 minutes
-        let checkCount = 0;
-        const maxChecks = 120; // 10 minutes (120 * 5s = 600s = 10min)
-        
-        const intervalId = setInterval(() => {
-         if (checkCount >= maxChecks) {
-           clearInterval(intervalId);
-           console.log('[QTM Cart Button Finder] Ending continuous checks after 5 minutes');
-           return;
-         }
-         
-         checkCount++;
-         
-         // If we've already verified success and CTA is still present, don't reapply
-         if (window.qtmCartButtonFinderSuccess) {
-           const currentInjected = document.querySelectorAll('[data-qtm-injected="1"]');
-           if (currentInjected.length > 0) {
-             console.log('[QTM Cart Button Finder] Continuous check: URL modifications already verified successful, skipping');
-             return;
-           }
-         }
-         
-         const injectedElements = document.querySelectorAll('[data-qtm-injected="1"]');
-         const updatedElements = document.querySelectorAll('[data-qtm-updated="1"]');
-         
-         if (injectedElements.length === 0 || updatedElements.length === 0) {
-           console.log('[QTM Cart Button Finder] Continuous check: Missing elements detected, re-applying');
-           processScopedLinks(url, true);
-           processAllCartLinks(url);
-           ensureScopedCta(url);
-           
-           // Check if this re-injection was successful
-           setTimeout(() => {
-             const newElements = document.querySelectorAll('[data-qtm-injected="1"], [data-qtm-updated="1"]');
-             if (newElements.length > 0) {
-               console.log('[QTM Cart Button Finder] Continuous check re-injection successful, marking as verified');
-               window.qtmCartButtonFinderSuccess = true;
-             }
-           }, 100);
-         }
-         
-        }, 5000); // Check every 5 seconds
-      }
-      
-      // Function to protect injected elements from removal
-      function protectInjectedElements() {
-        const injectedElements = document.querySelectorAll('[data-qtm-injected="1"], [data-qtm-updated="1"]');
-        
-        injectedElements.forEach(element => {
-          // Make it harder to remove the element
-          const originalRemove = element.remove;
-          element.remove = function() {
-            console.log('[QTM Cart Button Finder] Prevented removal of injected element');
-            return false;
-          };
-          
-          // Prevent style changes that would hide the element
-          const originalSetAttribute = element.setAttribute;
-          element.setAttribute = function(name, value) {
-            if (name === 'style' && (value.includes('display: none') || value.includes('visibility: hidden') || value.includes('opacity: 0'))) {
-              console.log('[QTM Cart Button Finder] Prevented style attribute change that would hide element');
-              return false;
-            }
-            return originalSetAttribute.call(this, name, value);
-          };
-          
-          // Prevent class changes that might hide the element
-          const originalClassListAdd = element.classList.add;
-          element.classList.add = function(className) {
-            if (className.includes('hidden') || className.includes('invisible') || className.includes('removed')) {
-              console.log('[QTM Cart Button Finder] Prevented adding class that might hide element:', className);
-              return false;
-            }
-            return originalClassListAdd.call(this, className);
-          };
-        });
-      }
-      
       // Function to set up mutation observer to detect when our buttons are removed
       function setupMutationObserver(url) {
         console.log('[QTM Cart Button Finder] Setting up MutationObserver to monitor button removal');
@@ -789,6 +658,14 @@
             ensureScopedCta(url);
           }
         });
+
+        // IMPORTANT: start observing. Without this, the observer never runs.
+        try {
+          const target = document.querySelector('main') || document.body;
+          if (target) observer.observe(target, { childList: true, subtree: true });
+        } catch (e) {
+          // ignore
+        }
         
         // Start ensuring immediately (handles "tel:" rendering after init)
         ensureScopedCta(url);
