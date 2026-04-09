@@ -237,12 +237,14 @@
 
           // Extract TN from phone > data > 0 > promo_number
           try {
-            const promoNumber = parsedData?.phone?.data?.[0]?.promo_number;
+            const promoNumber =
+              parsedData?.requestData?.fullResponse?.data?.phone?.data?.[0]?.promo_number ??
+              parsedData?.phone?.data?.[0]?.promo_number;
             if (promoNumber) {
               tn = String(promoNumber);
-              console.log('[QTM Cart Button Finder] Extracted TN (promo_number) from phone.data[0]:', tn);
+              console.log('[QTM Cart Button Finder] Extracted TN (promo_number) from mapi phone.data[0]:', tn);
             } else {
-              console.log('[QTM Cart Button Finder] No promo_number found in phone.data[0]; using default TN:', tn);
+              console.log('[QTM Cart Button Finder] No promo_number found in mapi; using default TN:', tn);
             }
           } catch (e) {
             console.warn('[QTM Cart Button Finder] Error extracting promo_number for TN; using default TN:', tn, e);
@@ -734,13 +736,7 @@
       // Re-check on load
       window.addEventListener('load', function () {
         console.log('[QTM Cart Button Finder] Page fully loaded, checking mapi values again...');
-        
-        // If we've already verified success, skip the update
-        if (window.qtmCartButtonFinderSuccess) {
-          console.log('[QTM Cart Button Finder] URL modifications already verified successful, skipping load-time update');
-          return;
-        }
-        
+
         const updatedValues = extractMapiValues();
         let valuesChanged = false;
  
@@ -797,7 +793,9 @@
 
             // Extract TN from phone > data > 0 > promo_number
             try {
-              const promoNumber = parsedData?.phone?.data?.[0]?.promo_number;
+              const promoNumber =
+                parsedData?.requestData?.fullResponse?.data?.phone?.data?.[0]?.promo_number ??
+                parsedData?.phone?.data?.[0]?.promo_number;
               if (promoNumber) extractedValues.tn = String(promoNumber);
             } catch (e) {
               // keep default tn
