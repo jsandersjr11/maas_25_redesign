@@ -215,7 +215,8 @@
       // Defaults
       let salescode = '20001139';
       let clearlinkeventid = '';
-      let tn = '1111111111';
+      const defaultTn = '1111111111';
+      let tn = defaultTn;
  
       try {
         if (eventRequestId) {
@@ -352,6 +353,14 @@
       )}&OSTR=2222222222&salescode=${salescode}&cookietime=30day${
         clearlinkeventid ? `&PartnerReferenceID=${clearlinkeventid}` : ''
       }`;
+
+      function rebuildBuyflowUrl(values) {
+        return `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
+          values.tn
+        )}&OSTR=2222222222&salescode=${values.salescode}&cookietime=30day${
+          values.clearlinkeventid ? `&PartnerReferenceID=${values.clearlinkeventid}` : ''
+        }`;
+      }
  
       function ensureQtmCartCtaHoverStyle() {
         if (document.getElementById('qtm-cart-cta-hover-style')) return;
@@ -506,6 +515,32 @@
    
       processScopedLinks(buyflowUrl);
       processAllCartLinks(buyflowUrl);
+
+      // If TN wasn't available yet, retry briefly after init/event.
+      // mapiRequestIdReady often fires before phone.data[0].promo_number is present.
+      (function retryPopulateTn() {
+        let attemptsLeft = 25; // ~5s @ 200ms
+        const tick = () => {
+          attemptsLeft--;
+          const updatedValues = extractMapiValues();
+          if (updatedValues.tn && updatedValues.tn !== tn) {
+            console.log(`[QTM Cart Button Finder] TN became available: ${tn} -> ${updatedValues.tn}. Updating URLs...`);
+            tn = updatedValues.tn;
+            buyflowUrl = rebuildBuyflowUrl({
+              salescode: updatedValues.salescode,
+              clearlinkeventid: updatedValues.clearlinkeventid,
+              tn: updatedValues.tn,
+            });
+            processScopedLinks(buyflowUrl);
+            processAllCartLinks(buyflowUrl);
+            return;
+          }
+          if (attemptsLeft > 0 && tn === defaultTn) {
+            setTimeout(tick, 200);
+          }
+        };
+        if (tn === defaultTn) setTimeout(tick, 200);
+      })();
    
       // Check if initial application was successful
       const initialInjectedElements = document.querySelectorAll('[data-qtm-injected="1"]');
@@ -755,11 +790,7 @@
  
         if (valuesChanged) {
           console.log('[QTM Cart Button Finder] Values changed after page load, updating button URLs...');
-          buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
-            updatedValues.tn
-          )}&OSTR=2222222222&salescode=${updatedValues.salescode}&cookietime=30day${
-            updatedValues.clearlinkeventid ? `&PartnerReferenceID=${updatedValues.clearlinkeventid}` : ''
-          }`;
+          buyflowUrl = rebuildBuyflowUrl(updatedValues);
           processScopedLinks(buyflowUrl);
           processAllCartLinks(buyflowUrl);
           
