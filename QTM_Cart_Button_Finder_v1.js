@@ -488,6 +488,44 @@
           console.error('[QTM Cart Button Finder] All scoped injection methods failed', e);
         }
       }
+
+      function hasInjectedCta() {
+        return document.querySelector('[data-qtm-injected="1"]') != null;
+      }
+
+      // React pages can render tel link later; keep trying briefly until we can inject once.
+      let ensureScopedCtaTimerId = null;
+      let lastEnsureScopedCtaAt = 0;
+      function ensureScopedCta(url, { maxMs = 15000, intervalMs = 250 } = {}) {
+        const now = Date.now();
+        if (now - lastEnsureScopedCtaAt < 200) return; // throttle bursts
+        lastEnsureScopedCtaAt = now;
+
+        if (hasInjectedCta()) return;
+
+        if (ensureScopedCtaTimerId) {
+          // a loop is already running; it will pick up the latest url via closure below
+          return;
+        }
+
+        const startedAt = Date.now();
+        ensureScopedCtaTimerId = setInterval(() => {
+          // stop conditions
+          if (hasInjectedCta()) {
+            clearInterval(ensureScopedCtaTimerId);
+            ensureScopedCtaTimerId = null;
+            return;
+          }
+          if (Date.now() - startedAt > maxMs) {
+            clearInterval(ensureScopedCtaTimerId);
+            ensureScopedCtaTimerId = null;
+            return;
+          }
+
+          // allowInject=true so we can insert when tel link appears
+          processScopedLinks(url, true);
+        }, intervalMs);
+      }
  
       // Process all cart links on the entire page
       function processAllCartLinks(url) {
@@ -526,6 +564,7 @@
       window.qtmCartButtonFinderSuccess = false;
    
       processAllCartLinks(buyflowUrl);
+      ensureScopedCta(buyflowUrl);
 
       // If TN wasn't available yet, retry briefly after init/event.
       // mapiRequestIdReady often fires before phone.data[0].promo_number is present.
@@ -544,6 +583,7 @@
             });
             processScopedLinks(buyflowUrl, false);
             processAllCartLinks(buyflowUrl);
+            ensureScopedCta(buyflowUrl);
             return;
           }
           if (attemptsLeft > 0 && tn === defaultTn) {
@@ -587,10 +627,10 @@
           setTimeout(() => {
             console.log(`[QTM Cart Button Finder] Scheduled re-injection check after ${delay}ms`);
            
-           // If we've already verified success and elements are still present, don't reapply
+           // If we've already verified success and CTA is still present, don't reapply
            if (window.qtmCartButtonFinderSuccess) {
-             const currentElements = document.querySelectorAll('[data-qtm-injected="1"], [data-qtm-updated="1"]');
-             if (currentElements.length > 0) {
+             const currentInjected = document.querySelectorAll('[data-qtm-injected="1"]');
+             if (currentInjected.length > 0) {
                console.log('[QTM Cart Button Finder] URL modifications already verified successful, skipping re-injection');
                return;
              }
@@ -603,6 +643,7 @@
              console.log('[QTM Cart Button Finder] Scheduled re-injection: Missing elements detected, re-applying');
             processScopedLinks(url, true);
              processAllCartLinks(url);
+             ensureScopedCta(url);
              
              // Check if this re-injection was successful
              setTimeout(() => {
@@ -629,10 +670,10 @@
          
          checkCount++;
          
-         // If we've already verified success and elements are still present, don't reapply
+         // If we've already verified success and CTA is still present, don't reapply
          if (window.qtmCartButtonFinderSuccess) {
-           const currentElements = document.querySelectorAll('[data-qtm-injected="1"], [data-qtm-updated="1"]');
-           if (currentElements.length > 0) {
+           const currentInjected = document.querySelectorAll('[data-qtm-injected="1"]');
+           if (currentInjected.length > 0) {
              console.log('[QTM Cart Button Finder] Continuous check: URL modifications already verified successful, skipping');
              return;
            }
@@ -645,6 +686,7 @@
            console.log('[QTM Cart Button Finder] Continuous check: Missing elements detected, re-applying');
            processScopedLinks(url, true);
            processAllCartLinks(url);
+           ensureScopedCta(url);
            
            // Check if this re-injection was successful
            setTimeout(() => {
@@ -700,6 +742,7 @@
         // Create an observer instance
         const observer = new MutationObserver((mutations) => {
           let needToReapply = false;
+          let shouldEnsure = false;
           
           mutations.forEach((mutation) => {
             // Check if nodes were removed
@@ -725,6 +768,11 @@
                 }
               }
             }
+
+            // If nodes were added, React may have just rendered the tel: link we need
+            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+              shouldEnsure = true;
+            }
           });
           
           // If our elements were removed, reapply them (React re-renders can remove injected DOM)
@@ -733,17 +781,20 @@
             setTimeout(() => {
               processScopedLinks(url, true);
               processAllCartLinks(url);
+              ensureScopedCta(url);
             }, 0); // next tick so DOM can settle
+          }
+
+          if (shouldEnsure) {
+            ensureScopedCta(url);
           }
         });
         
+        // Start ensuring immediately (handles "tel:" rendering after init)
+        ensureScopedCta(url);
+
         // Also set up a periodic check as a fallback
         setInterval(() => {
-          // If we've already verified success, skip the check
-          if (window.qtmCartButtonFinderSuccess) {
-            return;
-          }
-         
           const injectedElements = document.querySelectorAll('[data-qtm-injected="1"]');
           const updatedElements = document.querySelectorAll('[data-qtm-updated="1"]');
           
@@ -752,6 +803,7 @@
             console.log('[QTM Cart Button Finder] Periodic check: No injected/updated elements found, re-applying');
             processScopedLinks(url, true);
             processAllCartLinks(url);
+            ensureScopedCta(url);
             
             // Check if this re-injection was successful
             setTimeout(() => {
@@ -799,6 +851,7 @@
           processAllCartLinks(buyflowUrl);
           // Only inject CTA once, after load (prevents appear/disappear flicker)
           setTimeout(() => processScopedLinks(buyflowUrl, true), 0);
+          ensureScopedCta(buyflowUrl);
           
           // Check if this update was successful
           setTimeout(() => {
@@ -811,6 +864,7 @@
         } else {
           // Even if values didn't change, we still inject once after load (if needed).
           setTimeout(() => processScopedLinks(buyflowUrl, true), 0);
+          ensureScopedCta(buyflowUrl);
           console.log('[QTM Cart Button Finder] No changes to mapi values after page load');
         }
       });
