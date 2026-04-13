@@ -453,7 +453,7 @@
      }
 
      // Build URL
-     let buyflowUrl = `https://shop.brightspeed.com/uas/?affprog=clearlink&salescode=${salescode}&cookietime=30day${
+     let buyflowUrl = `https://shop.brightspeed.com/uas/?utm_medium=DAP&utm_source=Clearlink&affprog=clearlink&salescode=${salescode}&cookietime=30day${
        clearlinkeventid ? `&acsid=${clearlinkeventid}` : ''
      }`;
 
@@ -924,7 +924,7 @@
 
        if (valuesChanged) {
          console.log('[BSP Cart Button Finder] Values changed after page load, updating button URLs...');
-         buyflowUrl = `https://shop.brightspeed.com/uas/?affprog=clearlink&salescode=${updatedValues.salescode}&cookietime=30day${
+         buyflowUrl = `https://shop.brightspeed.com/uas/?utm_medium=DAP&utm_source=Clearlink&affprog=clearlink&salescode=${updatedValues.salescode}&cookietime=30day${
            updatedValues.clearlinkeventid ? `&acsid=${updatedValues.clearlinkeventid}` : ''
          }`;
          processScopedLinks(buyflowUrl);
