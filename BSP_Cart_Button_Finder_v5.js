@@ -404,6 +404,31 @@
       // If we find an <input>, do nothing
       if (content.querySelector('input')) return;
 
+      function updateExistingCtaIfPresent() {
+        // Prevent double-CTA: if the page already has a native CTA ("cobra"),
+        // prefer updating it instead of injecting a second CTA.
+        const candidates = Array.from(content.querySelectorAll('a.leshen-link-button-wrapper'));
+        if (candidates.length === 0) return false;
+
+        // If we already injected our CTA, nothing to do here.
+        if (content.querySelector('a.leshen-link-button-wrapper[data-bsp-injected="1"]')) return true;
+
+        // Prefer a non-tel CTA (the existing "switch/cart" style CTA), otherwise take the first.
+        const pick =
+          candidates.find((a) => {
+            const href = (a.getAttribute('href') || '').toLowerCase();
+            return href && !href.startsWith('tel:');
+          }) || candidates[0];
+
+        try {
+          pick.href = url;
+          pick.dataset.bspUpdated = '1';
+          return true;
+        } catch (e) {
+          return true; // CTA exists, but we couldn't set href; still skip injection
+        }
+      }
+
       const telAnchor = content.querySelector('a[href^="tel:"]');
       const cartAnchor = content.querySelector('a[href*="/cart"]');
 
@@ -537,6 +562,9 @@
 
       // If no tel or cart links found, insert button below last .leshen-typography-body (unchanged style)
       if (!telAnchor && !cartAnchor) {
+        // NEW: if an existing CTA is present (e.g. cobra), update it and do not inject another.
+        if (updateExistingCtaIfPresent()) return;
+
         const typographyElements = content.querySelectorAll('.leshen-typography-body');
         if (typographyElements.length === 0) return;
 
