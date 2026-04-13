@@ -1,50 +1,53 @@
 (function () {
-    console.log('[QTM Cart Button Finder] Script initialized');
+    const DEBUG = false;
+    const log = (...args) => DEBUG && console.log('[QTM Cart Button Finder]', ...args);
+    const warn = (...args) => DEBUG && console.warn('[QTM Cart Button Finder]', ...args);
+    const error = (...args) => console.error('[QTM Cart Button Finder]', ...args);
+
+    log('Script initialized');
  
-    // Fallback init in case event never fires
-    let scriptInitialized = false;
-    const fallbackTimeout = setTimeout(() => {
-      if (!scriptInitialized) {
-        console.log('[QTM Cart Button Finder] Fallback timeout reached. Initializing script anyway.');
-        initializeMainScript();
+    // Start fast (React/VWO friendly) with defaults, then upgrade when MAPI arrives.
+    let controller = null;
+    let booted = false;
+    function bootFast() {
+      if (booted) return;
+      booted = true;
+      try {
+        controller = initializeMainScript(null, null);
+      } catch (e) {
+        error('Fast boot failed', e);
       }
-    }, 30000);
+    }
+    // Next-tick boot so we don’t block VWO’s main thread
+    setTimeout(bootFast, 0);
  
     // Listen for the mapiRequestIdReady event
     document.addEventListener('mapiRequestIdReady', (e) => {
-      console.log('[QTM Cart Button Finder] mapiRequestIdReady event received');
+      log('mapiRequestIdReady event received');
       const requestId = e?.detail?.requestId;
-      console.log('[QTM Cart Button Finder] Request ID from event:', requestId);
+      log('Request ID from event:', requestId);
  
-      if (requestId && !scriptInitialized) {
-        scriptInitialized = true;
-        clearTimeout(fallbackTimeout);
- 
-        try {
-          const mapiData = localStorage.getItem('mapi');
-          if (mapiData) {
-            const parsedData = JSON.parse(mapiData);
-            console.log('[QTM Cart Button Finder] MAPI data found in localStorage');
-            initializeMainScript(parsedData, requestId);
-          } else {
-            console.log('[QTM Cart Button Finder] No MAPI data in localStorage, using event data only');
-            const minimalData = { requestId };
-            initializeMainScript(minimalData, requestId);
-          }
-        } catch (error) {
-          console.error('[QTM Cart Button Finder] Error processing MAPI data:', error);
-          const minimalData = { requestId };
-          initializeMainScript(minimalData, requestId);
-        }
-      } else if (!requestId) {
-        console.log('[QTM Cart Button Finder] Event received but no requestId found in event details');
+      if (!requestId) {
+        log('Event received but no requestId found in event details');
+        return;
+      }
+
+      // Always boot fast; then upgrade URL if/when we can.
+      bootFast();
+      try {
+        const mapiData = localStorage.getItem('mapi');
+        const parsedData = mapiData ? JSON.parse(mapiData) : { requestId };
+        if (controller && controller.updateFromMapi) controller.updateFromMapi(parsedData, requestId);
+      } catch (e2) {
+        warn('Error processing MAPI data from event; falling back to requestId only', e2);
+        if (controller && controller.updateFromMapi) controller.updateFromMapi({ requestId }, requestId);
       }
     });
  
     // Also check localStorage immediately in case the event has already fired
     try {
       const mapiData = localStorage.getItem('mapi');
-      if (mapiData && !scriptInitialized) {
+      if (mapiData) {
         const parsedData = JSON.parse(mapiData);
         if (
           parsedData &&
@@ -55,18 +58,17 @@
               parsedData.requestData.fullResponse.data &&
               parsedData.requestData.fullResponse.data.request_id))
         ) {
-          console.log('[QTM Cart Button Finder] MAPI data already exists in localStorage with requestId');
-          scriptInitialized = true;
-          clearTimeout(fallbackTimeout);
-          initializeMainScript(parsedData);
+          log('MAPI data already exists in localStorage with requestId');
+          bootFast();
+          if (controller && controller.updateFromMapi) controller.updateFromMapi(parsedData, null);
         }
       }
     } catch (error) {
-      console.error('[QTM Cart Button Finder] Error checking initial localStorage:', error);
+      warn('Error checking initial localStorage', error);
     }
  
     function initializeMainScript(parsedMapiData = null, eventRequestId = null) {
-      console.log('[QTM Cart Button Finder] Initializing main script');
+      log('Initializing main script');
  
       // Define the promo code to sales code mapping (updated from CSV data)
       const promoToSalesCodeMap = {
@@ -218,10 +220,87 @@
       const defaultTn = '1111111111';
       let tn = defaultTn;
  
+      function isLikelyTn(value) {
+        if (value == null) return false;
+        const digits = String(value).replace(/\D/g, '');
+        return digits.length === 10;
+      }
+
+      function normalizeTn(value) {
+        const digits = String(value).replace(/\D/g, '');
+        return digits.length === 10 ? digits : null;
+      }
+
+      function extractTnFromMapi(parsedData) {
+        // Preferred known paths (keep cheap/fast)
+        const phone0 =
+          parsedData?.requestData?.fullResponse?.data?.phone?.data?.[0] ??
+          parsedData?.phone?.data?.[0] ??
+          null;
+
+        const directCandidates = [
+          phone0?.promo_number,
+          phone0?.promoNumber,
+          phone0?.tn,
+          phone0?.TN,
+          phone0?.phone_number,
+          phone0?.phoneNumber,
+          phone0?.number,
+          phone0?.phone,
+          phone0?.tel,
+          parsedData?.tn,
+          parsedData?.TN,
+        ];
+
+        for (const c of directCandidates) {
+          if (isLikelyTn(c)) return normalizeTn(c);
+        }
+
+        // If phone0 exists, scan its values for a 10-digit number
+        if (phone0 && typeof phone0 === 'object') {
+          for (const v of Object.values(phone0)) {
+            if (isLikelyTn(v)) return normalizeTn(v);
+          }
+        }
+
+        return null;
+      }
+
+      function extractTnFromDom() {
+        // Use the first visible tel: link as a guaranteed TN source on this page.
+        // (MAPI can be missing/expired, but the CTA tel link is usually present.)
+        const telAnchor =
+          document.querySelector('main a[href^="tel:"]') ||
+          document.querySelector('a[href^="tel:"]');
+        if (!telAnchor) return null;
+
+        const href = telAnchor.getAttribute('href') || '';
+        const digits = href.replace(/\D/g, '');
+        if (digits.length === 10) return digits;
+        if (digits.length > 10) {
+          // Sometimes tel:+1XXXXXXXXXX
+          const last10 = digits.slice(-10);
+          if (last10.length === 10) return last10;
+        }
+        return null;
+      }
+
+      function maybeUpgradeTnFromDom() {
+        if (tn !== defaultTn) return false;
+        const domTn = extractTnFromDom();
+        if (!domTn) return false;
+        tn = domTn;
+        buyflowUrl = rebuildBuyflowUrl({ salescode, clearlinkeventid, tn });
+        processAllCartLinks(buyflowUrl);
+        ensureScopedCta(buyflowUrl);
+        processScopedLinks(buyflowUrl, false);
+        return true;
+      }
+
       try {
         if (eventRequestId) {
           clearlinkeventid = eventRequestId;
-          console.log('[QTM Cart Button Finder] Using requestId from event:', clearlinkeventid);
+          log('Using requestId from event:', clearlinkeventid);
         }
  
         const parsedData =
@@ -232,33 +311,31 @@
           })();
  
         if (parsedData) {
-          // Log the MAPI data structure for debugging
-          console.log('[QTM Cart Button Finder] MAPI data structure found');
-          console.log('[QTM Cart Button Finder] Root level keys:', Object.keys(parsedData));
+          // Avoid expensive logging unless DEBUG
+          log('MAPI data structure found');
+          log('Root level keys:', Object.keys(parsedData));
 
-          // Extract TN from phone > data > 0 > promo_number
+          // Extract TN (field name varies by implementation)
           try {
-            const promoNumber =
-              parsedData?.requestData?.fullResponse?.data?.phone?.data?.[0]?.promo_number ??
-              parsedData?.phone?.data?.[0]?.promo_number;
-            if (promoNumber) {
-              tn = String(promoNumber);
-              console.log('[QTM Cart Button Finder] Extracted TN (promo_number) from mapi phone.data[0]:', tn);
+            const extractedTn = extractTnFromMapi(parsedData);
+            if (extractedTn) {
+              tn = String(extractedTn);
+              log('Extracted TN from mapi:', tn);
             } else {
-              console.log('[QTM Cart Button Finder] No promo_number found in mapi; using default TN:', tn);
+              log('No promo_number found in mapi; using default TN:', tn);
             }
           } catch (e) {
-            console.warn('[QTM Cart Button Finder] Error extracting promo_number for TN; using default TN:', tn, e);
+            warn('Error extracting promo_number for TN; using default TN', tn, e);
           }
           
           // Extract request_id - check all possible locations if we don't already have it from the event
           if (!clearlinkeventid) {
             if (parsedData.requestId) {
               clearlinkeventid = parsedData.requestId;
-              console.log('[QTM Cart Button Finder] Extracted requestId (ACSID) from root level:', clearlinkeventid);
+              log('Extracted requestId (ACSID) from root level:', clearlinkeventid);
             } else if (parsedData.requestData && parsedData.requestData.requestId) {
               clearlinkeventid = parsedData.requestData.requestId;
-              console.log('[QTM Cart Button Finder] Extracted requestId (ACSID) from requestData:', clearlinkeventid);
+              log('Extracted requestId (ACSID) from requestData:', clearlinkeventid);
             } else if (
               parsedData.requestData &&
               parsedData.requestData.fullResponse &&
@@ -266,19 +343,9 @@
               parsedData.requestData.fullResponse.data.request_id
             ) {
               clearlinkeventid = parsedData.requestData.fullResponse.data.request_id;
-              console.log('[QTM Cart Button Finder] Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
+              log('Extracted request_id (ACSID) from fullResponse.data:', clearlinkeventid);
             } else {
-              console.log('[QTM Cart Button Finder] Could not find request_id in any expected location');
-              // Log available paths to help debug
-              if (parsedData.requestData) {
-                console.log('[QTM Cart Button Finder] requestData keys:', Object.keys(parsedData.requestData));
-                if (parsedData.requestData.fullResponse) {
-                  console.log('[QTM Cart Button Finder] fullResponse keys:', Object.keys(parsedData.requestData.fullResponse));
-                  if (parsedData.requestData.fullResponse.data) {
-                    console.log('[QTM Cart Button Finder] fullResponse.data keys:', Object.keys(parsedData.requestData.fullResponse.data));
-                  }
-                }
-              }
+              log('Could not find request_id in expected locations');
             }
           }
  
@@ -293,7 +360,7 @@
             parsedData.requestData.fullResponse.data.promo_code
           ) {
             promoCode = parsedData.requestData.fullResponse.data.promo_code;
-            console.log('[QTM Cart Button Finder] Extracted promo_code from fullResponse.data:', promoCode);
+            log('Extracted promo_code from fullResponse.data:', promoCode);
           } 
           // Then check in promo_data.data.promo_code
           else if (
@@ -305,48 +372,47 @@
             parsedData.requestData.fullResponse.data.promo_data.data.promo_code
           ) {
             promoCode = parsedData.requestData.fullResponse.data.promo_data.data.promo_code;
-            console.log('[QTM Cart Button Finder] Extracted promo_code from promo_data.data:', promoCode);
+            log('Extracted promo_code from promo_data.data:', promoCode);
           }
           // Check other possible locations
           else if (parsedData.promo_code) {
             promoCode = parsedData.promo_code;
-            console.log('[QTM Cart Button Finder] Extracted promo_code from root level:', promoCode);
+            log('Extracted promo_code from root level:', promoCode);
           } else if (parsedData.lastPromo) {
             promoCode = parsedData.lastPromo;
-            console.log('[QTM Cart Button Finder] Extracted lastPromo from root level:', promoCode);
+            log('Extracted lastPromo from root level:', promoCode);
           } else {
-            console.log('[QTM Cart Button Finder] Could not find promo_code in any expected location');
-            // Log available paths to help debug
-            if (parsedData.requestData && parsedData.requestData.fullResponse && parsedData.requestData.fullResponse.data) {
-              console.log('[QTM Cart Button Finder] Available properties in fullResponse.data:', 
-                          Object.keys(parsedData.requestData.fullResponse.data));
-              if (parsedData.requestData.fullResponse.data.promo_data) {
-                console.log('[QTM Cart Button Finder] promo_data keys:', 
-                            Object.keys(parsedData.requestData.fullResponse.data.promo_data));
-              }
-            }
+            log('Could not find promo_code in expected locations');
           }
  
           if (promoCode) {
             // Convert to string to ensure proper lookup
             promoCode = String(promoCode);
-            console.log('[QTM Cart Button Finder] Extracted promo_code:', promoCode);
+            log('Extracted promo_code:', promoCode);
             
             // Look up the sales code from the mapping
             if (promoToSalesCodeMap[promoCode]) {
               salescode = promoToSalesCodeMap[promoCode];
-              console.log('[QTM Cart Button Finder] Mapped to sales code:', salescode);
+              log('Mapped to sales code:', salescode);
             } else {
-              console.log('[QTM Cart Button Finder] No mapping found for promo code:', promoCode, 'using default sales code:', salescode);
+              log('No mapping found for promo code:', promoCode, 'using default sales code:', salescode);
             }
           } else {
-            console.log('[QTM Cart Button Finder] No promo_code found in mapi data, using default sales code:', salescode);
+            log('No promo_code found in mapi data; using default sales code:', salescode);
           }
         }
       } catch (error) {
-        console.error('[QTM Cart Button Finder] Error extracting data from mapi:', error);
+        warn('Error extracting data from mapi', error);
       }
  
+      // If MAPI is missing/expired, derive TN from the tel: link as soon as possible.
+      // This makes TN update "always" on the React page.
+      try {
+        maybeUpgradeTnFromDom();
+      } catch (e) {
+        // ignore
+      }
+
       // Build URL
       let buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
         tn
@@ -521,6 +587,15 @@
             return;
           }
 
+          // If we still don't have a TN, attempt to grab it from the tel: link once it renders.
+          try {
+            if (maybeUpgradeTnFromDom()) {
+              url = buyflowUrl; // keep loop using latest url
+            }
+          } catch (e) {
+            // ignore
+          }
+
           // allowInject=true so we can insert when tel link appears
           processScopedLinks(url, true);
         }, intervalMs);
@@ -528,30 +603,30 @@
  
       // Process all cart links on the entire page
       function processAllCartLinks(url) {
-        console.log('[QTM Cart Button Finder] Searching for all cart links on the page');
+        log('Searching for all cart links on the page');
         // Updated selector to catch both href="/cart" exactly and href containing "/cart"
         const allCartLinks = document.querySelectorAll('a[href="/cart"], a[href*="/cart"]');
         
         if (allCartLinks.length === 0) {
-          console.log('[QTM Cart Button Finder] No cart links found on the page');
+          log('No cart links found on the page');
           return;
         }
         
-        console.log(`[QTM Cart Button Finder] Found ${allCartLinks.length} cart links on the page`);
+        log(`Found ${allCartLinks.length} cart links on the page`);
         
         allCartLinks.forEach((link, index) => {
           try {
             // Skip links that were already processed by processScopedLinks
             if (link.dataset.qtmUpdated === '1') {
-              console.log(`[QTM Cart Button Finder] Skipping already updated cart link #${index + 1}`);
+              log(`Skipping already updated cart link #${index + 1}`);
               return;
             }
             
             link.href = url;
             link.dataset.qtmUpdated = '1';
-            console.log(`[QTM Cart Button Finder] Updated cart link #${index + 1}`);
+            log(`Updated cart link #${index + 1}`);
           } catch (e) {
-            console.error(`[QTM Cart Button Finder] Failed updating cart link #${index + 1}`, e);
+            warn(`Failed updating cart link #${index + 1}`, e);
           }
         });
       }
@@ -606,7 +681,7 @@
       
       // Function to set up mutation observer to detect when our buttons are removed
       function setupMutationObserver(url) {
-        console.log('[QTM Cart Button Finder] Setting up MutationObserver to monitor button removal');
+        log('Setting up MutationObserver to monitor button removal');
         
         // Create an observer instance
         const observer = new MutationObserver((mutations) => {
@@ -623,14 +698,14 @@
                 // Check if the node is an element and has our data attribute or contains elements with our attribute
                 if (node.nodeType === 1) { // ELEMENT_NODE
                   if (node.dataset && node.dataset.qtmInjected === '1' || node.dataset && node.dataset.qtmUpdated === '1') {
-                    console.log('[QTM Cart Button Finder] Detected removal of our injected/updated element');
+                    log('Detected removal of our injected/updated element');
                     needToReapply = true;
                     break;
                   }
                   
                   // Also check if any of the removed node's children had our data attribute
                   if (node.querySelector && node.querySelector('[data-qtm-injected="1"], [data-qtm-updated="1"]')) {
-                    console.log('[QTM Cart Button Finder] Detected removal of a container with our injected/updated elements');
+                    log('Detected removal of a container with our injected/updated elements');
                     needToReapply = true;
                     break;
                   }
@@ -646,7 +721,7 @@
           
           // If our elements were removed, reapply them (React re-renders can remove injected DOM)
           if (needToReapply) {
-            console.log('[QTM Cart Button Finder] Re-applying modifications after detected removal');
+            log('Re-applying modifications after detected removal');
             setTimeout(() => {
               processScopedLinks(url, true);
               processAllCartLinks(url);
@@ -670,14 +745,24 @@
         // Start ensuring immediately (handles "tel:" rendering after init)
         ensureScopedCta(url);
 
-        // Also set up a periodic check as a fallback
-        setInterval(() => {
+        // Periodic fallback, but only for a limited time (avoid permanent overhead in VWO).
+        const startedAt = Date.now();
+        const maxFallbackMs = 30000;
+        const intervalId = setInterval(() => {
+          if (window.qtmCartButtonFinderSuccess) {
+            clearInterval(intervalId);
+            return;
+          }
+          if (Date.now() - startedAt > maxFallbackMs) {
+            clearInterval(intervalId);
+            return;
+          }
           const injectedElements = document.querySelectorAll('[data-qtm-injected="1"]');
           const updatedElements = document.querySelectorAll('[data-qtm-updated="1"]');
           
           // If we expected elements to be there but they're not, reapply
           if ((injectedElements.length === 0 && updatedElements.length === 0)) {
-            console.log('[QTM Cart Button Finder] Periodic check: No injected/updated elements found, re-applying');
+            log('Periodic check: No injected/updated elements found, re-applying');
             processScopedLinks(url, true);
             processAllCartLinks(url);
             ensureScopedCta(url);
@@ -686,12 +771,12 @@
             setTimeout(() => {
               const newElements = document.querySelectorAll('[data-qtm-injected="1"], [data-qtm-updated="1"]');
               if (newElements.length > 0) {
-                console.log('[QTM Cart Button Finder] Periodic check re-injection successful, marking as verified');
+                log('Periodic check re-injection successful, marking as verified');
                 window.qtmCartButtonFinderSuccess = true;
               }
             }, 100);
           }
-        }, 2000); // Check every 2 seconds
+        }, 1500); // keep light while waiting for React renders
       }
  
       function runOnceAfterLoad(fn) {
@@ -704,7 +789,7 @@
 
       // Re-check on load (or immediately if load already happened)
       runOnceAfterLoad(function () {
-        console.log('[QTM Cart Button Finder] Page fully loaded, checking mapi values again...');
+        log('Page fully loaded, checking mapi values again...');
 
         const updatedValues = extractMapiValues();
         let valuesChanged = false;
@@ -723,7 +808,7 @@
         }
  
         if (valuesChanged) {
-          console.log('[QTM Cart Button Finder] Values changed after page load, updating button URLs...');
+          log('Values changed after page load, updating button URLs...');
           buyflowUrl = rebuildBuyflowUrl(updatedValues);
           processAllCartLinks(buyflowUrl);
           // Only inject CTA once, after load (prevents appear/disappear flicker)
@@ -742,7 +827,13 @@
           // Even if values didn't change, we still inject once after load (if needed).
           setTimeout(() => processScopedLinks(buyflowUrl, true), 0);
           ensureScopedCta(buyflowUrl);
-          console.log('[QTM Cart Button Finder] No changes to mapi values after page load');
+          // One more chance to upgrade TN from DOM post-load.
+          try {
+            maybeUpgradeTnFromDom();
+          } catch (e) {
+            // ignore
+          }
+          log('No changes to mapi values after page load');
         }
       });
  
@@ -759,14 +850,12 @@
           if (mapiData) {
             const parsedData = JSON.parse(mapiData);
  
-            console.log('[QTM Cart Button Finder] Re-extracting values from mapi data');
+            log('Re-extracting values from mapi data');
 
-            // Extract TN from phone > data > 0 > promo_number
+            // Extract TN (field name varies by implementation)
             try {
-              const promoNumber =
-                parsedData?.requestData?.fullResponse?.data?.phone?.data?.[0]?.promo_number ??
-                parsedData?.phone?.data?.[0]?.promo_number;
-              if (promoNumber) extractedValues.tn = String(promoNumber);
+              const extractedTn = extractTnFromMapi(parsedData);
+              if (extractedTn) extractedValues.tn = String(extractedTn);
             } catch (e) {
               // keep default tn
             }
@@ -836,7 +925,75 @@
         return extractedValues;
       }
  
-      console.log('[QTM Cart Button Finder] Main script execution completed');
+      log('Main script execution completed');
+
+      // Allow fast-boot + later upgrade without reinitializing everything.
+      return {
+        updateFromMapi(nextMapiData, nextEventRequestId) {
+          try {
+            const updatedValues = (() => {
+              // Prefer explicit args when available to avoid extra localStorage parse.
+              let extractedValues = {
+                salescode,
+                clearlinkeventid,
+                tn,
+              };
+
+              if (nextEventRequestId) extractedValues.clearlinkeventid = String(nextEventRequestId);
+
+              const parsedData = nextMapiData || null;
+              if (!parsedData) return extractedValues;
+
+              // TN
+              const extractedTn = extractTnFromMapi(parsedData);
+              if (extractedTn) extractedValues.tn = String(extractedTn);
+
+              // request id
+              if (!extractedValues.clearlinkeventid) {
+                extractedValues.clearlinkeventid =
+                  parsedData.requestId ||
+                  parsedData?.requestData?.requestId ||
+                  parsedData?.requestData?.fullResponse?.data?.request_id ||
+                  '';
+              }
+
+              // promo code -> salescode
+              const promoCode =
+                parsedData?.requestData?.fullResponse?.data?.promo_code ||
+                parsedData?.requestData?.fullResponse?.data?.promo_data?.data?.promo_code ||
+                parsedData?.promo_code ||
+                parsedData?.lastPromo ||
+                null;
+              if (promoCode != null) {
+                const promoStr = String(promoCode);
+                if (promoToSalesCodeMap[promoStr]) extractedValues.salescode = promoToSalesCodeMap[promoStr];
+              }
+
+              return extractedValues;
+            })();
+
+            const nextUrl = rebuildBuyflowUrl({
+              salescode: updatedValues.salescode,
+              clearlinkeventid: updatedValues.clearlinkeventid,
+              tn: updatedValues.tn || tn,
+            });
+
+            // Update internal state so subsequent retries use the best-known values
+            salescode = updatedValues.salescode || salescode;
+            clearlinkeventid = updatedValues.clearlinkeventid || clearlinkeventid;
+            tn = updatedValues.tn || tn;
+            buyflowUrl = nextUrl;
+
+            processAllCartLinks(buyflowUrl);
+            // avoid reinsertion flicker; just ensure if missing
+            ensureScopedCta(buyflowUrl);
+            // update existing injected CTA href if present
+            processScopedLinks(buyflowUrl, false);
+          } catch (e) {
+            warn('updateFromMapi failed', e);
+          }
+        },
+      };
     }
  
     // Script initialization occurs via event listener/localStorage
