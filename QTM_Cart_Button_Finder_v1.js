@@ -482,6 +482,21 @@
         // Only inject once, and only when explicitly allowed (e.g. after load)
         if (scopedCtaInjected || !allowInject) return;
 
+        const sectionBg = (() => {
+          try {
+            return window.getComputedStyle(firstSectionEl).backgroundColor || '';
+          } catch (e) {
+            return '';
+          }
+        })();
+        const isSectionWhite =
+          typeof sectionBg === 'string' &&
+          (sectionBg === 'rgb(255, 255, 255)' ||
+            sectionBg === 'rgba(255, 255, 255, 1)' ||
+            sectionBg.toLowerCase() === '#fff' ||
+            sectionBg.toLowerCase() === '#ffffff');
+        const ctaButtonBg = isSectionWhite ? '#ffffff4d' : '#ffffff';
+
         // Add a unique ID to make it easier to find and re-inject if removed
         const buttonId = 'qtm-injected-button-' + Math.floor(Math.random() * 10000);
         ensureQtmCartCtaHoverStyle();
@@ -507,7 +522,7 @@
                   padding: 12px 20px !important;
                   font: inherit !important;
                   color: #000 !important;
-                  background-color: #ffffff4d;
+                  background-color: ${ctaButtonBg};
                   border: 0 !important;
                   border-radius: 2em !important;
                   cursor: pointer !important;
