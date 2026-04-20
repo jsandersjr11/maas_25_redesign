@@ -419,14 +419,14 @@
       }
 
       // Build URL
-      let buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
+      let buyflowUrl = `https://px-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
         tn
       )}&OSTR=8337975340&salescode=${salescode}&cookietime=30day${
         clearlinkeventid ? `&PartnerReferenceID=${clearlinkeventid}` : ''
       }`;
 
       function rebuildBuyflowUrl(values) {
-        return `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
+        return `https://px-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
           values.tn
         )}&OSTR=8337975340&salescode=${values.salescode}&cookietime=30day${
           values.clearlinkeventid ? `&PartnerReferenceID=${values.clearlinkeventid}` : ''
