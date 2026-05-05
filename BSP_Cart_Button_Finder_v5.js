@@ -332,7 +332,7 @@
     let clearlinkeventid = '';
 
     function rebuildBuyflowUrl(values) {
-      return `https://shop.brightspeed.com/uas/?utm_medium=DAP&utm_source=Clearlink&affprog=clearlink&salescode=${values.salescode}&cookietime=30day${
+      return `https://shop.brightspeed.com/uas/?utm_medium=DAP&utm_source=Clearlink&affprog=clearlink&welcomeBack=welcome-back&salescode=${values.salescode}&cookietime=30day${
         values.clearlinkeventid ? `&acsid=${values.clearlinkeventid}` : ''
       }`;
     }

@@ -419,16 +419,16 @@
       }
 
       // Build URL
-      let buyflowUrl = `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
+      let buyflowUrl = `https://px-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
         tn
-      )}&OSTR=2222222222&salescode=${salescode}&cookietime=30day${
+      )}&OSTR=8337975340&salescode=${salescode}&cookietime=30day${
         clearlinkeventid ? `&PartnerReferenceID=${clearlinkeventid}` : ''
       }`;
 
       function rebuildBuyflowUrl(values) {
-        return `https://px-test-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
+        return `https://px-ordering.quantumfiber.com/index?partnerId=PX000131&BRND=Q&TN=${encodeURIComponent(
           values.tn
-        )}&OSTR=2222222222&salescode=${values.salescode}&cookietime=30day${
+        )}&OSTR=8337975340&salescode=${values.salescode}&cookietime=30day${
           values.clearlinkeventid ? `&PartnerReferenceID=${values.clearlinkeventid}` : ''
         }`;
       }
@@ -444,7 +444,7 @@
       }
 
       // Process inside <main> > first <section> child
-      let scopedCtaInjected = false;
+      // NOTE: Removed scopedCtaInjected closure flag to allow re-injection after React hydration wipes DOM
       function processScopedLinks(url, allowInject = false) {
         const mainEl = document.querySelector('main');
         if (!mainEl) {
@@ -480,12 +480,12 @@
           } catch (e) {
             // ignore
           }
-          scopedCtaInjected = true;
           return;
         }
  
-        // Only inject once, and only when explicitly allowed (e.g. after load)
-        if (scopedCtaInjected || !allowInject) return;
+        // Only inject when explicitly allowed AND element doesn't already exist
+        // Check DOM directly - don't rely on closure flag (React hydration can wipe DOM)
+        if (!allowInject || hasInjectedCta()) return;
 
         const sectionBg = (() => {
           try {
@@ -559,7 +559,6 @@
           try {
             telAnchor.insertAdjacentHTML('afterend', newButtonHtml);
             console.log('[QTM Cart Button Finder] Injected buyflow CTA after tel: link');
-            scopedCtaInjected = true;
           } catch (innerError) {
             console.warn('[QTM Cart Button Finder] Primary insertion method failed, trying alternative', innerError);
             const tempDiv = document.createElement('div');
@@ -567,7 +566,6 @@
             const buttonElement = tempDiv.firstElementChild;
             telAnchor.parentNode.insertBefore(buttonElement, telAnchor.nextSibling);
             console.log('[QTM Cart Button Finder] Injected buyflow CTA using alternative method');
-            scopedCtaInjected = true;
           }
         } catch (e) {
           console.error('[QTM Cart Button Finder] All scoped injection methods failed', e);
@@ -578,9 +576,13 @@
         return document.querySelector('[data-qtm-injected="1"]') != null;
       }
 
-      // React pages can render tel link later; keep trying briefly until we can inject once.
+      // React pages can render tel link later; keep trying briefly until we can inject.
+      // Also handles React hydration which may wipe our injected elements.
       let ensureScopedCtaTimerId = null;
       let lastEnsureScopedCtaAt = 0;
+      let hydrationRetries = 0;
+      const MAX_HYDRATION_RETRIES = 50; // ~12.5s at 250ms intervals
+      
       function ensureScopedCta(url, { maxMs = 15000, intervalMs = 250 } = {}) {
         const now = Date.now();
         if (now - lastEnsureScopedCtaAt < 200) return; // throttle bursts
@@ -594,14 +596,18 @@
         }
 
         const startedAt = Date.now();
+        hydrationRetries = 0;
+        
         ensureScopedCtaTimerId = setInterval(() => {
+          hydrationRetries++;
+          
           // stop conditions
           if (hasInjectedCta()) {
             clearInterval(ensureScopedCtaTimerId);
             ensureScopedCtaTimerId = null;
             return;
           }
-          if (Date.now() - startedAt > maxMs) {
+          if (Date.now() - startedAt > maxMs || hydrationRetries > MAX_HYDRATION_RETRIES) {
             clearInterval(ensureScopedCtaTimerId);
             ensureScopedCtaTimerId = null;
             return;
@@ -617,6 +623,7 @@
           }
 
           // allowInject=true so we can insert when tel link appears
+          // DOM check inside processScopedLinks handles React hydration cleanup
           processScopedLinks(url, true);
         }, intervalMs);
       }
@@ -739,14 +746,20 @@
             }
           });
           
-          // If our elements were removed, reapply them (React re-renders can remove injected DOM)
+          // If our elements were removed, reapply them (React hydration/re-renders can remove injected DOM)
           if (needToReapply) {
-            log('Re-applying modifications after detected removal');
+            log('Re-applying modifications after detected removal (likely React hydration)');
+            // Use a longer delay for React hydration to settle
             setTimeout(() => {
+              // Force allow inject since we know it was removed
               processScopedLinks(url, true);
               processAllCartLinks(url);
-              ensureScopedCta(url);
-            }, 0); // next tick so DOM can settle
+              // Restart the ensure timer to keep trying if React is still hydrating
+              if (!hasInjectedCta()) {
+                ensureScopedCtaTimerId = null; // reset to allow restart
+                ensureScopedCta(url);
+              }
+            }, 100); // slightly longer delay for React hydration
           }
 
           if (shouldEnsure) {
